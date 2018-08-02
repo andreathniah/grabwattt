@@ -123,7 +123,7 @@ autoScroll = page => {
 
 startScraping = async requestedURL => {
 	const browser = await puppeteer.launch({
-		headless: false,
+		headless: true,
 		args: ["--proxy-server='direct://'", "--proxy-bypass-list=*"]
 	});
 	const page = await browser.newPage();
