@@ -1,5 +1,8 @@
 {
 	"name": "site",
+	"engines": {
+		"node": "8.2.1"
+	},
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
@@ -8,7 +11,8 @@
 		"server": "nodemon server.js",
 		"dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
 		"start": "node server.js",
-		"heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+		"heroku-postbuild":
+			"cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
 	},
 	"dependencies": {
 		"body-parser": "^1.18.3",

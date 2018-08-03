@@ -132,8 +132,8 @@ autoScroll = page => {
 
 startScraping = async requestedURL => {
 	const browser = await puppeteer.launch({
-		headless: false,
-		args: ["--proxy-server='direct://'", "--proxy-bypass-list=*"]
+		headless: true,
+		args: ["--no-sandbox", "--disable-setuid-sandbox"]
 	});
 	const page = await browser.newPage();
 	await page.goto(requestedURL);
