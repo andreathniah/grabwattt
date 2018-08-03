@@ -5,6 +5,21 @@ const bodyParser = require("body-parser");
 const puppeteer = require("puppeteer");
 const firebase = require("firebase");
 
+// express configurations
+const app = express();
+const port = process.env.PORT || 5000;
+
+if (process.env.NODE_ENV === "production") {
+	// Serve any static files
+	app.use(express.static(path.join(__dirname, "client/build")));
+	// Handle React routing, return all requests to React app
+	app.get("*", function(req, res) {
+		res.sendFile(path.join(__dirname, "client/build", "index.html"));
+	});
+}
+app.listen(port, () => console.log(`Listening on port ${port}`));
+
+// firebase configurations
 if (!firebase.apps.length) {
 	let config = {
 		apiKey: "AIzaSyDVAp4x8NHKEEjPxZeYVWAJ1yoW-und2QM",
@@ -15,19 +30,7 @@ if (!firebase.apps.length) {
 }
 const db = firebase.database();
 
-const app = express();
-// Serve static files from the React frontend app
-app.use(express.static(path.join(__dirname, "client/build")));
-// Anything that doesn't match the above, send back index.html
-app.get("*", (req, res) => {
-	res.sendFile(path.join(__dirname + "/client/build/index.html"));
-});
-const port = process.env.PORT || 5000;
-
 app.use(bodyParser.json());
-app.listen(port, () => console.log(`Listening on port ${port}`));
-
-// create a GET route
 app.get("/api", (req, res) => {
 	res.send({ url: "hello" });
 });
@@ -129,7 +132,7 @@ autoScroll = page => {
 
 startScraping = async requestedURL => {
 	const browser = await puppeteer.launch({
-		headless: true,
+		headless: false,
 		args: ["--proxy-server='direct://'", "--proxy-bypass-list=*"]
 	});
 	const page = await browser.newPage();
