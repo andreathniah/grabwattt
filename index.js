@@ -1,6 +1,7 @@
+const fs = require("fs");
+const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
-const fs = require("fs");
 const puppeteer = require("puppeteer");
 const firebase = require("firebase");
 
@@ -10,12 +11,17 @@ if (!firebase.apps.length) {
 		authDomain: "download-wattpad-fic.firebaseapp.com",
 		databaseURL: "https://download-wattpad-fic.firebaseio.com"
 	};
-
 	firebase.initializeApp(config);
 }
 const db = firebase.database();
 
 const app = express();
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, "client/build")));
+// Anything that doesn't match the above, send back index.html
+app.get("*", (req, res) => {
+	res.sendFile(path.join(__dirname + "/client/build/index.html"));
+});
 const port = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
