@@ -47,7 +47,7 @@ class FormMessage extends React.Component {
 			? `Extracting ${current} of ${total} chapters...`
 			: "Loading...";
 
-		return <P>{message}</P>;
+		return <p>{message}</p>;
 	}
 }
 
