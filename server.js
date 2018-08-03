@@ -1,4 +1,5 @@
 const fs = require("fs");
+var cors = require("cors");
 const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -8,6 +9,7 @@ const firebase = require("firebase");
 // express configurations
 const app = express();
 const port = process.env.PORT || 5000;
+app.use(cors());
 
 if (process.env.NODE_ENV === "production") {
 	// Serve any static files
@@ -31,7 +33,7 @@ if (!firebase.apps.length) {
 const db = firebase.database();
 
 app.use(bodyParser.json());
-app.get("/api", (req, res) => {
+app.get("/", (req, res) => {
 	res.send({ url: "hello" });
 });
 

@@ -27,6 +27,7 @@ class FormMain extends React.Component {
 
 		fetch("/", {
 			method: "POST",
+			mode: "cors",
 			body: JSON.stringify({ url: requestedURL }),
 			headers: { "Content-Type": "application/json" }
 		})
@@ -34,7 +35,8 @@ class FormMain extends React.Component {
 			.then(body => {
 				this.setState({ url: requestedURL });
 				this.props.history.push(`/${body.url}`);
-			});
+			})
+			.catch(err => console.log(err));
 	};
 
 	render() {
