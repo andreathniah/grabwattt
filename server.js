@@ -39,6 +39,7 @@ app.get("/", (req, res) => {
 
 app.post("/", (req, res) => {
 	let requestedURL = req.body.url;
+	let storyId = req.body.storyId;
 
 	if (!requestedURL) {
 		return res
@@ -46,10 +47,13 @@ app.post("/", (req, res) => {
 			.send({ error: true, message: "Please provide wattpad URL" });
 	} else {
 		console.log("requestedURL: ", requestedURL);
-		promise = startScraping(requestedURL);
-		promise.then(function(key) {
-			return res.send({ url: key });
-		});
+		promise = startScraping(requestedURL, storyId);
+		promise
+			.then(key => {
+				res.send({ url: key });
+				deleteProgress(storyId);
+			})
+			.catch(err => res.send({ url: err }));
 	}
 });
 
@@ -61,10 +65,6 @@ extractLink = () => {
 };
 
 extractSummary = () => {
-	// const a = "\u{100}";
-	// const b = "\u{10FFF0}";
-	// const regex = new RegExp(`[${a}-${b}]`, "g");
-
 	const extractedSummary = document.querySelector("h2.description > pre")
 		.innerHTML;
 
@@ -132,9 +132,9 @@ autoScroll = page => {
 	});
 };
 
-startScraping = async requestedURL => {
+startScraping = async (requestedURL, storyId) => {
 	const browser = await puppeteer.launch({
-		headless: true,
+		headless: false,
 		args: ["--no-sandbox", "--disable-setuid-sandbox"]
 	});
 	const page = await browser.newPage();
@@ -148,6 +148,8 @@ startScraping = async requestedURL => {
 	const story = [];
 
 	// grab every chapter's content
+	var count = 0;
+
 	for (let url of chapterURL) {
 		const updatedURL = "https://www.wattpad.com" + url;
 		await page.goto(updatedURL);
@@ -155,6 +157,7 @@ startScraping = async requestedURL => {
 		const items = await page.evaluate(extractContent);
 		story.push(items);
 		console.log(updatedURL);
+		updateProgress(storyId, ++count, chapterURL.length);
 	}
 
 	const summaryURL = "https://www.wattpad.com" + landingURL;
@@ -174,6 +177,16 @@ startScraping = async requestedURL => {
 	// fs.writeFileSync("./items.html", items.join("\n") + "\n");
 
 	return storyKey;
+};
+
+updateProgress = async (storyId, counter, total) => {
+	const progressRef = db.ref("progress/" + storyId);
+	progressRef.set({ current: counter, total: total });
+};
+
+deleteProgress = storyId => {
+	const progressRef = db.ref("progress/" + storyId);
+	progressRef.set({ current: null, total: null });
 };
 
 let saveToFirebase = (
