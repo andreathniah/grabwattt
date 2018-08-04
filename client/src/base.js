@@ -1,11 +1,8 @@
 import Rebase from "re-base";
 import firebase from "firebase";
+import { firebaseConfig } from "./secret";
 
-const firebaseKey = {
-	apiKey: "AIzaSyDVAp4x8NHKEEjPxZeYVWAJ1yoW-und2QM",
-	authDomain: "download-wattpad-fic.firebaseapp.com",
-	databaseURL: "https://download-wattpad-fic.firebaseio.com"
-};
+const firebaseKey = firebaseConfig;
 const firebaseApp = firebase.initializeApp(firebaseKey);
 
 const base = Rebase.createClass(firebaseApp.database());

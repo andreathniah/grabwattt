@@ -6,6 +6,8 @@ const bodyParser = require("body-parser");
 const puppeteer = require("puppeteer");
 const firebase = require("firebase");
 
+var secretKey = require("./secret.js");
+
 // express configurations
 const app = express();
 const port = process.env.PORT || 5000;
@@ -23,12 +25,7 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 
 // firebase configurations
 if (!firebase.apps.length) {
-	let config = {
-		apiKey: "AIzaSyDVAp4x8NHKEEjPxZeYVWAJ1yoW-und2QM",
-		authDomain: "download-wattpad-fic.firebaseapp.com",
-		databaseURL: "https://download-wattpad-fic.firebaseio.com"
-	};
-	firebase.initializeApp(config);
+	firebase.initializeApp(secretKey.firebaseKey);
 }
 const db = firebase.database();
 
@@ -43,12 +40,18 @@ app.post("/", (req, res) => {
 
 	console.log("requestedURL: ", requestedURL);
 	promise = startScraping(requestedURL, storyId);
+
+	const whitenoiseHack = setInterval(() => {
+		console.log("interviewing the interval");
+	}, 25000);
+
 	promise.then(key => {
+		clearInterval(whitenoiseHack);
 		if (key) {
 			res.send({ url: key });
 			deleteProgress(storyId);
 		} else {
-			res.send({ error: true, message: "Please provide wattpad URL" });
+			res.send({ error: true, message: "oops, something went wrong" });
 		}
 	});
 });
