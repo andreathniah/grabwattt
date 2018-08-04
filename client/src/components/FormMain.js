@@ -42,7 +42,8 @@ class FormMain extends React.Component {
 			})
 				.then(res => res.json())
 				.then(body => {
-					this.props.history.push(`/${body.url}`);
+					if (body.error) alert(body.message);
+					else this.props.history.push(`/${body.url}`);
 				})
 				.catch(err => console.log(err));
 		}

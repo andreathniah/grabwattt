@@ -41,20 +41,16 @@ app.post("/", (req, res) => {
 	let requestedURL = req.body.url;
 	let storyId = req.body.storyId;
 
-	if (!requestedURL) {
-		return res
-			.status(400)
-			.send({ error: true, message: "Please provide wattpad URL" });
-	} else {
-		console.log("requestedURL: ", requestedURL);
-		promise = startScraping(requestedURL, storyId);
-		promise
-			.then(key => {
-				res.send({ url: key });
-				deleteProgress(storyId);
-			})
-			.catch(err => res.send({ url: err }));
-	}
+	console.log("requestedURL: ", requestedURL);
+	promise = startScraping(requestedURL, storyId);
+	promise.then(key => {
+		if (key) {
+			res.send({ url: key });
+			deleteProgress(storyId);
+		} else {
+			res.send({ error: true, message: "Please provide wattpad URL" });
+		}
+	});
 });
 
 extractLink = () => {
@@ -134,7 +130,7 @@ autoScroll = page => {
 
 startScraping = async (requestedURL, storyId) => {
 	const browser = await puppeteer.launch({
-		headless: false,
+		headless: true,
 		args: ["--no-sandbox", "--disable-setuid-sandbox"]
 	});
 	const page = await browser.newPage();
