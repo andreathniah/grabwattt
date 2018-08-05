@@ -1,7 +1,7 @@
 import React from "react";
 import FormHeader from "./FormHeader";
 import FormMessage from "./FormMessage";
-import base from "../base";
+import { firebaseApp } from "../base";
 
 class FormMain extends React.Component {
 	state = {
@@ -24,6 +24,15 @@ class FormMain extends React.Component {
 		return storyId;
 	};
 
+	checkCompleted = storyId => {
+		console.log("checking if completed");
+		const database = firebaseApp.database().ref("story" + storyId);
+		database.once("value", snapshot => {
+			if (snapshot.exists()) return true;
+			else return false;
+		});
+	};
+
 	wattpadURL = React.createRef();
 	goToFic = event => {
 		event.preventDefault();
@@ -42,10 +51,20 @@ class FormMain extends React.Component {
 			})
 				.then(res => res.json())
 				.then(body => {
+					var checker = false;
+
 					if (body.error) alert(body.message);
 					else this.props.history.push(`/${body.url}`);
 				})
-				.catch(err => console.log(err));
+				.catch(err => {
+					console.log(err);
+
+					var checker = false;
+					while (checker === false) {
+						checker = this.checkCompleted(storyId);
+					}
+					this.props.history.push(`/${this.state.storyId}`);
+				});
 		}
 	};
 

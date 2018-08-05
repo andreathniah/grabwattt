@@ -133,7 +133,7 @@ autoScroll = page => {
 
 startScraping = async (requestedURL, storyId) => {
 	const browser = await puppeteer.launch({
-		headless: true,
+		headless: false,
 		args: ["--no-sandbox", "--disable-setuid-sandbox"]
 	});
 	const page = await browser.newPage();
@@ -169,7 +169,8 @@ startScraping = async (requestedURL, storyId) => {
 		storyTitle,
 		storyAuthor,
 		storySummary,
-		summaryURL
+		summaryURL,
+		storyId
 	);
 	await browser.close();
 
@@ -193,18 +194,29 @@ let saveToFirebase = (
 	storyTitle,
 	storyAuthor,
 	storySummary,
-	storyURL
+	storyURL,
+	storyId
 ) => {
-	let questionRef = db.ref("/");
-	let newQuestionRef = questionRef.push();
-	let newQuestionKey = newQuestionRef.key;
-	newQuestionRef.set({
+	const storyRef = db.ref("story/" + storyId);
+	storyRef.set({
 		title: storyTitle,
 		author: storyAuthor,
 		pages: story,
 		summary: storySummary,
 		url: storyURL
 	});
-	console.log("[#] Success => Id: ", newQuestionKey, "\n");
-	return newQuestionKey;
+	return storyId;
+
+	// let questionRef = db.ref("/");
+	// let newQuestionRef = questionRef.push();
+	// let newQuestionKey = newQuestionRef.key;
+	// newQuestionRef.set({
+	// 	title: storyTitle,
+	// 	author: storyAuthor,
+	// 	pages: story,
+	// 	summary: storySummary,
+	// 	url: storyURL
+	// });
+	// console.log("[#] Success => Id: ", newQuestionKey, "\n");
+	// return newQuestionKey;
 };
