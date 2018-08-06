@@ -7,7 +7,7 @@ class FicMain extends React.Component {
 	state = { storybox: [] };
 
 	componentDidMount() {
-		this.ref = base.syncState(`${this.props.match.params.storyId}`, {
+		this.ref = base.syncState(`story/${this.props.match.params.storyId}`, {
 			context: this,
 			state: "storybox"
 		});

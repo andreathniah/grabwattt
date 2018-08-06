@@ -150,6 +150,7 @@ startScraping = async (requestedURL, storyId) => {
 	var count = 0;
 
 	for (let url of chapterURL) {
+		// const updatedURL = "https://cors-anywhere.herokuapp.com/wattpad.com" + url;
 		const updatedURL = "https://www.wattpad.com" + url;
 		await page.goto(updatedURL);
 		await autoScroll(page);
@@ -159,7 +160,9 @@ startScraping = async (requestedURL, storyId) => {
 		updateProgress(storyId, ++count, chapterURL.length);
 	}
 
-	const summaryURL = "https://www.wattpad.com" + landingURL;
+	const summaryURL =
+		// "https://cors-anywhere.herokuapp.com/wattpad.com" + landingURL;
+		"https://www.wattpad.com" + landingURL;
 	await page.goto(summaryURL);
 	const storySummary = await page.evaluate(extractSummary);
 	console.log("summaryURL: ", summaryURL);
@@ -169,7 +172,8 @@ startScraping = async (requestedURL, storyId) => {
 		storyTitle,
 		storyAuthor,
 		storySummary,
-		summaryURL
+		summaryURL,
+		storyId
 	);
 	await browser.close();
 
@@ -193,18 +197,18 @@ let saveToFirebase = (
 	storyTitle,
 	storyAuthor,
 	storySummary,
-	storyURL
+	storyURL,
+	storyId
 ) => {
-	let questionRef = db.ref("/");
-	let newQuestionRef = questionRef.push();
-	let newQuestionKey = newQuestionRef.key;
-	newQuestionRef.set({
+	const storyRef = db.ref("story/" + storyId);
+	storyRef.set({
 		title: storyTitle,
 		author: storyAuthor,
 		pages: story,
 		summary: storySummary,
 		url: storyURL
 	});
-	console.log("[#] Success => Id: ", newQuestionKey, "\n");
-	return newQuestionKey;
+
+	console.log("[#] Success => Id: ", storyId, "\n");
+	return storyId;
 };
