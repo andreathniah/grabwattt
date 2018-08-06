@@ -43,8 +43,6 @@ app.post("/", (req, res) => {
 	promise = startScraping(requestedURL, storyId);
 
 	const whitenoiseHack = setInterval(() => {
-		console.log("interviewing the interval");
-
 		const progressRef = db.ref("progress/" + storyId);
 		progressRef.update({ noise: ++count });
 	}, 25000);
@@ -53,8 +51,10 @@ app.post("/", (req, res) => {
 		clearInterval(whitenoiseHack);
 		if (key) {
 			res.send({ url: key });
+			console.log("deleting progress");
 			deleteProgress(storyId);
 		} else {
+			console.log("ERROR");
 			res.send({ error: true, message: "oops, something went wrong" });
 		}
 	});

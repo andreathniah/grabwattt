@@ -26,7 +26,7 @@ class FormMain extends React.Component {
 
 	checkCompleted = storyId => {
 		console.log("checking if completed");
-		const database = firebaseApp.database().ref("story" + storyId);
+		const database = firebaseApp.database().ref("story/" + storyId);
 		database.once("value", snapshot => {
 			if (snapshot.exists()) return true;
 			else return false;
@@ -62,6 +62,7 @@ class FormMain extends React.Component {
 					var checker = false;
 					while (checker === false) {
 						checker = this.checkCompleted(storyId);
+						console.log("not completed");
 					}
 					this.props.history.push(`/${this.state.storyId}`);
 				});
