@@ -1,5 +1,4 @@
 import React from "react";
-import FormMessage from "./FormMessage";
 import LoaderMessage from "./LoaderMessage";
 import FicMain from "./FicMain";
 import base from "../base";

@@ -1,6 +1,5 @@
 import React from "react";
 import FormHeader from "./FormHeader";
-import FormMessage from "./FormMessage";
 import { firebaseApp } from "../base";
 
 class FormMain extends React.Component {
