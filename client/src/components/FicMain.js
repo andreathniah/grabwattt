@@ -7,7 +7,7 @@ class FicMain extends React.Component {
 	state = { storybox: [] };
 
 	componentDidMount() {
-		this.ref = base.syncState(`story/${this.props.match.params.storyId}`, {
+		this.ref = base.syncState(`story/${this.props.storyId}`, {
 			context: this,
 			state: "storybox"
 		});
@@ -25,7 +25,7 @@ class FicMain extends React.Component {
 
 	render() {
 		const { storybox } = this.state;
-		const { storyId } = this.props.match.params;
+		const { storyId } = this.props.storyId;
 		const storyArr = [];
 
 		const contents = Object.entries(storybox)[1];

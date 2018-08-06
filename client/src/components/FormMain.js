@@ -51,19 +51,10 @@ class FormMain extends React.Component {
 			})
 				.then(res => res.json())
 				.then(body => {
-					var checker = false;
-
-					if (body.error) alert(body.message);
-					else this.props.history.push(`/${body.url}`);
+					this.props.history.push(`/${body.url}`);
 				})
 				.catch(err => {
 					console.log(err);
-
-					var checker = false;
-					while (checker === false) {
-						checker = this.checkCompleted(storyId);
-						console.log("not completed");
-					}
 					this.props.history.push(`/${this.state.storyId}`);
 				});
 		}
@@ -71,8 +62,6 @@ class FormMain extends React.Component {
 
 	render() {
 		const { storyId } = this.state;
-		console.log(storyId);
-		const message = storyId ? <FormMessage storyId={storyId} /> : null;
 
 		return (
 			<div className="flex-fullview form">
@@ -87,7 +76,6 @@ class FormMain extends React.Component {
 					<button type="submit" className="button">
 						Go
 					</button>
-					{message}
 				</form>
 			</div>
 		);

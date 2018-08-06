@@ -41,23 +41,10 @@ app.post("/", (req, res) => {
 
 	console.log("requestedURL: ", requestedURL);
 	promise = startScraping(requestedURL, storyId);
-
-	const whitenoiseHack = setInterval(() => {
-		const progressRef = db.ref("progress/" + storyId);
-		progressRef.update({ noise: ++count });
-	}, 25000);
-
 	promise.then(key => {
-		clearInterval(whitenoiseHack);
-		if (key) {
-			res.send({ url: key });
-			console.log("deleting progress");
-			deleteProgress(storyId);
-		} else {
-			console.log("ERROR");
-			res.send({ error: true, message: "oops, something went wrong" });
-		}
+		if (key) deleteProgress(storyId);
 	});
+	res.send({ url: storyId });
 });
 
 extractLink = () => {
@@ -141,6 +128,8 @@ startScraping = async (requestedURL, storyId) => {
 		args: ["--no-sandbox", "--disable-setuid-sandbox"]
 	});
 	const page = await browser.newPage();
+	await page.setExtraHTTPHeaders({ Referer: "https://www.wattpad.com" });
+
 	await page.goto(requestedURL);
 
 	// grab miscellaneous details
