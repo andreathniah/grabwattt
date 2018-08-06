@@ -37,12 +37,16 @@ app.get("/", (req, res) => {
 app.post("/", (req, res) => {
 	let requestedURL = req.body.url;
 	let storyId = req.body.storyId;
+	let count = 0;
 
 	console.log("requestedURL: ", requestedURL);
 	promise = startScraping(requestedURL, storyId);
 
 	const whitenoiseHack = setInterval(() => {
 		console.log("interviewing the interval");
+
+		const progressRef = db.ref("progress/" + storyId);
+		progressRef.update({ noise: ++count });
 	}, 25000);
 
 	promise.then(key => {
@@ -184,7 +188,7 @@ startScraping = async (requestedURL, storyId) => {
 
 updateProgress = async (storyId, counter, total) => {
 	const progressRef = db.ref("progress/" + storyId);
-	progressRef.set({ current: counter, total: total });
+	progressRef.update({ current: counter, total: total });
 };
 
 deleteProgress = storyId => {

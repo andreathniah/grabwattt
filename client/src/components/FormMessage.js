@@ -20,6 +20,7 @@ class FormMessage extends React.Component {
 		const { storyId } = this.props;
 		var current = null,
 			total = null,
+			noise = null,
 			values = null;
 
 		const hello = Object.entries(progressbox)
@@ -33,21 +34,29 @@ class FormMessage extends React.Component {
 			total = Object.entries(hello)
 				.filter(([key, val]) => key === "total")
 				.map(([key, val]) => val)[0];
+			noise = Object.entries(hello)
+				.filter(([key, val]) => key === "noise")
+				.map(([key, val]) => val)[0];
 		}
 
-		values = { current: current, total: total };
+		values = { current: current, total: total, noise: noise };
 		return values;
 	};
 
 	render() {
 		const values = this.filterProgress();
-		const { current, total } = values;
+		const { current, total, noise } = values;
 
 		const message = !(current === null && total === null)
 			? `Extracting ${current} of ${total} chapters...`
 			: "Loading...";
 
-		return <p>{message}</p>;
+		return (
+			<div>
+				<p>{message}</p>
+				{console.log(noise)}
+			</div>
+		);
 	}
 }
 
