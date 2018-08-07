@@ -17,10 +17,13 @@ class Loader extends React.Component {
 			state: "queuebox",
 			then() {
 				const timerId = setTimeout(() => {
-					if (Object.keys(this.state.queuebox).length === 0) {
+					var { queuebox, storybox } = this.state;
+					if (
+						Object.keys(queuebox).length === 0 &&
+						Object.keys(storybox).length === 0
+					) {
+						console.log("redirecting");
 						this.props.history.push("/error404");
-					} else {
-						this.state.queuebox = null;
 					}
 				}, 1000);
 			}
@@ -48,11 +51,7 @@ class Loader extends React.Component {
 				{loading ? (
 					<LoaderMessage storyId={match.params.storyId} />
 				) : (
-					<FicMain
-						storyId={match.params.storyId}
-						history={history}
-						queuebox={queuebox}
-					/>
+					<FicMain storyId={match.params.storyId} history={history} />
 				)}
 			</div>
 		);

@@ -24,6 +24,11 @@
 	margin-top: 0;
 }
 
+.header span {
+	font-weight: bold;
+	color: rgba(255, 165, 0, 0.8);
+}
+
 mark {
 	display: inline-block;
 	line-height: 0em;
@@ -72,6 +77,17 @@ input {
 input:focus {
 	border: 1px solid #ffa500;
 	outline: 0;
+}
+
+.error-404 {
+	font-weight: bolder;
+	font-size: 10em;
+	margin-bottom: -0.15em;
+
+	color: black;
+	-webkit-text-fill-color: white; /* Will override color (regardless of order) */
+	-webkit-text-stroke-width: 2px;
+	-webkit-text-stroke-color: rgba(255, 165, 0, 1);
 }
 
 .loader-message {

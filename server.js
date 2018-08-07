@@ -117,14 +117,14 @@ autoScroll = page => {
 					clearInterval(timer);
 					resolve();
 				}
-			}, 100);
+			}, 50);
 		});
 	});
 };
 
 startScraping = async (requestedURL, storyId) => {
 	const browser = await puppeteer.launch({
-		headless: true,
+		headless: false,
 		args: ["--no-sandbox", "--disable-setuid-sandbox"]
 	});
 	const page = await browser.newPage();
@@ -179,6 +179,8 @@ updateProgress = async (storyId, counter, total) => {
 
 deleteProgress = storyId => {
 	const progressRef = db.ref("progress/" + storyId);
+	const queueRef = db.ref("queue/" + storyId);
+	queueRef.update({ toDelete: null });
 	progressRef.set({ current: null, total: null });
 };
 

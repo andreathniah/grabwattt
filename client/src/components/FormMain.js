@@ -31,7 +31,7 @@ class FormMain extends React.Component {
 
 	addToQueue = storyId => {
 		const queuebox = { ...this.state.queuebox };
-		queuebox[storyId] = "added from server";
+		queuebox[storyId] = { toDelete: true };
 		this.setState({ queuebox: queuebox });
 	};
 
@@ -45,21 +45,28 @@ class FormMain extends React.Component {
 			const storyId = this.grabStoryId(requestedURL);
 			this.setState(prevState => ({ storyId: storyId }));
 
-			fetch("/", {
-				method: "POST",
-				mode: "cors",
-				body: JSON.stringify({ url: requestedURL, storyId: storyId }),
-				headers: { "Content-Type": "application/json" }
-			})
-				.then(res => res.json())
-				.then(body => {
-					this.addToQueue(body.url);
-					this.props.history.push(`/${body.url}`);
-				})
-				.catch(err => {
-					console.log(err);
+			const database = firebaseApp.database().ref("story/" + storyId);
+			database.once("value", snapshot => {
+				if (!snapshot.exists()) {
+					fetch("/", {
+						method: "POST",
+						mode: "cors",
+						body: JSON.stringify({ url: requestedURL, storyId: storyId }),
+						headers: { "Content-Type": "application/json" }
+					})
+						.then(res => res.json())
+						.then(body => {
+							this.addToQueue(body.url);
+							this.props.history.push(`/${body.url}`);
+						})
+						.catch(err => {
+							console.log(err);
+							this.props.history.push(`/${this.state.storyId}`);
+						});
+				} else {
 					this.props.history.push(`/${this.state.storyId}`);
-				});
+				}
+			});
 		}
 	};
 

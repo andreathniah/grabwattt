@@ -6,7 +6,13 @@ class FicHeader extends React.Component {
 
 	handleDownload = () => {
 		const { storyTitle, storyAuthor } = this.props;
-		generatePDF(storyTitle, storyAuthor);
+		try {
+			generatePDF(storyTitle, storyAuthor);
+		} catch (error) {
+			alert(
+				"Something went wrong! Trying using Ctrl+P and save as PDF instead!"
+			);
+		}
 	};
 
 	handleHome = () => {
