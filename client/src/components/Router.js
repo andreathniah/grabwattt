@@ -10,8 +10,8 @@ const Router = () => (
 	<BrowserRouter>
 		<Switch>
 			<Route exact path="/" component={FormMain} />
+			<Route exact path="/error404" component={NotFound} />
 			<Route path="/:storyId" component={Loader} />
-			<Route component={NotFound} />
 		</Switch>
 	</BrowserRouter>
 );

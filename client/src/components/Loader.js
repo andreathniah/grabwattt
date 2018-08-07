@@ -4,12 +4,26 @@ import FicMain from "./FicMain";
 import base from "../base";
 
 class Loader extends React.Component {
-	state = { loading: true, storybox: [] };
+	state = { loading: true, storybox: [], queuebox: [] };
 
 	componentDidMount() {
 		this.ref = base.syncState(`story/${this.props.match.params.storyId}`, {
 			context: this,
 			state: "storybox"
+		});
+
+		this.ref = base.syncState(`queue/${this.props.match.params.storyId}`, {
+			context: this,
+			state: "queuebox",
+			then() {
+				const timerId = setTimeout(() => {
+					if (Object.keys(this.state.queuebox).length === 0) {
+						this.props.history.push("/error404");
+					} else {
+						this.state.queuebox = null;
+					}
+				}, 1000);
+			}
 		});
 	}
 
@@ -26,8 +40,8 @@ class Loader extends React.Component {
 	}
 
 	render() {
-		const { loading } = this.state;
-		const { match } = this.props;
+		const { loading, queuebox } = this.state;
+		const { match, history } = this.props;
 
 		return (
 			<div>
@@ -36,7 +50,8 @@ class Loader extends React.Component {
 				) : (
 					<FicMain
 						storyId={match.params.storyId}
-						history={this.props.history}
+						history={history}
+						queuebox={queuebox}
 					/>
 				)}
 			</div>

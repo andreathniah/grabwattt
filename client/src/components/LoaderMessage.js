@@ -32,7 +32,7 @@ class LoaderMessage extends React.Component {
 				progressbox.current === undefined ||
 				progressbox.total === undefined
 			) {
-				message = `Fetching story id: ${storyId} from wattpad, this may take a while...`;
+				message = `Fetching story id: ${storyId} from wattpad...`;
 			} else {
 				message = `Extracting ${progressbox.current} of ${
 					progressbox.total

@@ -1,11 +1,17 @@
 import React from "react";
 import FormHeader from "./FormHeader";
+import base from "../base";
 import { firebaseApp } from "../base";
 
 class FormMain extends React.Component {
-	state = {
-		storyId: ""
-	};
+	state = { storyId: "", queuebox: [] };
+
+	componentDidMount() {
+		this.ref = base.syncState("/queue", {
+			context: this,
+			state: "queuebox"
+		});
+	}
 
 	validateURL = requestedURL => {
 		const chapterLink = requestedURL.includes("https://www.wattpad.com/"); //ok
@@ -23,13 +29,10 @@ class FormMain extends React.Component {
 		return storyId;
 	};
 
-	checkCompleted = storyId => {
-		console.log("checking if completed");
-		const database = firebaseApp.database().ref("story/" + storyId);
-		database.once("value", snapshot => {
-			if (snapshot.exists()) return true;
-			else return false;
-		});
+	addToQueue = storyId => {
+		const queuebox = { ...this.state.queuebox };
+		queuebox[storyId] = "added from server";
+		this.setState({ queuebox: queuebox });
 	};
 
 	wattpadURL = React.createRef();
@@ -50,6 +53,7 @@ class FormMain extends React.Component {
 			})
 				.then(res => res.json())
 				.then(body => {
+					this.addToQueue(body.url);
 					this.props.history.push(`/${body.url}`);
 				})
 				.catch(err => {
