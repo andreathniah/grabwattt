@@ -25,7 +25,7 @@ class FicMain extends React.Component {
 
 	render() {
 		const { storybox } = this.state;
-		const { storyId } = this.props.storyId;
+		const { storyId } = this.props;
 		const storyArr = [];
 
 		const contents = Object.entries(storybox)[1];
@@ -41,7 +41,7 @@ class FicMain extends React.Component {
 		const storyURL = this.extractDetails("url");
 
 		return (
-			<div className="flex-container">
+			<div className="container">
 				<FicHeader
 					history={this.props.history}
 					storyId={storyId}

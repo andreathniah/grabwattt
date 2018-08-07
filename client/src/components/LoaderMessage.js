@@ -23,14 +23,37 @@ class LoaderMessage extends React.Component {
 	render() {
 		const { progressbox, loading } = this.state;
 		const { storyId } = this.props;
+		var message = null;
 
-		const message = loading
-			? `Fetching story id: ${storyId}...`
-			: `Extracting ${progressbox.current} of ${progressbox.total} chapters...`;
+		if (loading) {
+			message = `Fetching story id: ${storyId} from database...`;
+		} else {
+			if (
+				progressbox.current === undefined ||
+				progressbox.total === undefined
+			) {
+				message = `Fetching story id: ${storyId} from wattpad, this may take a while...`;
+			} else {
+				message = `Extracting ${progressbox.current} of ${
+					progressbox.total
+				} chapters...`;
+			}
+		}
 
 		return (
-			<div>
-				<p>{message}</p>
+			<div className="flex-fullview">
+				<div className="sk-cube-grid">
+					<div className="sk-cube sk-cube1" />
+					<div className="sk-cube sk-cube2" />
+					<div className="sk-cube sk-cube3" />
+					<div className="sk-cube sk-cube4" />
+					<div className="sk-cube sk-cube5" />
+					<div className="sk-cube sk-cube6" />
+					<div className="sk-cube sk-cube7" />
+					<div className="sk-cube sk-cube8" />
+					<div className="sk-cube sk-cube9" />
+				</div>
+				<p className="loader-message">{message}</p>
 			</div>
 		);
 	}

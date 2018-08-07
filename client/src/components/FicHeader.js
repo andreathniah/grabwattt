@@ -33,25 +33,40 @@ class FicHeader extends React.Component {
 		else
 			return (
 				<header>
-					<div className="flex-row">
-						<div>Database reference key: {storyId}</div>
-						<div>
-							<button
-								type="button"
-								className="button"
-								onClick={this.handleDownload}
-							>
-								Download As PDF
-							</button>
-							<button
-								type="button"
-								className="button"
-								onClick={this.handleHome}
-							>
-								Grab another Story
-							</button>
+					<nav className="navbar navbar-expand-lg navbar-light bg-light header-nav">
+						<a className="navbar-brand">Logo here</a>
+						<button
+							className="navbar-toggler"
+							type="button"
+							data-toggle="collapse"
+							data-target="#navbarNavAltMarkup"
+							aria-controls="navbarNavAltMarkup"
+							aria-expanded="false"
+							aria-label="Toggle navigation"
+						>
+							<span className="navbar-toggler-icon" />
+						</button>
+						<div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+							<div className="navbar-nav">
+								<a
+									className="navbar-item nav-link active"
+									onClick={this.handleHome}
+								>
+									Home{" "}
+								</a>
+								<a
+									className="nav-item nav-link active"
+									onClick={this.handleDownload}
+								>
+									Download as PDF <span className="sr-only">(current)</span>
+								</a>
+								<a className="nav-item nav-link disabled" href="#">
+									Database reference key: {storyId}
+								</a>
+							</div>
 						</div>
-					</div>
+					</nav>
+
 					<div id="summary-container" className="print-container">
 						<h5>
 							{storyTitle} {storyAuthor}

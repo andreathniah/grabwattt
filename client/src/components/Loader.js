@@ -19,7 +19,6 @@ class Loader extends React.Component {
 
 	componentDidUpdate() {
 		const { loading, storybox } = this.state;
-		console.log(storybox);
 
 		if (loading === true && Object.keys(storybox).length !== 0) {
 			this.setState(prevState => ({ loading: false }));

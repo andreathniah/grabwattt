@@ -9,7 +9,7 @@ class FicBody extends React.Component {
 		));
 
 		return (
-			<div id="story-container" className="print-container">
+			<div id="story-container" className=" print-container">
 				{storyItem}
 			</div>
 		);

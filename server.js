@@ -124,7 +124,7 @@ autoScroll = page => {
 
 startScraping = async (requestedURL, storyId) => {
 	const browser = await puppeteer.launch({
-		headless: true,
+		headless: false,
 		args: ["--no-sandbox", "--disable-setuid-sandbox"]
 	});
 	const page = await browser.newPage();
@@ -143,7 +143,6 @@ startScraping = async (requestedURL, storyId) => {
 	var count = 0;
 
 	for (let url of chapterURL) {
-		// const updatedURL = "https://cors-anywhere.herokuapp.com/wattpad.com" + url;
 		const updatedURL = "https://www.wattpad.com" + url;
 		await page.goto(updatedURL);
 		await autoScroll(page);
@@ -153,9 +152,7 @@ startScraping = async (requestedURL, storyId) => {
 		updateProgress(storyId, ++count, chapterURL.length);
 	}
 
-	const summaryURL =
-		// "https://cors-anywhere.herokuapp.com/wattpad.com" + landingURL;
-		"https://www.wattpad.com" + landingURL;
+	const summaryURL = "https://www.wattpad.com" + landingURL;
 	await page.goto(summaryURL);
 	const storySummary = await page.evaluate(extractSummary);
 	console.log("summaryURL: ", summaryURL);
