@@ -62,8 +62,8 @@ startPDF = async pdfURL => {
 		args: ["--no-sandbox", "--disable-setuid-sandbox"]
 	});
 	const page = await browser.newPage();
-	await page.goto(pdfURL);
-	await page.waitForSelector(".page");
+	await page.goto(pdfURL, { waitUntil: "networkidle0" });
+	await page.waitForSelector("img");
 
 	console.log("pdfURL: ", pdfURL);
 

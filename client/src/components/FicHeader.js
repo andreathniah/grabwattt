@@ -10,7 +10,6 @@ class FicHeader extends React.Component {
 			generatePDF(storyTitle, storyAuthor);
 		} catch (error) {
 			alert("Please make sure your browser has no pop-up/ads blockers!");
-
 			try {
 				this.handleBackup();
 			} catch (error) {

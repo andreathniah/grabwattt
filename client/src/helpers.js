@@ -12,6 +12,13 @@ export function generatePDF(storyTitle, storyAuthor) {
 		pagesplit: true
 	};
 
+	var images = document.getElementsByTagName("img");
+	var l = images.length;
+	for (var i = 0; i < l; i++) {
+		images[0].parentNode.removeChild(images[0]);
+		console.log("done");
+	}
+
 	var div = document.getElementsByClassName("print-container");
 
 	var noRecursionNeeded = div.length;
