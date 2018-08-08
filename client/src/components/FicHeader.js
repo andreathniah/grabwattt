@@ -9,10 +9,13 @@ class FicHeader extends React.Component {
 		try {
 			generatePDF(storyTitle, storyAuthor);
 		} catch (error) {
-			alert(
-				"Something went wrong! Trying using Ctrl+P and save as PDF instead!"
-			);
-			console.log(error);
+			alert("Please make sure your browser has no pop-up/ads blockers!");
+
+			try {
+				this.handleBackup();
+			} catch (error) {
+				alert("oops, something went wrong, use Ctrl+P and save as PDF instead");
+			}
 		}
 	};
 
@@ -20,12 +23,26 @@ class FicHeader extends React.Component {
 		this.props.history.push("/");
 	};
 
+	handleBackup = () => {
+		fetch("/pdf", {
+			method: "POST",
+			mode: "cors",
+			body: JSON.stringify({ url: window.location.href }),
+			headers: { "Content-Type": "application/json" }
+		})
+			.then(res => res.blob())
+			.then(blob => URL.createObjectURL(blob))
+			.then(url => {
+				window.open(url, "_blank");
+				url.revokeObjectURL(url);
+			})
+			.catch(err => console.log(err));
+	};
+
 	componentDidUpdate() {
 		if (this.state.loading === true)
 			this.setState(prevState => ({ loading: false }));
 	}
-
-	componentDidMount() {}
 
 	render() {
 		const {
@@ -67,14 +84,14 @@ class FicHeader extends React.Component {
 								>
 									Download as PDF <span className="sr-only">(current)</span>
 								</a>
-								<a className="nav-item nav-link disabled" href="#">
+								<a className="nav-item nav-link disabled">
 									Database reference key: {storyId}
 								</a>
 							</div>
 						</div>
 					</nav>
 
-					<div id="summary-container" className="print-container">
+					<div id="summary-container" className="page print-container">
 						<h5>
 							{storyTitle} {storyAuthor}
 						</h5>

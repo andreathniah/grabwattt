@@ -71,8 +71,6 @@ class FormMain extends React.Component {
 	};
 
 	render() {
-		const { storyId } = this.state;
-
 		return (
 			<div className="container flex-fullview form">
 				<form onSubmit={this.goToFic}>

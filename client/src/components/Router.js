@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import NotFound from "./NotFound";
 import FormMain from "./FormMain";
-import FicMain from "./FicMain";
 import Loader from "./Loader";
 
 const Router = () => (

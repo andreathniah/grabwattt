@@ -30,14 +30,10 @@ if (!firebase.apps.length) {
 const db = firebase.database();
 
 app.use(bodyParser.json());
-app.get("/", (req, res) => {
-	res.send({ url: "hello" });
-});
 
 app.post("/", (req, res) => {
 	let requestedURL = req.body.url;
 	let storyId = req.body.storyId;
-	let count = 0;
 
 	console.log("requestedURL: ", requestedURL);
 	promise = startScraping(requestedURL, storyId);
@@ -48,6 +44,39 @@ app.post("/", (req, res) => {
 		.catch(err => console.console.error());
 	res.send({ url: storyId });
 });
+
+app.post("/pdf", (req, res) => {
+	let pdfURL = req.body.url;
+	promise = startPDF(pdfURL);
+	promise
+		.then(buffer => {
+			res.type("application/pdf");
+			res.send(buffer);
+		})
+		.catch(err => console.log(err));
+});
+
+startPDF = async pdfURL => {
+	const browser = await puppeteer.launch({
+		headless: true,
+		args: ["--no-sandbox", "--disable-setuid-sandbox"]
+	});
+	const page = await browser.newPage();
+	await page.goto(pdfURL);
+	await page.waitForSelector(".page");
+
+	console.log("pdfURL: ", pdfURL);
+
+	const buffer = await page.pdf({
+		format: "A4",
+		margin: { left: "2cm", top: "2.5cm", right: "2cm", bottom: "2.5cm" }
+	});
+
+	console.log("[#] Success => Id: ", pdfURL, "\n");
+
+	browser.close();
+	return buffer;
+};
 
 extractLink = () => {
 	return document

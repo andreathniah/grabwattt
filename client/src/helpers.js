@@ -6,13 +6,11 @@ export function generatePDF(storyTitle, storyAuthor) {
 	// https://plnkr.co/edit/64KOSxMgDWfRUfg2bxfo?p=preview
 	var pdf = new jsPDF();
 	var pdfName = storyTitle + " " + storyAuthor + ".pdf";
-	var options = { width: 170, pagesplit: true };
 
-	var images = document.getElementsByTagName("img");
-	var l = images.length;
-	for (var i = 0; i < l; i++) {
-		images[0].parentNode.removeChild(images[0]);
-	}
+	var options = {
+		width: 170,
+		pagesplit: true
+	};
 
 	var div = document.getElementsByClassName("print-container");
 
@@ -45,31 +43,38 @@ export function generatePDF(storyTitle, storyAuthor) {
 export function convertToPDF(storyTitle, storyAuthor) {
 	console.log("creating pdf:", storyTitle);
 	var doc = new jsPDF();
+
 	var PTSans = longAssString;
 	doc.addFileToVFS("PTSans.ttf", PTSans);
 	doc.addFont("PTSans.ttf", "PTSans", "normal");
 	doc.setFont("PTSans"); // set font
 
-	var margins = {
-		top: 20,
-		bottom: 20,
-		left: 10,
-		width: 170
+	var images = document.getElementsByTagName("img");
+	var l = images.length;
+	for (var i = 0; i < l; i++) {
+		images[0].className += "ignore-img";
+		console.log("done");
+		// images[0].parentNode.removeChild(images[0]);
+	}
+
+	var specialElementHandlers = {
+		".ignore-img": function(element, renderer) {
+			return true;
+		}
 	};
-	var options = { width: margins.width, pagesplit: true };
+
+	var options = {
+		width: 170,
+		pagesplit: true,
+		elementHandlers: specialElementHandlers
+	};
+
 	var pdfName = storyTitle + " " + storyAuthor + ".pdf";
 
 	doc.fromHTML(
-		document.getElementById("summary-container"),
-		margins.left, // x coord
-		margins.top,
-		options
-	);
-
-	doc.fromHTML(
 		document.getElementById("story-container"),
-		margins.left, // x coord
-		5,
+		15,
+		15,
 		options,
 		function() {
 			doc.save(pdfName);

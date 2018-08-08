@@ -16,7 +16,7 @@ class Loader extends React.Component {
 			context: this,
 			state: "queuebox",
 			then() {
-				const timerId = setTimeout(() => {
+				setTimeout(() => {
 					var { queuebox, storybox } = this.state;
 					if (
 						Object.keys(queuebox).length === 0 &&
@@ -45,7 +45,7 @@ class Loader extends React.Component {
 	}
 
 	render() {
-		const { loading, queuebox } = this.state;
+		const { loading } = this.state;
 		const { match, history } = this.props;
 
 		return (

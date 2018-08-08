@@ -1,6 +1,6 @@
 import React from "react";
-import FicBody from "./FicBody";
 import FicHeader from "./FicHeader";
+import FicChapter from "./FicChapter";
 import base from "../base";
 
 class FicMain extends React.Component {
@@ -26,12 +26,12 @@ class FicMain extends React.Component {
 	render() {
 		const { storybox } = this.state;
 		const { storyId } = this.props;
-		const storyArr = [];
 
 		const contents = Object.entries(storybox)[1];
 		if (typeof contents !== "undefined") {
-			contents[1].map(id => {
-				for (var i = 0; i < id.length; i++) storyArr.push(id[i]);
+			var i = 0;
+			var storyChapter = contents[1].map(id => {
+				return <FicChapter key={i++} storybox={id} />;
 			});
 		}
 
@@ -50,7 +50,9 @@ class FicMain extends React.Component {
 					storySummary={storySummary}
 					storyURL={storyURL}
 				/>
-				<FicBody storybox={storyArr} />
+				<div id="story-container" className="print-container">
+					{storyChapter}
+				</div>
 			</div>
 		);
 	}

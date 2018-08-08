@@ -1,3 +1,6 @@
+body {
+	font-size: larger;
+}
 .header-nav {
 	margin-bottom: 2vh;
 }
@@ -96,6 +99,13 @@ input:focus {
 	color: #ffa500;
 }
 
+/* Printing */
+/* https://medium.com/@raphaelstbler/advanced-pdf-generation-for-node-js-using-puppeteer-e168253e159c */
+
+.page {
+	page-break-after: always;
+}
+
 /* Pop-up box */
 .instructions {
 	width: 100%;
@@ -120,11 +130,11 @@ input:focus {
 }
 
 .popup {
-	margin: 25vh auto;
+	margin: 20vh auto;
 	padding: 20px;
 	background: #fff;
 	border-radius: 5px;
-	width: 80vw;
+	width: 50vw;
 	position: relative;
 	transition: all 2s ease-in-out;
 }
@@ -165,7 +175,8 @@ input:focus {
 		width: 70%;
 	}
 	.popup {
-		width: 70%;
+		margin: 25vh auto;
+		width: 70vw;
 	}
 }
 

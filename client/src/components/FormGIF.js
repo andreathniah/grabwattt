@@ -14,7 +14,11 @@ class FormGIF extends React.Component {
 							&times;
 						</a>
 						<div className="content">
-							<img src="./instructions.gif" className="instructions" />
+							<img
+								src="./instructions.gif"
+								alt="instructions"
+								className="instructions"
+							/>
 						</div>
 					</div>
 				</div>
