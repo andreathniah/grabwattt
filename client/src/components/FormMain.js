@@ -72,7 +72,7 @@ class FormMain extends React.Component {
 
 	render() {
 		return (
-			<div className="container flex-fullview form">
+			<div className=" flex-fullview form">
 				<form onSubmit={this.goToFic}>
 					<FormHeader />
 					<input

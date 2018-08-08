@@ -59,7 +59,12 @@ app.post("/pdf", (req, res) => {
 startPDF = async pdfURL => {
 	const browser = await puppeteer.launch({
 		headless: true,
-		args: ["--no-sandbox", "--disable-setuid-sandbox"]
+		args: [
+			"--no-sandbox",
+			"--disable-setuid-sandbox",
+			"--disable-dev-shm-usage",
+			"--single-process"
+		]
 	});
 	const page = await browser.newPage();
 	await page.goto(pdfURL, { waitUntil: "networkidle0" });
