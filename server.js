@@ -41,9 +41,11 @@ app.post("/", (req, res) => {
 
 	console.log("requestedURL: ", requestedURL);
 	promise = startScraping(requestedURL, storyId);
-	promise.then(key => {
-		if (key) deleteProgress(storyId);
-	});
+	promise
+		.then(key => {
+			if (key) deleteProgress(storyId);
+		})
+		.catch(err => console.console.error());
 	res.send({ url: storyId });
 });
 

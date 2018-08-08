@@ -12,6 +12,7 @@ class FicHeader extends React.Component {
 			alert(
 				"Something went wrong! Trying using Ctrl+P and save as PDF instead!"
 			);
+			console.log(error);
 		}
 	};
 

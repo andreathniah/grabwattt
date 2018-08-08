@@ -8,11 +8,11 @@ export function generatePDF(storyTitle, storyAuthor) {
 	var pdfName = storyTitle + " " + storyAuthor + ".pdf";
 	var options = { width: 170, pagesplit: true };
 
-	// var images = document.getElementsByTagName("img");
-	// var l = images.length;
-	// for (var i = 0; i < l; i++) {
-	// 	images[0].parentNode.removeChild(images[0]);
-	// }
+	var images = document.getElementsByTagName("img");
+	var l = images.length;
+	for (var i = 0; i < l; i++) {
+		images[0].parentNode.removeChild(images[0]);
+	}
 
 	var div = document.getElementsByClassName("print-container");
 

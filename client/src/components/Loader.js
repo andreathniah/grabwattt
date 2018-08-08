@@ -24,6 +24,8 @@ class Loader extends React.Component {
 					) {
 						console.log("redirecting");
 						this.props.history.push("/error404");
+					} else {
+						queuebox = " ";
 					}
 				}, 1000);
 			}
