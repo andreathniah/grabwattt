@@ -67,14 +67,14 @@ class FormMain extends React.Component {
 					this.props.history.push(`/${this.state.storyId}`);
 				}
 			});
-		}
+		} else alert("looks like something is wrong, is your link a CHAPTER URL?");
 	};
 
 	render() {
 		const { storyId } = this.state;
 
 		return (
-			<div className="flex-fullview form">
+			<div className="container flex-fullview form">
 				<form onSubmit={this.goToFic}>
 					<FormHeader />
 					<input

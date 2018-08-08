@@ -96,6 +96,79 @@ input:focus {
 	color: #ffa500;
 }
 
+/* Pop-up box */
+.instructions {
+	width: 100%;
+	max-width: 100%;
+	height: auto;
+}
+
+.overlay {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.7);
+	transition: opacity 500ms;
+	visibility: hidden;
+	opacity: 0;
+}
+.overlay:target {
+	visibility: visible;
+	opacity: 1;
+}
+
+.popup {
+	margin: 25vh auto;
+	padding: 20px;
+	background: #fff;
+	border-radius: 5px;
+	width: 80vw;
+	position: relative;
+	transition: all 2s ease-in-out;
+}
+
+.popup h4 {
+	margin-top: 0;
+	font-weight: bold;
+	text-transform: capitalize;
+}
+
+.popup .close {
+	position: absolute;
+	top: 20px;
+	right: 30px;
+	transition: all 200ms;
+	font-size: 30px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #333;
+}
+.popup .close:hover {
+	color: #06d85f;
+}
+.popup .content {
+	max-height: 50%;
+	overflow: auto;
+}
+
+.box > a {
+	color: #ffa500;
+	font-style: italic;
+	font-weight: bold;
+	color: rgba(255, 165, 0, 0.8);
+}
+
+@media screen and (max-width: 700px) {
+	.box {
+		width: 70%;
+	}
+	.popup {
+		width: 70%;
+	}
+}
+
 /* Spinners */
 .sk-cube-grid {
 	width: 40px;

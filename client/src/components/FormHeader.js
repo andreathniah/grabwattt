@@ -1,4 +1,5 @@
 import React from "react";
+import FormGIF from "./FormGIF";
 
 class FormHeader extends React.Component {
 	render() {
@@ -8,7 +9,8 @@ class FormHeader extends React.Component {
 					<mark>want that wattpad fic?</mark>
 				</h1>
 				<p>
-					Enter any wattpad <span>chapter</span> URL to start!
+					enter any wattpad <span>chapter URL</span> to start!
+					<FormGIF />
 				</p>
 			</div>
 		);
