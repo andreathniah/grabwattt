@@ -63,12 +63,15 @@ startPDF = async pdfURL => {
 			"--no-sandbox",
 			"--disable-setuid-sandbox",
 			"--disable-dev-shm-usage",
-			"--single-process",
-			"--disable-gpu"
+			"--single-process"
 		]
 	});
+
 	const page = await browser.newPage();
-	await page.goto(pdfURL, { waitUntil: "networkidle0" });
+	await page.goto(pdfURL, {
+		waitUntil: "networkidle0",
+		timeout: 3000000
+	});
 	await page.waitForSelector(".page");
 
 	console.log("pdfURL: ", pdfURL);
