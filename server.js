@@ -63,13 +63,17 @@ startPDF = async pdfURL => {
 			"--no-sandbox",
 			"--disable-setuid-sandbox",
 			"--disable-dev-shm-usage"
-			"--single-process" // disable this in localhost
+			// "--single-process" // disable this in localhost
 		]
 	});
 
 	const page = await browser.newPage();
-	await page.goto(pdfURL).catch(err => console.log(err));
+	await page.goto(pdfURL);
 	await page.waitForSelector(".page");
+
+	// page.on("error", err => {
+	// 	browser.close();
+	// });
 
 	console.log("pdfURL: ", pdfURL);
 
