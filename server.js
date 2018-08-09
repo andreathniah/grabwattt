@@ -62,16 +62,13 @@ startPDF = async pdfURL => {
 		args: [
 			"--no-sandbox",
 			"--disable-setuid-sandbox",
-			"--disable-dev-shm-usage",
-			"--single-process"
+			"--disable-dev-shm-usage"
+			"--single-process" // disable this in localhost
 		]
 	});
 
 	const page = await browser.newPage();
-	await page.goto(pdfURL, {
-		waitUntil: "networkidle0",
-		timeout: 3000000
-	});
+	await page.goto(pdfURL).catch(err => console.log(err));
 	await page.waitForSelector(".page");
 
 	console.log("pdfURL: ", pdfURL);
