@@ -72,19 +72,24 @@ class FormMain extends React.Component {
 
 	render() {
 		return (
-			<div className="container flex-fullview form">
-				<form onSubmit={this.goToFic}>
-					<FormHeader />
-					<input
-						type="text"
-						ref={this.wattpadURL}
-						required
-						placeholder="Enter a URL"
-					/>
-					<button type="submit" className="button">
-						Go
-					</button>
-				</form>
+			<div className="background">
+				<div className="container flex-fullview">
+					<form onSubmit={this.goToFic}>
+						<FormHeader />
+						<div className="input-group">
+							<input
+								className="form-control"
+								type="text"
+								ref={this.wattpadURL}
+								required
+								placeholder="Enter a URL"
+							/>
+							<button type="submit" className="button">
+								Go
+							</button>
+						</div>
+					</form>
+				</div>
 			</div>
 		);
 	}
