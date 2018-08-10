@@ -62,16 +62,15 @@ class FicHeader extends React.Component {
 		else
 			return (
 				<header>
-					<nav className="navbar navbar-expand-lg navbar-light bg-light header-nav">
+					<nav className="navbar navbar-expand-lg navbar-light bg-light">
 						<a className="navbar-brand" onClick={this.handleHome}>
 							<img
 								src="/GrabWatt.png"
-								width="30"
-								height="30"
+								width="50"
+								height="50"
 								className="d-inline-block align-top"
 								alt="GrabWatt"
 							/>
-							GrabWatt
 						</a>
 						<button
 							className="navbar-toggler"

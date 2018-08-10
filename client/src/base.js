@@ -1,5 +1,6 @@
 import Rebase from "re-base";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/database";
 import { firebaseConfig } from "./secret";
 
 const firebaseKey = firebaseConfig;

@@ -1,8 +1,9 @@
 body {
 	font-size: larger;
 }
-.header-nav {
+.navbar {
 	margin-bottom: 2vh;
+	background-color: darkred;
 }
 
 .flex-fullview {
