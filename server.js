@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const fs = require("fs");
 var cors = require("cors");
 const path = require("path");
