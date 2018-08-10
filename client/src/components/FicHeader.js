@@ -63,7 +63,16 @@ class FicHeader extends React.Component {
 			return (
 				<header>
 					<nav className="navbar navbar-expand-lg navbar-light bg-light header-nav">
-						<a className="navbar-brand">Logo here</a>
+						<a className="navbar-brand" onClick={this.handleHome}>
+							<img
+								src="/GrabWatt.png"
+								width="30"
+								height="30"
+								className="d-inline-block align-top"
+								alt="GrabWatt"
+							/>
+							GrabWatt
+						</a>
 						<button
 							className="navbar-toggler"
 							type="button"
@@ -77,12 +86,6 @@ class FicHeader extends React.Component {
 						</button>
 						<div className="collapse navbar-collapse" id="navbarNavAltMarkup">
 							<div className="navbar-nav">
-								<a
-									className="navbar-item nav-link active"
-									onClick={this.handleHome}
-								>
-									Home{" "}
-								</a>
 								<a
 									className="nav-item nav-link active"
 									onClick={this.handleDownload}

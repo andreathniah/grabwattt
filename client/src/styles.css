@@ -98,6 +98,10 @@ input:focus {
 	color: #ffa500;
 }
 
+.navbar-brand {
+	font-weight: lighter;
+}
+
 /* Printing */
 /* https://medium.com/@raphaelstbler/advanced-pdf-generation-for-node-js-using-puppeteer-e168253e159c */
 

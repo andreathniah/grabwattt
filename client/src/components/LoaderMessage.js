@@ -26,13 +26,13 @@ class LoaderMessage extends React.Component {
 		var message = null;
 
 		if (loading) {
-			message = `Fetching story id: ${storyId} from database...`;
+			message = `Fetching story id: ${storyId}...`;
 		} else {
 			if (
 				progressbox.current === undefined ||
 				progressbox.total === undefined
 			) {
-				message = `Fetching story id: ${storyId} from wattpad...`;
+				message = `Fetching story id: ${storyId}...`;
 			} else {
 				message = `Extracting ${progressbox.current} of ${
 					progressbox.total
