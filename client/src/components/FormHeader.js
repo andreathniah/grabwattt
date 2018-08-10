@@ -9,7 +9,9 @@ class FormHeader extends React.Component {
 					<mark>want that wattpad fic?</mark>
 				</h1>
 				<div>
-					enter any wattpad <span>chapter URL</span> to start!
+					<span>
+						enter any wattpad <span>chapter URL</span> to start!
+					</span>
 					<FormGIF />
 					<br />
 				</div>

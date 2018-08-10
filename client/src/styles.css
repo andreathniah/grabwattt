@@ -11,7 +11,6 @@ body {
 	justify-content: center;
 	flex-direction: column;
 	height: 100vh;
-	font-family: "Open Sans", sans-serif;
 }
 
 .form {
@@ -27,7 +26,7 @@ body {
 	margin-top: 0;
 }
 
-.header span {
+.header span > span {
 	font-weight: bold;
 	color: rgba(255, 165, 0, 0.8);
 }
@@ -174,9 +173,22 @@ input:focus {
 	.box {
 		width: 70%;
 	}
+
+	.box > a {
+		font-size: 0.9em;
+	}
+
 	.popup {
 		margin: 25vh auto;
 		width: 70vw;
+	}
+
+	.header h1 {
+		font-size: 1.6em;
+	}
+
+	.header span {
+		font-size: 1em;
 	}
 }
 
