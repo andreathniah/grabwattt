@@ -103,9 +103,11 @@ class FormMain extends React.Component {
 								required
 								placeholder="Enter a URL"
 							/>
-							<button type="submit" className="button">
-								Go
-							</button>
+							<span className="input-group-btn">
+								<button type="submit" className="button">
+									Go
+								</button>
+							</span>
 						</div>
 					</form>
 				</div>
