@@ -44,7 +44,7 @@ app.post("/", (req, res) => {
 		.then(key => {
 			if (key) deleteProgress(storyId);
 		})
-		.catch(err => console.console.error());
+		.catch(err => console.log(err));
 	res.send({ url: storyId });
 });
 
@@ -65,8 +65,8 @@ startPDF = async pdfURL => {
 		args: [
 			"--no-sandbox",
 			"--disable-setuid-sandbox",
-			"--disable-dev-shm-usage"
-			// "--single-process" // disable this in localhost
+			"--disable-dev-shm-usage",
+			"--single-process" // disable this in localhost
 		]
 	});
 
@@ -238,7 +238,8 @@ let saveToFirebase = (
 		author: storyAuthor,
 		pages: story,
 		summary: storySummary,
-		url: storyURL
+		url: storyURL,
+		timestamp: Date.now()
 	});
 
 	console.log("[#] Success => Id: ", storyId, "\n");

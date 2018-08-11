@@ -9,9 +9,28 @@ class FormMain extends React.Component {
 	componentDidMount() {
 		this.ref = base.syncState("/queue", {
 			context: this,
-			state: "queuebox"
+			state: "queuebox",
+			then() {
+				this.deleteOld();
+			}
 		});
 	}
+
+	deleteOld = () => {
+		console.log("checking timestamp");
+		const database = firebaseApp.database().ref("story");
+		var now = Date.now();
+		var cutoff = now - 168 * 60 * 60 * 1000; // 1 week
+		var old = database
+			.orderByChild("timestamp")
+			.endAt(cutoff)
+			.limitToLast(1);
+
+		old.on("child_added", function(snapshot) {
+			console.log(snapshot.key, snapshot.val().timestamp);
+			database.child(snapshot.key).remove();
+		});
+	};
 
 	validateURL = requestedURL => {
 		const chapterLink = requestedURL.includes("https://www.wattpad.com/"); //ok
