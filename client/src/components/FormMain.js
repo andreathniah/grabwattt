@@ -18,12 +18,18 @@ class FormMain extends React.Component {
 	}
 
 	deleteQueue = () => {
-		console.log("deleting completed queue data...");
-		const queuebox = { ...this.state.queuebox };
+		var checker = false;
+		const { queuebox } = this.state;
 		Object.entries(queuebox).map(([key, val]) => {
-			if (val.toDelete) queuebox[key] = "";
+			if (val.toDelete) {
+				console.log("deleting completed queue data...");
+				queuebox[key].toDelete = null;
+				checker = true;
+			}
 		});
-		this.setState(prevState => ({ queuebox: queuebox }));
+		if (checker) {
+			this.setState(prevState => ({ queuebox: queuebox }));
+		}
 	};
 
 	deleteOld = () => {
