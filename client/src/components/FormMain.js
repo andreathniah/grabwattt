@@ -20,7 +20,7 @@ class FormMain extends React.Component {
 		console.log("checking timestamp");
 		const database = firebaseApp.database().ref("story");
 		var now = Date.now();
-		var cutoff = now - 168 * 60 * 60 * 1000; // 1 week
+		var cutoff = now - 12 * 60 * 60 * 1000; // 1 week
 		var old = database
 			.orderByChild("timestamp")
 			.endAt(cutoff)
