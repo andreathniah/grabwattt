@@ -11,16 +11,26 @@ class FormMain extends React.Component {
 			context: this,
 			state: "queuebox",
 			then() {
+				this.deleteQueue();
 				this.deleteOld();
 			}
 		});
 	}
 
+	deleteQueue = () => {
+		console.log("deleting completed queue data...");
+		const queuebox = { ...this.state.queuebox };
+		Object.entries(queuebox).map(([key, val]) => {
+			if (val.toDelete) queuebox[key] = "";
+		});
+		this.setState(prevState => ({ queuebox: queuebox }));
+	};
+
 	deleteOld = () => {
-		console.log("checking timestamp");
+		console.log("deleting data older than 12 hours...");
 		const database = firebaseApp.database().ref("story");
 		var now = Date.now();
-		var cutoff = now - 12 * 60 * 60 * 1000; // 1 week
+		var cutoff = now - 8 * 60 * 60 * 1000; // 1 week
 		var old = database
 			.orderByChild("timestamp")
 			.endAt(cutoff)
