@@ -103,6 +103,15 @@ class FormFeedback extends React.Component {
 										value={this.state.message}
 									/>
 								</div>
+
+								<div>
+									<label>
+										Ask me more at: <br />
+									</label>
+									<a href="https://youtu.be/xW4OiW7rktY">
+										https://youtu.be/xW4OiW7rktY
+									</a>
+								</div>
 							</div>
 							<div className="modal-footer">
 								<button
