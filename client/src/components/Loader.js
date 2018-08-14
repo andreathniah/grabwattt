@@ -23,7 +23,7 @@ class Loader extends React.Component {
 						Object.keys(storybox).length === 0
 					) {
 						console.log("redirecting");
-						this.props.history.push("/error404");
+						// this.props.history.push("/error404");
 					}
 				}, 1000);
 			}

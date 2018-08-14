@@ -220,7 +220,7 @@ updateProgress = async (storyId, counter, total) => {
 deleteProgress = storyId => {
 	const progressRef = db.ref("progress/" + storyId);
 	const queueRef = db.ref("queue/" + storyId);
-	queueRef.update({ toDelete: null });
+	queueRef.set({ toDelete: true });
 	progressRef.set({ current: null, total: null });
 };
 

@@ -1,5 +1,6 @@
 import React from "react";
 import FormGIF from "./FormGIF";
+import FormFeedback from "./FormFeedback";
 
 class FormHeader extends React.Component {
 	render() {
@@ -13,6 +14,7 @@ class FormHeader extends React.Component {
 						enter any wattpad <span>chapter URL</span> to start!
 					</span>
 					<FormGIF />
+					<FormFeedback />
 					<br />
 				</div>
 			</div>

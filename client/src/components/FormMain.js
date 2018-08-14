@@ -11,7 +11,7 @@ class FormMain extends React.Component {
 			context: this,
 			state: "queuebox",
 			then() {
-				this.deleteQueue();
+				// this.deleteQueue();
 				this.deleteOld();
 			}
 		});
@@ -66,7 +66,7 @@ class FormMain extends React.Component {
 
 	addToQueue = storyId => {
 		const queuebox = { ...this.state.queuebox };
-		queuebox[storyId] = { toDelete: true };
+		queuebox[storyId] = { toDelete: false };
 		this.setState({ queuebox: queuebox });
 	};
 

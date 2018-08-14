@@ -4,24 +4,22 @@ class FormGIF extends React.Component {
 	render() {
 		return (
 			<div className="box">
-				<a data-toggle="modal" href="#exampleModalCenter">
+				<a data-toggle="modal" href="#instructionModal">
 					click for more instructions!
 				</a>
 
 				<div
 					className="modal fade"
-					id="exampleModalCenter"
+					id="instructionModal"
 					tabIndex="-1"
 					role="dialog"
-					aria-labelledby="exampleModalCenterTitle"
+					aria-labelledby="instructionModalTitle"
 					aria-hidden="true"
 				>
 					<div className="modal-dialog modal-dialog-centered" role="document">
 						<div className="modal-content">
 							<div className="modal-header">
-								<h5 className="modal-title" id="exampleModalLongTitle">
-									Instructions
-								</h5>
+								<h5 className="modal-title">Instructions</h5>
 								<button
 									type="button"
 									className="close"
