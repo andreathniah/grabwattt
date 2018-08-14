@@ -4,29 +4,12 @@ import FicMain from "./FicMain";
 import base from "../base";
 
 class Loader extends React.Component {
-	state = { loading: true, storybox: [], queuebox: [] };
+	state = { loading: true, storybox: [] };
 
 	componentDidMount() {
 		this.ref = base.syncState(`story/${this.props.match.params.storyId}`, {
 			context: this,
 			state: "storybox"
-		});
-
-		this.ref = base.syncState(`queue/${this.props.match.params.storyId}`, {
-			context: this,
-			state: "queuebox",
-			then() {
-				setTimeout(() => {
-					var { queuebox, storybox } = this.state;
-					if (
-						Object.keys(queuebox).length === 0 &&
-						Object.keys(storybox).length === 0
-					) {
-						console.log("redirecting");
-						// this.props.history.push("/error404");
-					}
-				}, 1000);
-			}
 		});
 	}
 
