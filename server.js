@@ -44,7 +44,10 @@ app.post("/", (req, res) => {
 		.then(key => {
 			if (key) deleteProgress(storyId);
 		})
-		.catch(err => console.log(err));
+		.catch(err => {
+			logError(storyId);
+			console.log(err);
+		});
 	res.send({ url: storyId });
 });
 
@@ -215,6 +218,17 @@ startScraping = async (requestedURL, storyId) => {
 updateProgress = async (storyId, counter, total) => {
 	const progressRef = db.ref("progress/" + storyId);
 	progressRef.update({ current: counter, total: total });
+};
+
+logError = async storyId => {
+	console.log("logging error...");
+	const errorRef = db.ref("error/" + storyId);
+	const queueRef = db.ref("queue/" + storyId);
+	const progressRef = db.ref("progress/" + storyId);
+
+	errorRef.set({ errorFound: true });
+	queueRef.set({ toDelete: true });
+	progressRef.set({ current: null, total: null });
 };
 
 deleteProgress = storyId => {

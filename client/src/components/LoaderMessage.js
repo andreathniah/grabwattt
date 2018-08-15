@@ -2,7 +2,7 @@ import React from "react";
 import base from "../base";
 
 class LoaderMessage extends React.Component {
-	state = { progressbox: [], loading: true };
+	state = { progressbox: [], loading: true, error: false };
 
 	componentDidMount() {
 		const { storyId } = this.props;
@@ -14,6 +14,11 @@ class LoaderMessage extends React.Component {
 				this.setState(prevState => ({ loading: false }));
 			}
 		});
+
+		this.ref = base.syncState(`error/${storyId}/errorFound`, {
+			context: this,
+			state: "error"
+		});
 	}
 
 	componentWillUnmount() {
@@ -21,13 +26,13 @@ class LoaderMessage extends React.Component {
 	}
 
 	render() {
-		const { progressbox, loading } = this.state;
+		const { progressbox, loading, error } = this.state;
 		const { storyId } = this.props;
 		var message = null;
 
-		if (loading) {
+		if (loading && error === false) {
 			message = `Fetching story id: ${storyId}...`;
-		} else {
+		} else if (loading === false && error === false) {
 			if (
 				progressbox.current === undefined ||
 				progressbox.total === undefined
@@ -38,6 +43,8 @@ class LoaderMessage extends React.Component {
 					progressbox.total
 				} chapters...`;
 			}
+		} else {
+			message = "Oops, something went wrong. Try again!";
 		}
 
 		return (

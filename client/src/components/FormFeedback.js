@@ -36,14 +36,17 @@ class FormFeedback extends React.Component {
 			thumbs: thumbs,
 			message: message
 		};
-		this.setState(prevState => ({
-			feedbackbox: feedback,
-			message: "",
-			up: "",
-			down: "",
-			thumbs: ""
-		}));
-		console.log(thumbs, message);
+
+		if (thumbs !== "" && message !== "") {
+			this.setState(prevState => ({
+				feedbackbox: feedback,
+				message: "",
+				up: "",
+				down: "",
+				thumbs: ""
+			}));
+			console.log("Feedback sent");
+		}
 	};
 
 	render() {
