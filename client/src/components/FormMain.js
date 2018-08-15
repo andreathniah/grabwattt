@@ -66,10 +66,37 @@ class FormMain extends React.Component {
 		else return false;
 	};
 
-	grabStoryId = requestedURL => {
+	grabTempStoryId = requestedURL => {
 		const str = requestedURL.replace("https://www.wattpad.com/", "");
 		const storyId = str.split("-")[0];
 		return storyId;
+	};
+
+	grabStoryId = requestedURL => {
+		return fetch(requestedURL)
+			.then(results => {
+				return results.text();
+			})
+			.then(data => {
+				const parser = new DOMParser();
+				const httpDoc = parser.parseFromString(data, "text/html");
+				const storyLink = httpDoc
+					.querySelector("div.toc-header.text-center")
+					.querySelector("a.on-navigate")
+					.getAttribute("href");
+				return storyLink;
+			})
+			.then(link => {
+				const str = link.split("-")[0];
+				const storyId = str.split("/")[2];
+				console.log("StoryId:", storyId);
+				if (isNaN(storyId)) return this.grabTempStoryId(requestedURL);
+				else return storyId;
+			})
+			.catch(error => {
+				console.log(error);
+				return this.grabTempStoryId(requestedURL);
+			});
 	};
 
 	addToQueue = storyId => {
@@ -85,30 +112,30 @@ class FormMain extends React.Component {
 		const validation = this.validateURL(requestedURL);
 
 		if (validation) {
-			const storyId = this.grabStoryId(requestedURL);
-			this.setState(prevState => ({ storyId: storyId }));
-
-			const database = firebaseApp.database().ref("story/" + storyId);
-			database.once("value", snapshot => {
-				if (!snapshot.exists()) {
-					fetch("/", {
-						method: "POST",
-						mode: "cors",
-						body: JSON.stringify({ url: requestedURL, storyId: storyId }),
-						headers: { "Content-Type": "application/json" }
-					})
-						.then(res => res.json())
-						.then(body => {
-							this.addToQueue(body.url);
-							this.props.history.push(`/${body.url}`);
+			// promise based
+			this.grabStoryId(requestedURL).then(storyId => {
+				const database = firebaseApp.database().ref("story/" + storyId);
+				database.once("value", snapshot => {
+					if (!snapshot.exists()) {
+						fetch("/", {
+							method: "POST",
+							mode: "cors",
+							body: JSON.stringify({ url: requestedURL, storyId: storyId }),
+							headers: { "Content-Type": "application/json" }
 						})
-						.catch(err => {
-							console.log(err);
-							this.props.history.push(`/${this.state.storyId}`);
-						});
-				} else {
-					this.props.history.push(`/${this.state.storyId}`);
-				}
+							.then(res => res.json())
+							.then(body => {
+								this.addToQueue(body.url);
+								this.props.history.push(`/${body.url}`);
+							})
+							.catch(err => {
+								console.log(err);
+								this.props.history.push(`/${storyId}`);
+							});
+					} else {
+						this.props.history.push(`/${storyId}`);
+					}
+				});
 			});
 		} else alert("looks like something is wrong, is your link a CHAPTER URL?");
 	};
