@@ -4,9 +4,14 @@ import base from "../base";
 import { firebaseApp } from "../base";
 
 class FormMain extends React.Component {
-	state = { storyId: "", queuebox: [] };
+	state = { storyId: "", queuebox: [], errorbox: [] };
 
 	componentDidMount() {
+		this.ref = base.syncState("/error", {
+			context: this,
+			state: "errorbox"
+		});
+
 		this.ref = base.syncState("/queue", {
 			context: this,
 			state: "queuebox",
@@ -17,13 +22,16 @@ class FormMain extends React.Component {
 		});
 	}
 
+	// delete queue and error checkers
 	deleteQueue = () => {
 		var checker = false;
-		const { queuebox } = this.state;
+		const { queuebox, errorbox } = this.state;
 		Object.entries(queuebox).map(([key, val]) => {
 			if (val.toDelete) {
 				console.log("deleting completed queue data...");
 				queuebox[key].toDelete = null;
+				errorbox[key].errorFound = null;
+
 				checker = true;
 			}
 		});

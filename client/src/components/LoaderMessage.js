@@ -25,6 +25,10 @@ class LoaderMessage extends React.Component {
 		base.removeBinding(this.ref);
 	}
 
+	handleHome = () => {
+		this.props.history.push("/");
+	};
+
 	render() {
 		const { progressbox, loading, error } = this.state;
 		const { storyId } = this.props;
@@ -61,6 +65,11 @@ class LoaderMessage extends React.Component {
 					<div className="sk-cube sk-cube9" />
 				</div>
 				<p className="loader-message">{message}</p>
+				{error ? (
+					<button type="button" className="button" onClick={this.handleHome}>
+						Return home
+					</button>
+				) : null}
 			</div>
 		);
 	}

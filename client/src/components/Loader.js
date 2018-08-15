@@ -32,7 +32,7 @@ class Loader extends React.Component {
 		return (
 			<div>
 				{loading ? (
-					<LoaderMessage storyId={match.params.storyId} />
+					<LoaderMessage storyId={match.params.storyId} history={history} />
 				) : (
 					<FicMain storyId={match.params.storyId} history={history} />
 				)}
