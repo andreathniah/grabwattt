@@ -7,9 +7,9 @@ class NotFound extends React.Component {
 
 	render() {
 		return (
-			<div className="flex-fullview form">
+			<div className="flex-fullview background">
 				<h1 className="error-404">404</h1>
-				<p>The page you are looking for does not exist.</p>
+				<p>The story you are looking for has expired</p>
 				<div>
 					<button type="button" className="button" onClick={this.handleHome}>
 						Return home

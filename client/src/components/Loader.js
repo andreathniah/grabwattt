@@ -2,14 +2,36 @@ import React from "react";
 import LoaderMessage from "./LoaderMessage";
 import FicMain from "./FicMain";
 import base from "../base";
+import { firebaseApp } from "../base";
 
 class Loader extends React.Component {
 	state = { loading: true, storybox: [] };
 
 	componentDidMount() {
-		this.ref = base.syncState(`story/${this.props.match.params.storyId}`, {
+		const { storybox } = this.state;
+		const { storyId } = this.props.match.params;
+
+		this.ref = base.syncState(`story/${storyId}`, {
 			context: this,
-			state: "storybox"
+			state: "storybox",
+			then() {
+				const queueRef = firebaseApp.database().ref("queue");
+				const storyRef = firebaseApp.database().ref("story");
+				const errorRef = firebaseApp.database().ref("error/" + storyId);
+
+				queueRef.child(storyId).once("value", snapshot => {
+					if (!snapshot.exists()) {
+						storyRef.child(storyId).once("value", snapshot => {
+							if (!snapshot.exists()) {
+								console.log("redirecting...");
+								errorRef.set({ errorFound: null });
+
+								this.props.history.push("/error404");
+							}
+						});
+					}
+				});
+			}
 		});
 	}
 
