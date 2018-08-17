@@ -11,7 +11,8 @@ class FormHeader extends React.Component {
 				</h1>
 				<div>
 					<span>
-						enter any wattpad <span>chapter URL</span> to start!
+						enter any wattpad <span>chapter URL</span> to start! <br />
+						data will be purged after 12hours
 					</span>
 					<FormGIF />
 					<FormFeedback />
