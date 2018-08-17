@@ -4,7 +4,7 @@ import base from "../base";
 import { firebaseApp } from "../base";
 
 class FormMain extends React.Component {
-	state = { storyId: "", queuebox: [], errorbox: [] };
+	state = { storyId: "", url: "", queuebox: [], errorbox: [] };
 
 	componentDidMount() {
 		this.ref = base.syncState("/error", {
@@ -78,6 +78,24 @@ class FormMain extends React.Component {
 		this.setState({ queuebox: queuebox });
 	};
 
+	postToServer = (requestedURL, storyId) => {
+		fetch("/", {
+			method: "POST",
+			mode: "cors",
+			body: JSON.stringify({ url: requestedURL, storyId: storyId }),
+			headers: { "Content-Type": "application/json" }
+		})
+			.then(res => res.json())
+			.then(body => {
+				this.addToQueue(body.url);
+				this.props.history.push(`/${body.url}`);
+			})
+			.catch(err => {
+				console.log(err);
+				this.props.history.push(`/${this.state.storyId}`);
+			});
+	};
+
 	wattpadURL = React.createRef();
 	goToFic = event => {
 		event.preventDefault();
@@ -85,31 +103,22 @@ class FormMain extends React.Component {
 		const validation = this.validateURL(requestedURL);
 
 		if (validation) {
-			const storyId = this.grabStoryId(requestedURL);
-			this.setState(prevState => ({ storyId: storyId }));
+			// ensure no multiple clicks are allowed
+			if (this.state.url !== requestedURL) {
+				const storyId = this.grabStoryId(requestedURL);
+				this.setState(prevState => ({ url: requestedURL, storyId: storyId }));
 
-			const database = firebaseApp.database().ref("story/" + storyId);
-			database.once("value", snapshot => {
-				if (!snapshot.exists()) {
-					fetch("/", {
-						method: "POST",
-						mode: "cors",
-						body: JSON.stringify({ url: requestedURL, storyId: storyId }),
-						headers: { "Content-Type": "application/json" }
-					})
-						.then(res => res.json())
-						.then(body => {
-							this.addToQueue(body.url);
-							this.props.history.push(`/${body.url}`);
-						})
-						.catch(err => {
-							console.log(err);
-							this.props.history.push(`/${this.state.storyId}`);
-						});
-				} else {
-					this.props.history.push(`/${this.state.storyId}`);
-				}
-			});
+				const database = firebaseApp.database().ref("story/" + storyId);
+				database.once("value", snapshot => {
+					if (!snapshot.exists()) {
+						this.postToServer(requestedURL, storyId);
+					} else {
+						this.props.history.push(`/${this.state.storyId}`);
+					}
+				});
+			} else {
+				alert("please click only once per story");
+			}
 		} else alert("looks like something is wrong, is your link a CHAPTER URL?");
 	};
 

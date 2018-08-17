@@ -221,7 +221,6 @@ updateProgress = async (storyId, counter, total) => {
 };
 
 logError = async storyId => {
-	console.log("logging error...");
 	const errorRef = db.ref("error/" + storyId);
 	const queueRef = db.ref("queue/" + storyId);
 	const progressRef = db.ref("progress/" + storyId);
