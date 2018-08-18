@@ -6,7 +6,7 @@ import { firebaseApp } from "../base";
 import ReactGA from "react-ga";
 
 class FormMain extends React.Component {
-	state = { storyId: "", url: "", queuebox: [], errorbox: [] };
+	state = { storyId: "", status: "", queuebox: [], errorbox: [] };
 
 	componentDidMount() {
 		this.ref = base.syncState("/error", {
@@ -24,7 +24,7 @@ class FormMain extends React.Component {
 		});
 	}
 
-	// delete queue and error checkers
+	// delete queue and error checkers after extraction process
 	deleteQueue = () => {
 		var checker = false;
 		const { queuebox, errorbox } = this.state;
@@ -42,6 +42,7 @@ class FormMain extends React.Component {
 		}
 	};
 
+	// delete data older than 12 hours
 	deleteOld = () => {
 		console.log("deleting data older than 12 hours...");
 		const database = firebaseApp.database().ref("story");
@@ -58,6 +59,7 @@ class FormMain extends React.Component {
 		});
 	};
 
+	// check if given url can be parsed
 	validateURL = requestedURL => {
 		const chapterLink = requestedURL.includes("https://www.wattpad.com/"); //ok
 		const storyLink = requestedURL.includes("https://www.wattpad.com/story/"); // reject
@@ -68,10 +70,39 @@ class FormMain extends React.Component {
 		else return false;
 	};
 
-	grabStoryId = requestedURL => {
+	// grab chapterId instead when storyId throw errors
+	grabTempStoryId = requestedURL => {
 		const str = requestedURL.replace("https://www.wattpad.com/", "");
 		const storyId = str.split("-")[0];
 		return storyId;
+	};
+
+	// fetch to grab html to isolate storyId from dropdownlist
+	grabStoryId = requestedURL => {
+		return fetch(requestedURL)
+			.then(results => {
+				return results.text();
+			})
+			.then(data => {
+				const parser = new DOMParser();
+				const httpDoc = parser.parseFromString(data, "text/html");
+				const storyLink = httpDoc
+					.querySelector("div.toc-header.text-center")
+					.querySelector("a.on-navigate")
+					.getAttribute("href");
+				return storyLink;
+			})
+			.then(link => {
+				const str = link.split("-")[0];
+				const storyId = str.split("/")[2];
+				console.log("StoryId:", storyId);
+				if (isNaN(storyId)) return this.grabTempStoryId(requestedURL);
+				else return storyId;
+			})
+			.catch(error => {
+				console.log(error);
+				return this.grabTempStoryId(requestedURL);
+			});
 	};
 
 	addToQueue = storyId => {
@@ -105,11 +136,10 @@ class FormMain extends React.Component {
 		const validation = this.validateURL(requestedURL);
 
 		if (validation) {
-			// ensure no multiple clicks are allowed
-			if (this.state.url !== requestedURL) {
-				const storyId = this.grabStoryId(requestedURL);
-				this.setState(prevState => ({ url: requestedURL, storyId: storyId }));
+			this.setState(prevState => ({ status: "disabled" }));
 
+			// promise based
+			this.grabStoryId(requestedURL).then(storyId => {
 				const database = firebaseApp.database().ref("story/" + storyId);
 				database.once("value", snapshot => {
 					if (!snapshot.exists()) {
@@ -124,13 +154,25 @@ class FormMain extends React.Component {
 						this.props.history.push(`/${storyId}`);
 					}
 				});
-			} else {
-				alert("please click only once per story");
-			}
-		} else alert("looks like something is wrong, is your link a CHAPTER URL?");
+			});
+		} else {
+			alert("looks like something is wrong, is your link a CHAPTER URL?");
+			this.setState(prevState => ({ status: "" }));
+		}
 	};
 
 	render() {
+		const { status } = this.state;
+		const disabledStatus =
+			status === "disabled" ? (
+				<button type="submit" className="button" disabled>
+					Go
+				</button>
+			) : (
+				<button type="submit" className="button">
+					Go
+				</button>
+			);
 		return (
 			<div className="background">
 				<div className="container flex-fullview">
@@ -144,11 +186,7 @@ class FormMain extends React.Component {
 								required
 								placeholder="Enter a URL"
 							/>
-							<span className="input-group-btn">
-								<button type="submit" className="button">
-									Go
-								</button>
-							</span>
+							<span className="input-group-btn">{disabledStatus}</span>
 						</div>
 					</form>
 				</div>
