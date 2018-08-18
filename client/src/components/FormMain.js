@@ -140,11 +140,17 @@ class FormMain extends React.Component {
 
 			// promise based
 			this.grabStoryId(requestedURL).then(storyId => {
-				const database = firebaseApp.database().ref("story/" + storyId);
-				database.once("value", snapshot => {
+				const database = firebaseApp.database().ref("/");
+				database.child(`story/${storyId}`).once("value", snapshot => {
 					if (!snapshot.exists()) {
-						this.postToServer(requestedURL, storyId);
+						database.child(`queue/${storyId}`).once("value", snapshot => {
+							// new request for story
+							if (!snapshot.exists()) this.postToServer(requestedURL, storyId);
+							// story requested by another user is in the midst of extraction
+							else this.props.history.push(`/${storyId}`);
+						});
 					} else {
+						// story already available in firebase
 						ReactGA.event({
 							category: "flag",
 							action: "recurring-story",
