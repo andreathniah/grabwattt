@@ -3,6 +3,7 @@ import FormHeader from "./FormHeader";
 import DetectAdBlock from "./DetectAdBlock";
 import base from "../base";
 import { firebaseApp } from "../base";
+import ReactGA from "react-ga";
 
 class FormMain extends React.Component {
 	state = { storyId: "", url: "", queuebox: [], errorbox: [] };
@@ -114,7 +115,13 @@ class FormMain extends React.Component {
 					if (!snapshot.exists()) {
 						this.postToServer(requestedURL, storyId);
 					} else {
-						this.props.history.push(`/${this.state.storyId}`);
+						ReactGA.event({
+							category: "flag",
+							action: "recurring-story",
+							label: "same-story-request",
+							value: storyId
+						});
+						this.props.history.push(`/${storyId}`);
 					}
 				});
 			} else {

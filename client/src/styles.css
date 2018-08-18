@@ -6,6 +6,11 @@ body {
 	background-color: darkred;
 }
 
+.navbar-baseline {
+	display: flex;
+	align-items: baseline;
+}
+
 .flex-fullview {
 	display: flex;
 	align-items: center;

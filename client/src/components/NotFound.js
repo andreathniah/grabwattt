@@ -1,7 +1,13 @@
 import React from "react";
+import ReactGA from "react-ga";
 
 class NotFound extends React.Component {
 	handleHome = () => {
+		ReactGA.event({
+			category: "error",
+			action: "redirection",
+			label: "return-home"
+		});
 		this.props.history.push("/");
 	};
 

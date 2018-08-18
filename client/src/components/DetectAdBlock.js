@@ -5,35 +5,26 @@ class DetectAdBlock extends React.Component {
 	componentDidMount() {
 		this.detectAdBlock();
 	}
-	// Function called if AdBlock is not detected
 	adBlockNotDetected = () => {
 		console.log("AdBlock is not enabled");
 	};
-	// Function called if AdBlock is detected
 	adBlockDetected = () => {
 		console.log("AdBlock is enabled");
 	};
 
 	detectAdBlock = () => {
-		// We look at whether FuckAdBlock already exists.
 		if (
 			typeof fuckAdBlock !== "undefined" ||
 			typeof FuckAdBlock !== "undefined"
 		) {
-			// If this is the case, it means that something tries to usurp are identity
-			// So, considering that it is a detection
 			this.adBlockDetected();
 		} else {
-			// Otherwise, you import the script FuckAdBlock
 			var importFAB = document.createElement("script");
 			importFAB.onload = function() {
-				// If all goes well, we configure FuckAdBlock
 				fuckAdBlock.onDetected(this.adBlockDetected);
 				fuckAdBlock.onNotDetected(this.adBlockNotDetected);
 			};
 			importFAB.onerror = function() {
-				// If the script does not load (blocked, integrity error, ...)
-				// Then a detection is triggered
 				this.adBlockDetected();
 			};
 			importFAB.integrity =

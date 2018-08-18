@@ -1,5 +1,6 @@
 import React from "react";
 import { generatePDF } from "../helpers";
+import ReactGA from "react-ga";
 
 class FicHeader extends React.Component {
 	state = { loading: true };
@@ -8,9 +9,21 @@ class FicHeader extends React.Component {
 		const { storyTitle, storyAuthor } = this.props;
 		try {
 			generatePDF(storyTitle, storyAuthor);
+			ReactGA.event({
+				category: "downloads",
+				action: "pdf",
+				label: "jsPDF",
+				value: this.props.storyId
+			});
 		} catch (error) {
 			alert("Please make sure your browser has no pop-up/ads blockers!");
 			try {
+				ReactGA.event({
+					category: "downloads",
+					action: "pdf",
+					label: "pupeteer",
+					value: this.props.storyId
+				});
 				this.handleBackup();
 
 				const pdfURL =
@@ -19,12 +32,24 @@ class FicHeader extends React.Component {
 					"&waitFor=header&emulateScreenMedia=false&pdf.margin.top=2cm&pdf.margin.right=2cm&pdf.margin.bottom=2cm&pdf.margin.left=2cm";
 				window.open(pdfURL, "_blank");
 			} catch (error) {
+				ReactGA.event({
+					category: "downloads",
+					action: "pdf",
+					label: "error",
+					value: this.props.storyId
+				});
 				alert("oops, something went wrong, use Ctrl+P and save as PDF instead");
 			}
 		}
 	};
 
 	handleHome = () => {
+		ReactGA.event({
+			category: "sucess",
+			action: "redirection",
+			label: "return-home",
+			value: this.props.storyId
+		});
 		this.props.history.push("/");
 	};
 
@@ -63,7 +88,10 @@ class FicHeader extends React.Component {
 			return (
 				<header>
 					<nav className="navbar navbar-expand-lg navbar-light bg-light">
-						<a className="navbar-brand" onClick={this.handleHome}>
+						<a
+							className="navbar-brand navbar-baseline"
+							onClick={this.handleHome}
+						>
 							<img
 								src="/GrabWatt.png"
 								width="50"
@@ -85,6 +113,12 @@ class FicHeader extends React.Component {
 						</button>
 						<div className="collapse navbar-collapse" id="navbarNavAltMarkup">
 							<div className="navbar-nav">
+								<a
+									className="nav-item nav-link active"
+									onClick={this.handleHome}
+								>
+									Home <span className="sr-only">(current)</span>
+								</a>
 								<a
 									className="nav-item nav-link active"
 									onClick={this.handleDownload}

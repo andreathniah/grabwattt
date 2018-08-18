@@ -1,5 +1,6 @@
 import React from "react";
 import base from "../base";
+import ReactGA from "react-ga";
 
 class LoaderMessage extends React.Component {
 	state = { progressbox: [], loading: true, error: false };
@@ -26,6 +27,12 @@ class LoaderMessage extends React.Component {
 	}
 
 	handleHome = () => {
+		ReactGA.event({
+			category: "error",
+			action: "redirction",
+			label: "story-extraction-failed",
+			value: this.props.storyId
+		});
 		this.props.history.push("/");
 	};
 

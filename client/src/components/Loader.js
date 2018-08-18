@@ -3,6 +3,7 @@ import LoaderMessage from "./LoaderMessage";
 import FicMain from "./FicMain";
 import base from "../base";
 import { firebaseApp } from "../base";
+import ReactGA from "react-ga";
 
 class Loader extends React.Component {
 	state = { loading: true, storybox: [] };
@@ -23,6 +24,12 @@ class Loader extends React.Component {
 					if (!snapshot.exists()) {
 						storyRef.child(storyId).once("value", snapshot => {
 							if (!snapshot.exists()) {
+								ReactGA.event({
+									category: "error",
+									action: "redirction",
+									label: "story-not-found",
+									value: storyId
+								});
 								console.log("redirecting...");
 								errorRef.set({ errorFound: null });
 
