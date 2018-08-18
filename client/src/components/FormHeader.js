@@ -12,7 +12,7 @@ class FormHeader extends React.Component {
 				<div>
 					<span>
 						enter any wattpad <span>chapter URL</span> to start! <br />
-						data will be purged after 12hours
+						data will be purged after <span>12 hours</span>
 					</span>
 					<FormGIF />
 					<FormFeedback />

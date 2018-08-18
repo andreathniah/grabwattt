@@ -8,8 +8,9 @@ import Loader from "./Loader";
 import GAListener from "./GAListener";
 import ReactGA from "react-ga";
 
-// ReactGA.initialize("UA-123756712-1");
-ReactGA.initialize("UA-123756712-3", { titleCase: false });
+const gaTracker =
+	process.env.NODE_ENV === "development" ? "UA-123756712-3" : "UA-123756712-1";
+ReactGA.initialize(gaTracker, { titleCase: false });
 
 const Router = () => (
 	<BrowserRouter>
