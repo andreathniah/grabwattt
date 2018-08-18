@@ -4,6 +4,7 @@
 	"private": true,
 	"dependencies": {
 		"firebase": "^5.0.4",
+		"fuckadblock": "^3.2.1",
 		"jspdf": "^1.4.1",
 		"re-base": "^3.2.3",
 		"react": "^16.4.1",

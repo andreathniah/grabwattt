@@ -1,5 +1,6 @@
 import React from "react";
 import FormHeader from "./FormHeader";
+import DetectAdBlock from "./DetectAdBlock";
 import base from "../base";
 import { firebaseApp } from "../base";
 
@@ -144,6 +145,7 @@ class FormMain extends React.Component {
 						</div>
 					</form>
 				</div>
+				<DetectAdBlock />
 			</div>
 		);
 	}
