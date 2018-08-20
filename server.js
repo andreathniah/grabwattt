@@ -137,8 +137,10 @@ extractContent = () => {
 	items.push(title);
 
 	for (let element of extractedElements) {
-		const text = element.innerHTML.replace(/…/g, "...");
-		const removedUTF8 = text.replace(/[^\x00-\x7F]/g, "");
+		const text0 = element.innerHTML.replace(/[…]/g, "...");
+		const text1 = text0.replace(/[“]/g, '"');
+		const text2 = text1.replace(/[”]/g, '"');
+		const removedUTF8 = text2.replace(/[^\x00-\x7F]/g, "");
 
 		const paragraph = "<p>" + removedUTF8 + "</p>";
 		items.push(paragraph);
