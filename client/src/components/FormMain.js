@@ -9,6 +9,11 @@ class FormMain extends React.Component {
 	state = { storyId: "", status: "", queuebox: [], errorbox: [] };
 
 	componentDidMount() {
+		const alertMsg =
+			"hey! it seems that we are regularly running into errors on the server, we'll try to fix it asap. meanwhile, limit yourself to only sumbitting one link per hour!";
+
+		alert(alertMsg);
+		console.log(alertMsg);
 		this.ref = base.syncState("/error", {
 			context: this,
 			state: "errorbox"
@@ -167,6 +172,7 @@ class FormMain extends React.Component {
 
 	render() {
 		const { status } = this.state;
+
 		const disabledStatus =
 			status === "disabled" ? (
 				<button type="submit" className="button" disabled>
