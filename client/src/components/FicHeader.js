@@ -8,6 +8,7 @@ class FicHeader extends React.Component {
 	handleDownload = () => {
 		const { storyTitle, storyAuthor } = this.props;
 		try {
+			// default pdf download option with jsPDF
 			generatePDF(storyTitle, storyAuthor);
 			ReactGA.event({
 				category: "downloads",
@@ -18,14 +19,16 @@ class FicHeader extends React.Component {
 		} catch (error) {
 			alert("Please make sure your browser has no pop-up/ads blockers!");
 			try {
+				// backup pdf download option with pupeteer
+				this.handleBackup();
 				ReactGA.event({
 					category: "downloads",
 					action: "pdf",
 					label: "pupeteer",
 					value: this.props.storyId
 				});
-				this.handleBackup();
 
+				// backup pdf download option with pupeteer microservice
 				const pdfURL =
 					"https://url-to-pdf-api.herokuapp.com/api/render?url=" +
 					window.location.href +
@@ -53,6 +56,7 @@ class FicHeader extends React.Component {
 		this.props.history.push("/");
 	};
 
+	// create blob from pupeteer's pdf
 	handleBackup = () => {
 		fetch("/pdf", {
 			method: "POST",

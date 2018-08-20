@@ -30,7 +30,6 @@ class FormMain extends React.Component {
 		const { queuebox, errorbox } = this.state;
 		Object.entries(queuebox).map(([key, val]) => {
 			if (val.toDelete) {
-				console.log("deleting completed queue data...");
 				queuebox[key].toDelete = null;
 				errorbox[key].errorFound = null;
 
@@ -44,10 +43,9 @@ class FormMain extends React.Component {
 
 	// delete data older than 12 hours
 	deleteOld = () => {
-		console.log("deleting data older than 12 hours...");
 		const database = firebaseApp.database().ref("story");
 		var now = Date.now();
-		var cutoff = now - 8 * 60 * 60 * 1000; // 1 week
+		var cutoff = now - 12 * 60 * 60 * 1000; // 12 hours
 		var old = database
 			.orderByChild("timestamp")
 			.endAt(cutoff)

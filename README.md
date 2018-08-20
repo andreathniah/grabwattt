@@ -2,7 +2,7 @@
 
 <img src="./client/public/GrabWatt.png" width="100" height="100" />
 
-Simple web application that allows users to download their preferred Wattpad stories into HTML or PDF format. Downloaded files will be removed from database after a week.
+Simple web application that allows users to download their preferred Wattpad stories into HTML or PDF format. No logins or software downloads are required. Data will be removed from database after 12 hours.
 
 https://grabwatt.herokuapp.com/
 
@@ -16,7 +16,20 @@ https://grabwatt.herokuapp.com/
 git clone https://github.com/andreathniah/download-wattpad-stories
 cd download-wattpad-stories
 yarn install
+cd client
+yarn install
+cd ..
 yarn dev
+```
+
+[Google's Firebase Realtime Database](https://firebase.google.com/products/realtime-database/) is required. After the set up, create `.env` files at `/` and `/client`
+with the appropriate content from Firebase.
+
+```
+NODE_ENV=development
+REACT_APP_FIREBASE_DOMAIN=
+REACT_APP_FIREBASE_KEY=
+REACT_APP_FIREBASE_URL=
 ```
 
 ## Build With
