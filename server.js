@@ -73,9 +73,7 @@ startPDF = async pdfURL => {
   });
 
   const page = await pdfBrowser.newPage();
-  console.log("new page created");
   await page.goto(pdfURL);
-  console.log("navigated to url ");
   await page.waitForSelector(".page");
 
   console.log("pdfURL: ", pdfURL);
