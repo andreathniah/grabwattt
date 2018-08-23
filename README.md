@@ -22,8 +22,7 @@ cd ..
 yarn dev
 ```
 
-[Google's Firebase Realtime Database](https://firebase.google.com/products/realtime-database/) is required. After the set up, create `.env` files at `/` and `/client`
-with the appropriate content from Firebase.
+[Google's Firebase Realtime Database](https://firebase.google.com/products/realtime-database/) is required. After the set up, create `.env` files at `/` and `/client` with the appropriate content from Firebase.
 
 ```
 NODE_ENV=development

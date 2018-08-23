@@ -1,6 +1,5 @@
 require("dotenv").config();
 
-const fs = require("fs");
 var cors = require("cors");
 const path = require("path");
 const express = require("express");
@@ -17,246 +16,268 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 
 if (process.env.NODE_ENV === "production") {
-	// Serve any static files
-	app.use(express.static(path.join(__dirname, "client/build")));
-	// Handle React routing, return all requests to React app
-	app.get("*", function(req, res) {
-		res.sendFile(path.join(__dirname, "client/build", "index.html"));
-	});
+  // Serve any static files
+  app.use(express.static(path.join(__dirname, "client/build")));
+  // Handle React routing, return all requests to React app
+  app.get("*", function(req, res) {
+    res.sendFile(path.join(__dirname, "client/build", "index.html"));
+  });
 }
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 // firebase configurations
 if (!firebase.apps.length) {
-	firebase.initializeApp(secretKey.firebaseKey);
+  firebase.initializeApp(secretKey.firebaseKey);
 }
 const db = firebase.database();
 
 app.use(bodyParser.json());
 
 app.post("/", (req, res) => {
-	let requestedURL = req.body.url;
-	let storyId = req.body.storyId;
+  let requestedURL = req.body.url;
+  let storyId = req.body.storyId;
 
-	console.log("requestedURL: ", requestedURL);
-	promise = startScraping(requestedURL, storyId);
-	promise
-		.then(key => {
-			if (key) deleteProgress(storyId);
-		})
-		.catch(err => {
-			logError(storyId);
-			console.log(err);
-		});
-	res.send({ url: storyId });
+  console.log("requestedURL: ", requestedURL);
+  promise = startScraping(requestedURL, storyId);
+  promise
+    .then(key => {
+      if (key) deleteProgress(storyId);
+    })
+    .catch(err => {
+      logError(storyId);
+      console.log(err);
+    });
+  res.send({ url: storyId });
 });
 
 app.post("/pdf", (req, res) => {
-	let pdfURL = req.body.url;
-	promise = startPDF(pdfURL);
-	promise
-		.then(buffer => {
-			res.type("application/pdf");
-			res.send(buffer);
-		})
-		.catch(err => console.log(err));
+  let pdfURL = req.body.url;
+  promise = startPDF(pdfURL);
+  promise
+    .then(buffer => {
+      res.type("application/pdf");
+      res.send(buffer);
+    })
+    .catch(err => console.log(err));
 });
 
 startPDF = async pdfURL => {
-	const browser = await puppeteer.launch({
-		headless: true,
-		args: [
-			"--no-sandbox",
-			"--disable-setuid-sandbox",
-			"--disable-dev-shm-usage",
-			"--single-process" // disable this in localhost
-		]
-	});
+  const pdfBrowser = await puppeteer.launch({
+    headless: true,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--single-process" // disable this in localhost
+    ]
+  });
 
-	const page = await browser.newPage();
-	await page.goto(pdfURL);
-	await page.waitForSelector(".page");
+  const page = await pdfBrowser.newPage();
+  console.log("new page created");
+  await page.goto(pdfURL);
+  console.log("navigated to url ");
+  await page.waitForSelector(".page");
 
-	console.log("pdfURL: ", pdfURL);
+  console.log("pdfURL: ", pdfURL);
 
-	const buffer = await page.pdf({
-		format: "A4",
-		margin: { left: "2cm", top: "2.5cm", right: "2cm", bottom: "2.5cm" }
-	});
+  const buffer = await page.pdf({
+    format: "A4",
+    margin: { left: "2cm", top: "2.5cm", right: "2cm", bottom: "2.5cm" }
+  });
 
-	console.log("[#] Success => Id: ", pdfURL, "\n");
+  console.log("[#] Success => Id: ", pdfURL, "\n");
 
-	browser.close();
-	return buffer;
+  pdfBrowser.close();
+  return buffer;
 };
 
+// extract link to the story's summary
 extractLink = () => {
-	return document
-		.querySelector("div.toc-header.text-center")
-		.querySelector("a.on-navigate")
-		.getAttribute("href");
+  return document
+    .querySelector("div.toc-header.text-center")
+    .querySelector("a.on-navigate")
+    .getAttribute("href");
 };
 
+// extract story summary
 extractSummary = () => {
-	const extractedSummary = document.querySelector("h2.description > pre")
-		.innerHTML;
+  const extractedSummary = document.querySelector("h2.description > pre")
+    .innerHTML;
 
-	const text = extractedSummary.replace(/…/g, "...");
-	const removedUTF8 = text.replace(/[^\x00-\x7F]/g, "");
-	return removedUTF8;
+  const text = extractedSummary.replace(/…/g, "...");
+  const removedUTF8 = text.replace(/[^\x00-\x7F]/g, "");
+  return removedUTF8;
 };
 
+// extract story title
 extractTitle = () => {
-	return document.getElementsByClassName("title h5")[0].innerText;
+  return document.getElementsByClassName("title h5")[0].innerText;
 };
 
+// extract author name
 extractAuthor = () => {
-	return document.getElementsByClassName("author h6")[0].innerText;
+  return document.getElementsByClassName("author h6")[0].innerText;
 };
 
+// extract the links to all chapters of the story
 extractChapters = () => {
-	const extractedChapters = document
-		.querySelector("ul.table-of-contents")
-		.getElementsByTagName("li");
+  const extractedChapters = document
+    .querySelector("ul.table-of-contents")
+    .getElementsByTagName("li");
 
-	const chapters = [];
-	for (let chapter of extractedChapters) {
-		chapters.push(chapter.querySelector("a.on-navigate").getAttribute("href"));
-	}
-	return chapters;
+  const chapters = [];
+  for (let chapter of extractedChapters) {
+    chapters.push(chapter.querySelector("a.on-navigate").getAttribute("href"));
+  }
+  return chapters;
 };
 
+// extract story content and get rid of comments
 extractContent = () => {
-	$(".comment-marker").remove();
-	const extractedElements = document.querySelectorAll("p[data-p-id]");
-	const chapterTitle = document.querySelector("header > h2");
+  $(".comment-marker").remove();
+  const extractedElements = document.querySelectorAll("p[data-p-id]");
+  const chapterTitle = document.querySelector("header > h2");
 
-	const items = [];
-	const title = "<h5>" + chapterTitle.innerHTML + "</h5>";
-	items.push("<!--ADD_PAGE-->");
-	items.push(title);
+  const items = [];
+  const title = "<h5>" + chapterTitle.innerHTML + "</h5>";
+  items.push("<!--ADD_PAGE-->");
+  items.push(title);
 
-	for (let element of extractedElements) {
-		const text0 = element.innerHTML.replace(/[…]/g, "...");
-		const text1 = text0.replace(/[“]/g, '"');
-		const text2 = text1.replace(/[”]/g, '"');
-		const removedUTF8 = text2.replace(/[^\x00-\x7F]/g, "");
+  for (let element of extractedElements) {
+    const text0 = element.innerHTML.replace(/[…]/g, "...");
+    const text1 = text0.replace(/[“]/g, '"');
+    const text2 = text1.replace(/[”]/g, '"');
+    const text3 = text2.replace(/[’]/g, "'");
+    const removedUTF8 = text3.replace(/[^\x00-\x7F]/g, "");
 
-		const paragraph = "<p>" + removedUTF8 + "</p>";
-		items.push(paragraph);
-	}
-	return items;
+    const paragraph = "<p>" + removedUTF8 + "</p>";
+    items.push(paragraph);
+  }
+  return items;
 };
 
+// scroll page to the end of the chapter
 autoScroll = page => {
-	return page.evaluate(() => {
-		return new Promise((resolve, reject) => {
-			var totalHeight = 0;
-			var distance = 100;
-			var timer = setInterval(() => {
-				var scrollHeight = document.body.scrollHeight;
-				window.scrollBy(0, distance);
-				totalHeight += distance;
+  return page.evaluate(() => {
+    return new Promise((resolve, reject) => {
+      var totalHeight = 0;
+      var distance = 100;
+      var timer = setInterval(() => {
+        var scrollHeight = document.body.scrollHeight;
+        window.scrollBy(0, distance);
+        totalHeight += distance;
 
-				if (totalHeight >= scrollHeight) {
-					clearInterval(timer);
-					resolve();
-				}
-			}, 50);
-		});
-	});
+        if (totalHeight >= scrollHeight) {
+          clearInterval(timer);
+          resolve();
+        }
+      }, 50);
+    });
+  });
 };
 
+// creates a global variable of browser on server start to reduce memory
+(async () => {
+  browser = await puppeteer.launch({
+    headless: false,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage"
+    ]
+  });
+
+  console.log("Chrome browser started");
+})();
+
+// create a new page and start scraping materials
 startScraping = async (requestedURL, storyId) => {
-	const browser = await puppeteer.launch({
-		headless: true,
-		args: ["--no-sandbox", "--disable-setuid-sandbox"]
-	});
-	const page = await browser.newPage();
-	await page.setExtraHTTPHeaders({ Referer: "https://www.wattpad.com" });
+  const page = await browser.newPage();
+  await page.setExtraHTTPHeaders({ Referer: "https://www.wattpad.com" });
+  await page.goto(requestedURL);
 
-	await page.goto(requestedURL);
+  // grab miscellaneous details
+  const storyTitle = await page.evaluate(extractTitle);
+  const storyAuthor = await page.evaluate(extractAuthor);
+  const chapterURL = await page.evaluate(extractChapters);
+  const landingURL = await page.evaluate(extractLink); // find link to summary page
+  const story = [];
 
-	// grab miscellaneous details
-	const storyTitle = await page.evaluate(extractTitle);
-	const storyAuthor = await page.evaluate(extractAuthor);
-	const chapterURL = await page.evaluate(extractChapters);
-	const landingURL = await page.evaluate(extractLink); // find link to summary page
-	const story = [];
+  // grab every chapter's content
+  var count = 0;
 
-	// grab every chapter's content
-	var count = 0;
+  for (let url of chapterURL) {
+    const updatedURL = "https://www.wattpad.com" + url;
+    await page.goto(updatedURL);
+    await autoScroll(page);
+    const items = await page.evaluate(extractContent);
+    story.push(items);
+    console.log(updatedURL);
+    updateProgress(storyId, ++count, chapterURL.length);
+  }
 
-	for (let url of chapterURL) {
-		const updatedURL = "https://www.wattpad.com" + url;
-		await page.goto(updatedURL);
-		await autoScroll(page);
-		const items = await page.evaluate(extractContent);
-		story.push(items);
-		console.log(updatedURL);
-		updateProgress(storyId, ++count, chapterURL.length);
-	}
+  const summaryURL = "https://www.wattpad.com" + landingURL;
+  await page.goto(summaryURL);
+  const storySummary = await page.evaluate(extractSummary);
+  console.log("summaryURL: ", summaryURL);
 
-	const summaryURL = "https://www.wattpad.com" + landingURL;
-	await page.goto(summaryURL);
-	const storySummary = await page.evaluate(extractSummary);
-	console.log("summaryURL: ", summaryURL);
-
-	const storyKey = saveToFirebase(
-		story,
-		storyTitle,
-		storyAuthor,
-		storySummary,
-		summaryURL,
-		storyId
-	);
-	await browser.close();
-
-	// fs.writeFileSync("./items.html", items.join("\n") + "\n");
-
-	return storyKey;
+  const storyKey = saveToFirebase(
+    story,
+    storyTitle,
+    storyAuthor,
+    storySummary,
+    summaryURL,
+    storyId
+  );
+  await page.close();
+  // await browser.close();
+  return storyKey;
 };
 
+// update chapter progress counter of the story
 updateProgress = async (storyId, counter, total) => {
-	const progressRef = db.ref("progress/" + storyId);
-	progressRef.update({ current: counter, total: total });
+  const progressRef = db.ref("progress/" + storyId);
+  progressRef.update({ current: counter, total: total });
 };
 
+// delete progress and flag for error and deletion error occurs
 logError = async storyId => {
-	const errorRef = db.ref("error/" + storyId);
-	const queueRef = db.ref("queue/" + storyId);
-	const progressRef = db.ref("progress/" + storyId);
+  const errorRef = db.ref("error/" + storyId);
+  const queueRef = db.ref("queue/" + storyId);
+  const progressRef = db.ref("progress/" + storyId);
 
-	errorRef.set({ errorFound: true });
-	queueRef.set({ toDelete: true });
-	progressRef.set({ current: null, total: null });
+  errorRef.set({ errorFound: true });
+  queueRef.set({ toDelete: true });
+  progressRef.set({ current: null, total: null });
 };
 
+// delete progress and flag for deletion when extraction is completed
 deleteProgress = storyId => {
-	const progressRef = db.ref("progress/" + storyId);
-	const queueRef = db.ref("queue/" + storyId);
-	queueRef.set({ toDelete: true });
-	progressRef.set({ current: null, total: null });
+  const progressRef = db.ref("progress/" + storyId);
+  const queueRef = db.ref("queue/" + storyId);
+  queueRef.set({ toDelete: true });
+  progressRef.set({ current: null, total: null });
 };
 
+// commit extracted contents to firebase on on success
 let saveToFirebase = (
-	story,
-	storyTitle,
-	storyAuthor,
-	storySummary,
-	storyURL,
-	storyId
+  story,
+  storyTitle,
+  storyAuthor,
+  storySummary,
+  storyURL,
+  storyId
 ) => {
-	const storyRef = db.ref("story/" + storyId);
-	storyRef.set({
-		title: storyTitle,
-		author: storyAuthor,
-		pages: story,
-		summary: storySummary,
-		url: storyURL,
-		timestamp: Date.now()
-	});
+  const storyRef = db.ref("story/" + storyId);
+  storyRef.set({
+    title: storyTitle,
+    author: storyAuthor,
+    pages: story,
+    summary: storySummary,
+    url: storyURL,
+    timestamp: Date.now()
+  });
 
-	console.log("[#] Success => Id: ", storyId, "\n");
-	return storyId;
+  console.log("[#] Success => Id: ", storyId, "\n");
+  return storyId;
 };
