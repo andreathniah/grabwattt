@@ -179,7 +179,7 @@ autoScroll = page => {
 // creates a global variable of browser on server start to reduce memory
 (async () => {
   browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
