@@ -194,42 +194,54 @@ startScraping = async (requestedURL, storyId) => {
   await page.setExtraHTTPHeaders({ Referer: "https://www.wattpad.com" });
   await page.goto(requestedURL);
 
-  // grab miscellaneous details
-  const storyTitle = await page.evaluate(extractTitle);
-  const storyAuthor = await page.evaluate(extractAuthor);
-  const chapterURL = await page.evaluate(extractChapters);
-  const landingURL = await page.evaluate(extractLink); // find link to summary page
-  const story = [];
+  try {
+    // grab miscellaneous details
+    const storyTitle = await page.evaluate(extractTitle);
+    const storyAuthor = await page.evaluate(extractAuthor);
+    const chapterURL = await page.evaluate(extractChapters);
+    const landingURL = await page.evaluate(extractLink); // find link to summary page
+    const story = [];
 
-  // grab every chapter's content
-  var count = 0;
+    // grab every chapter's content
+    var count = 0;
 
-  for (let url of chapterURL) {
-    const updatedURL = "https://www.wattpad.com" + url;
-    await page.goto(updatedURL);
-    await autoScroll(page);
-    const items = await page.evaluate(extractContent);
-    story.push(items);
-    console.log(updatedURL);
-    updateProgress(storyId, ++count, chapterURL.length);
+    for (let url of chapterURL) {
+      const updatedURL = "https://www.wattpad.com" + url;
+      await page.goto(updatedURL);
+      await autoScroll(page);
+      const items = await page.evaluate(extractContent);
+      story.push(items);
+      console.log(updatedURL);
+      updateProgress(storyId, ++count, chapterURL.length);
+    }
+
+    const summaryURL = "https://www.wattpad.com" + landingURL;
+    await page.goto(summaryURL);
+    const storySummary = await page.evaluate(extractSummary);
+    console.log("summaryURL: ", summaryURL);
+
+    page.on("error", err => {
+      page.close();
+      logError(storyId);
+      console.log(err);
+    });
+
+    const storyKey = saveToFirebase(
+      story,
+      storyTitle,
+      storyAuthor,
+      storySummary,
+      summaryURL,
+      storyId
+    );
+
+    await page.close();
+    return storyKey;
+  } catch (err) {
+    await page.close();
+    logError(storyId);
+    console.log(err);
   }
-
-  const summaryURL = "https://www.wattpad.com" + landingURL;
-  await page.goto(summaryURL);
-  const storySummary = await page.evaluate(extractSummary);
-  console.log("summaryURL: ", summaryURL);
-
-  const storyKey = saveToFirebase(
-    story,
-    storyTitle,
-    storyAuthor,
-    storySummary,
-    summaryURL,
-    storyId
-  );
-  await page.close();
-  // await browser.close();
-  return storyKey;
 };
 
 // update chapter progress counter of the story

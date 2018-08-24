@@ -10,8 +10,8 @@ class FormMain extends React.Component {
 
   componentDidMount() {
     const alertMsg =
-      "hey! it seems that we are regularly running into errors on the server, we'll try to fix it asap. meanwhile, limit yourself to only sumbitting one link per hour!";
-    console.log(alertMsg);
+      "hey! if you find yourself encountering error one too many times, try limiting yourself to only sumbitting one link per hour. i'm fixing it, i promise!";
+    alert(alertMsg);
 
     this.ref = base.syncState("/error", {
       context: this,
@@ -155,7 +155,7 @@ class FormMain extends React.Component {
             // story already available in firebase
             ReactGA.event({
               category: "flag",
-              action: "recurring-story",
+              action: "redirection",
               label: "same-story-request",
               value: storyId
             });
