@@ -10,11 +10,13 @@ https://grabwatt.herokuapp.com/
 
 <img src="./client/public/instructions.gif"/>
 
-## Installation
+## Create your own instance of Grabwatt
+
+Download [NodeJS](https://nodejs.org/en/) and carry out the following commands:
 
 ```
 git clone https://github.com/andreathniah/download-wattpad-stories
-cd download-wattpad-stories
+cd grabwatt
 yarn install
 cd client
 yarn install
@@ -37,3 +39,4 @@ REACT_APP_FIREBASE_URL=
 - [ReactJS](https://reactjs.org/) - Front-end JS library for building UI
 - [Firebase](https://firebase.google.com/) - Realtime database used
 - [Puppeteer](https://github.com/GoogleChrome/puppeteer) - Headless Chrome Node API
+- [jsPDF](https://github.com/MrRio/jsPDF) - Client-side library used for PDF generation

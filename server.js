@@ -224,6 +224,7 @@ startScraping = async (requestedURL, storyId) => {
       page.close();
       logError(storyId);
       console.log(err);
+      console.log("closing page...");
     });
 
     const storyKey = saveToFirebase(
@@ -241,6 +242,7 @@ startScraping = async (requestedURL, storyId) => {
     await page.close();
     logError(storyId);
     console.log(err);
+    console.log("closing page...");
   }
 };
 

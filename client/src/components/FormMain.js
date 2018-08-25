@@ -147,16 +147,32 @@ class FormMain extends React.Component {
           if (!snapshot.exists()) {
             database.child(`queue/${storyId}`).once("value", snapshot => {
               // new request for story
-              if (!snapshot.exists()) this.postToServer(requestedURL, storyId);
+              if (!snapshot.exists()) {
+                ReactGA.event({
+                  category: "flag",
+                  action: "request",
+                  label: "request-story-extraction",
+                  value: storyId
+                });
+                this.postToServer(requestedURL, storyId);
+              }
               // story requested by another user is in the midst of extraction
-              else this.props.history.push(`/${storyId}`);
+              else {
+                ReactGA.event({
+                  category: "flag",
+                  action: "redirection",
+                  label: "same-story-request",
+                  value: storyId
+                });
+                this.props.history.push(`/${storyId}`);
+              }
             });
           } else {
             // story already available in firebase
             ReactGA.event({
               category: "flag",
               action: "redirection",
-              label: "same-story-request",
+              label: "story-already-available",
               value: storyId
             });
             this.props.history.push(`/${storyId}`);
