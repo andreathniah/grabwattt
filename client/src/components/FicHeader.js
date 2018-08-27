@@ -73,7 +73,7 @@ class FicHeader extends React.Component {
       .catch(err => console.log(err));
   };
 
-  handleEpub = () => {
+  downloadEpub = () => {
     const { storyTitle, storyAuthor } = this.props;
 
     const epubSummary = document.getElementById("summary-container").innerHTML;
@@ -99,6 +99,28 @@ class FicHeader extends React.Component {
         url.revokeObjectURL(url);
       })
       .catch(err => console.log(err));
+  };
+
+  handleEpub = () => {
+    alert("Please make sure your browser has no pop-up/ads blockers!");
+
+    try {
+      ReactGA.event({
+        category: "downloads",
+        action: "epub",
+        label: "epub-gen",
+        value: this.props.storyId
+      });
+      this.downloadEpub();
+    } catch (error) {
+      ReactGA.event({
+        category: "downloads",
+        action: "epub",
+        label: "error",
+        value: this.props.storyId
+      });
+      alert("oops, something went wrong, download as PDF instead");
+    }
   };
 
   componentDidUpdate() {
