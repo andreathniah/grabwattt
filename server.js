@@ -1,11 +1,13 @@
 require("dotenv").config();
 
+const fs = require("fs");
 var cors = require("cors");
 const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const puppeteer = require("puppeteer");
 const firebase = require("firebase");
+const Epub = require("epub-gen");
 require("firebase/database");
 
 var secretKey = require("./secret.js");
@@ -52,7 +54,7 @@ app.post("/", (req, res) => {
 
 app.post("/pdf", (req, res) => {
   let pdfURL = req.body.url;
-  promise = startPDF(pdfURL);
+  const promise = startPDF(pdfURL);
   promise
     .then(buffer => {
       res.type("application/pdf");
@@ -60,6 +62,67 @@ app.post("/pdf", (req, res) => {
     })
     .catch(err => console.log(err));
 });
+
+app.post("/epub", (req, res) => {
+  let epubURL = req.body.url;
+  let epubTitle = req.body.title;
+  let epubAuthor = req.body.author;
+  let epubSummary = req.body.summary;
+  let epubContent = req.body.content;
+
+  const fileName = `${epubTitle}.epub`;
+  const status = new Promise startEPUB(
+    epubURL,
+    epubTitle,
+    epubAuthor,
+    epubSummary,
+    epubContent
+  );
+
+
+  if (status !== false) {
+    console.log(status);
+    var file = __dirname + `/archive/${fileName}`;
+    res.download(file);
+    
+    // delete file once downloaded as blob
+    fs.unlink(fileName, err => {
+      if (err) console.log("failed to delete local image:" + err);
+      else console.log("successfully deleted local image");
+    });
+  }
+});
+
+startEPUB = async (
+  epubURL,
+  epubTitle,
+  epubAuthor,
+  epubSummary,
+  epubContent
+) => {
+  const fileName = `archive/${epubTitle}.epub`;
+
+  var option = {
+    title: epubTitle, // *Required, title of the book.
+    author: epubAuthor, // *Required, name of the author.
+    cover:
+      "https://store-images.s-microsoft.com/image/apps.24478.9007199266251874.5f562869-2f0d-4969-b368-922587e7fa41.a1e2e2b2-ba04-47f5-b314-1fc7e97c571c?mode=crop&q=90&h=270&w=270&format=jpg&background=transparent", // Url or File path, both ok.
+    content: [
+      { title: "Summary", data: epubSummary },
+      { title: "Story", data: epubContent }
+    ]
+  };
+
+  new Epub(option, fileName).promise
+    .then(() => {
+      console.log("[#] Success => Id: ", epubURL, "\n");
+      return true;
+    })
+    .catch(err => {
+      console.log(err);
+      return false;
+    });
+};
 
 startPDF = async pdfURL => {
   const pdfBrowser = await puppeteer.launch({
@@ -221,10 +284,10 @@ startScraping = async (requestedURL, storyId) => {
     console.log("summaryURL: ", summaryURL);
 
     page.on("error", err => {
+      page.goto("about:blank");
       page.close();
       logError(storyId);
       console.log(err);
-      console.log("closing page...");
     });
 
     const storyKey = saveToFirebase(
@@ -236,13 +299,14 @@ startScraping = async (requestedURL, storyId) => {
       storyId
     );
 
+    await page.goto("about:blank");
     await page.close();
     return storyKey;
   } catch (err) {
+    await page.goto("about:blank");
     await page.close();
     logError(storyId);
     console.log(err);
-    console.log("closing page...");
   }
 };
 
@@ -261,6 +325,7 @@ logError = async storyId => {
   errorRef.set({ errorFound: true });
   queueRef.set({ toDelete: true });
   progressRef.set({ current: null, total: null });
+  console.log("Closing page:", storyId);
 };
 
 // delete progress and flag for deletion when extraction is completed

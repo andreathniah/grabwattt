@@ -15,7 +15,7 @@ https://grabwatt.herokuapp.com/
 Download [NodeJS](https://nodejs.org/en/) and carry out the following commands:
 
 ```
-git clone https://github.com/andreathniah/download-wattpad-stories
+git clone https://github.com/andreathniah/grabwatt.git
 cd grabwatt
 yarn install
 cd client

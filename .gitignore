@@ -5,3 +5,7 @@
 # misc
 .DS_Store
 .env
+
+/archive
+
+test.js
