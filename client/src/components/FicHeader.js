@@ -75,8 +75,10 @@ class FicHeader extends React.Component {
 
   handleEpub = () => {
     const { storyTitle, storyAuthor } = this.props;
+
     const epubSummary = document.getElementById("summary-container").innerHTML;
     const epubContent = document.getElementById("story-container").innerHTML;
+    const epubPage = document.getElementsByClassName("page");
 
     fetch("/epub", {
       method: "POST",

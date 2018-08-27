@@ -70,59 +70,46 @@ app.post("/epub", (req, res) => {
   let epubSummary = req.body.summary;
   let epubContent = req.body.content;
 
-  const fileName = `${epubTitle}.epub`;
-  const status = new Promise startEPUB(
-    epubURL,
-    epubTitle,
-    epubAuthor,
-    epubSummary,
-    epubContent
-  );
-
-
-  if (status !== false) {
-    console.log(status);
-    var file = __dirname + `/archive/${fileName}`;
-    res.download(file);
-    
-    // delete file once downloaded as blob
-    fs.unlink(fileName, err => {
-      if (err) console.log("failed to delete local image:" + err);
-      else console.log("successfully deleted local image");
-    });
-  }
-});
-
-startEPUB = async (
-  epubURL,
-  epubTitle,
-  epubAuthor,
-  epubSummary,
-  epubContent
-) => {
   const fileName = `archive/${epubTitle}.epub`;
-
-  var option = {
+  const option = {
     title: epubTitle, // *Required, title of the book.
     author: epubAuthor, // *Required, name of the author.
-    cover:
-      "https://store-images.s-microsoft.com/image/apps.24478.9007199266251874.5f562869-2f0d-4969-b368-922587e7fa41.a1e2e2b2-ba04-47f5-b314-1fc7e97c571c?mode=crop&q=90&h=270&w=270&format=jpg&background=transparent", // Url or File path, both ok.
     content: [
-      { title: "Summary", data: epubSummary },
+      { title: epubTitle, author: epubAuthor, data: epubSummary },
       { title: "Story", data: epubContent }
     ]
   };
 
-  new Epub(option, fileName).promise
-    .then(() => {
-      console.log("[#] Success => Id: ", epubURL, "\n");
-      return true;
-    })
-    .catch(err => {
-      console.log(err);
-      return false;
-    });
-};
+  const promise = new Promise((resolve, reject) => {
+    new Epub(option, fileName).promise
+      .then(() => {
+        resolve(true);
+        console.log("[#] Success => Id: ", epubURL, "\n");
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+
+  promise.then(
+    status => {
+      const file = __dirname + `/${fileName}`;
+      res.download(file, "report.pdf", function(err) {
+        if (!err) {
+          setTimeout(() => {
+            fs.unlink(fileName, err => {
+              if (!err) console.log("successfully deleted local image");
+              else console.log(err);
+            });
+          }, 3000);
+        }
+      });
+    },
+    error => {
+      console.log(error);
+    }
+  );
+});
 
 startPDF = async pdfURL => {
   const pdfBrowser = await puppeteer.launch({
