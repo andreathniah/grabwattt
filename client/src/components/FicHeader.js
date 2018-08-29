@@ -17,7 +17,9 @@ class FicHeader extends React.Component {
         value: this.props.storyId
       });
     } catch (error) {
-      alert("Please make sure your browser has no pop-up/ads blockers!");
+      alert(
+        "Please make sure your browser has no pop-up or ads blockers! Keep a lookout for the pop-up blocked icon at your address bar."
+      );
       try {
         // backup pdf download option with pupeteer
         this.handleBackup();
@@ -102,7 +104,9 @@ class FicHeader extends React.Component {
   };
 
   handleEpub = () => {
-    alert("Please make sure your browser has no pop-up/ads blockers!");
+    alert(
+      "Please make sure your browser has no pop-up or ads blockers! Keep a lookout for the pop-up blocked icon at your address bar."
+    );
 
     try {
       ReactGA.event({

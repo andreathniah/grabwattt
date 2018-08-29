@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const fs = require("fs");
-var cors = require("cors");
+const cors = require("cors");
 const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -79,6 +79,11 @@ app.post("/epub", (req, res) => {
       { title: "Story", data: epubContent }
     ]
   };
+
+  const dir = "./archive";
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
 
   const promise = new Promise((resolve, reject) => {
     new Epub(option, fileName).promise
