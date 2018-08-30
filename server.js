@@ -305,7 +305,7 @@ startScraping = async (requestedURL, storyId) => {
 // update chapter progress counter of the story
 updateProgress = async (storyId, counter, total) => {
   const progressRef = db.ref("progress/" + storyId);
-  progressRef.update({ current: counter, total: total });
+  progressRef.update({ current: counter, total: total, timestamp: Date.now() });
 };
 
 // delete progress and flag for error and deletion error occurs
@@ -316,7 +316,7 @@ logError = async storyId => {
 
   errorRef.set({ errorFound: true });
   queueRef.set({ toDelete: true });
-  progressRef.set({ current: null, total: null });
+  progressRef.set({ current: null, total: null, timestamp: null });
   console.log("Closing page:", storyId);
 };
 
@@ -325,7 +325,7 @@ deleteProgress = storyId => {
   const progressRef = db.ref("progress/" + storyId);
   const queueRef = db.ref("queue/" + storyId);
   queueRef.set({ toDelete: true });
-  progressRef.set({ current: null, total: null });
+  progressRef.set({ current: null, total: null, timestamp: null });
 };
 
 // commit extracted contents to firebase on on success

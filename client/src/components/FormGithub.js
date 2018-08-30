@@ -17,6 +17,7 @@ class FormGithub extends React.Component {
           href="https://github.com/andreathniah/grabwatt"
           target="_blank"
           onClick={this.handleGithub}
+          rel="noopener noreferrer"
         >
           <span>check out the git repository!</span>
         </a>

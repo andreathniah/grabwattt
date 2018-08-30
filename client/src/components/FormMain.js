@@ -24,6 +24,7 @@ class FormMain extends React.Component {
       then() {
         this.deleteQueue();
         this.deleteOld();
+        this.deleteSilentCrash();
       }
     });
   }
@@ -48,16 +49,39 @@ class FormMain extends React.Component {
   // delete data older than 12 hours
   deleteOld = () => {
     const database = firebaseApp.database().ref("story");
-    var now = Date.now();
-    var cutoff = now - 12 * 60 * 60 * 1000; // 12 hours
-    var old = database
+    const now = Date.now();
+    const cutoff = now - 12 * 60 * 60 * 1000; // 12 hours
+    const old = database
       .orderByChild("timestamp")
       .endAt(cutoff)
       .limitToLast(1);
 
     old.on("child_added", function(snapshot) {
-      console.log(snapshot.key, snapshot.val().timestamp);
+      console.log("old data:", snapshot.key, snapshot.val().timestamp);
       database.child(snapshot.key).remove();
+    });
+  };
+
+  // delete progress counter that silently failed aka 15mins
+  deleteSilentCrash = () => {
+    const progressRef = firebaseApp.database().ref("progress");
+    const errorRef = firebaseApp.database().ref("error");
+    const queueRef = firebaseApp.database().ref("queue");
+
+    const now = Date.now();
+    const cutoff = now - 15 * 60 * 1000; // 15 mins
+
+    const old = progressRef
+      .orderByChild("timestamp")
+      .endAt(cutoff)
+      .limitToLast(1);
+
+    old.on("child_added", snapshot => {
+      console.log("silent crash:", snapshot.key, snapshot.val().timestamp);
+      // set variables up for deletion
+      progressRef.child(snapshot.key).remove();
+      errorRef.child(snapshot.key).set({ errorFound: true });
+      queueRef.child(snapshot.key).set({ toDelete: true });
     });
   };
 
