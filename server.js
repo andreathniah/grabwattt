@@ -33,7 +33,8 @@ if (!firebase.apps.length) {
 }
 const db = firebase.database();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 app.post("/", (req, res) => {
   let requestedURL = req.body.url;
@@ -103,7 +104,7 @@ app.post("/epub", (req, res) => {
         if (!err) {
           setTimeout(() => {
             fs.unlink(fileName, err => {
-              if (!err) console.log("successfully deleted local image");
+              if (!err) console.log("Local image deleted");
               else console.log(err);
             });
           }, 3000);
