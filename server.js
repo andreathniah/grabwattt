@@ -34,7 +34,13 @@ if (!firebase.apps.length) {
 const db = firebase.database();
 
 app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(
+  bodyParser.urlencoded({
+    limit: "50mb",
+    extended: true,
+    parameterLimit: 50000
+  })
+);
 
 app.post("/", (req, res) => {
   let requestedURL = req.body.url;
@@ -90,7 +96,7 @@ app.post("/epub", (req, res) => {
     new Epub(option, fileName).promise
       .then(() => {
         resolve(true);
-        console.log("[#] Success => Id: ", epubURL, "\n");
+        console.log("[EPUB] Success => Id: ", epubURL, "\n");
       })
       .catch(err => {
         reject(err);
@@ -139,7 +145,7 @@ startPDF = async pdfURL => {
     margin: { left: "2cm", top: "2.5cm", right: "2cm", bottom: "2.5cm" }
   });
 
-  console.log("[#] Success => Id: ", pdfURL, "\n");
+  console.log("[PDF] Success => Id: ", pdfURL, "\n");
 
   pdfBrowser.close();
   return buffer;
@@ -348,6 +354,6 @@ let saveToFirebase = (
     timestamp: Date.now()
   });
 
-  console.log("[#] Success => Id: ", storyId, "\n");
+  console.log("[STORY] Success => Id: ", storyId, "\n");
   return storyId;
 };

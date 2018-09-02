@@ -39,4 +39,4 @@ REACT_APP_FIREBASE_URL=
 - [ReactJS](https://reactjs.org/) - Front-end JS library for building UI
 - [Firebase](https://firebase.google.com/) - Realtime database used
 - [Puppeteer](https://github.com/GoogleChrome/puppeteer) - Headless Chrome Node API
-- [jsPDF](https://github.com/MrRio/jsPDF) - Client-side library used for PDF generation
+- [epub-gen](https://github.com/cyrilis/epub-gen) and [jsPDF](https://github.com/MrRio/jsPDF) - Libraries used for PDF and EPUB generation respectively

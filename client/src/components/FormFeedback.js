@@ -45,7 +45,6 @@ class FormFeedback extends React.Component {
         down: "",
         thumbs: ""
       }));
-      console.log("Feedback sent");
     }
   };
 
@@ -68,7 +67,7 @@ class FormFeedback extends React.Component {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="exampleModalLongTitle">
-                  i wanna improve!
+                  Help GrabWatt improve!
                 </h5>
                 <button
                   type="button"

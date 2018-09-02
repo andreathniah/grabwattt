@@ -10,7 +10,7 @@ class FormMain extends React.Component {
 
   componentDidMount() {
     const alertMsg =
-      "hey! if you find yourself encountering error one too many times, try limiting yourself to only sumbitting one link per hour. i'm fixing it, i promise!";
+      "Hey! If you find yourself encountering error one too many times, try limiting yourself to only sumbitting one link per hour. I'm fixing it, I promise!";
     alert(alertMsg);
 
     this.ref = base.syncState("/error", {
@@ -46,11 +46,11 @@ class FormMain extends React.Component {
     }
   };
 
-  // delete data older than 12 hours
+  // delete data older than 8 hours
   deleteOld = () => {
     const database = firebaseApp.database().ref("story");
     const now = Date.now();
-    const cutoff = now - 12 * 60 * 60 * 1000; // 12 hours
+    const cutoff = now - 8 * 60 * 60 * 1000; // 8 hours
     const old = database
       .orderByChild("timestamp")
       .endAt(cutoff)
@@ -233,7 +233,7 @@ class FormMain extends React.Component {
                 type="text"
                 ref={this.wattpadURL}
                 required
-                placeholder="Enter a URL"
+                placeholder="Enter chapter URL"
               />
               <span className="input-group-btn">{disabledStatus}</span>
             </div>
