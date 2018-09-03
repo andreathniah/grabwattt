@@ -12,7 +12,7 @@ class FormMain extends React.Component {
   componentDidMount() {
     const alertMsg =
       "Hey! If you find yourself encountering error one too many times, try limiting yourself to only sumbitting one link per hour. I'm fixing it, I promise!";
-    alert(alertMsg);
+    // alert(alertMsg);
 
     this.ref = base.syncState("/error", {
       context: this,
@@ -210,6 +210,10 @@ class FormMain extends React.Component {
     }
   };
 
+  handleFeedback = () => {
+    this.props.history.push("/feedback");
+  };
+
   render() {
     const { status } = this.state;
 
@@ -240,8 +244,11 @@ class FormMain extends React.Component {
             </div>
           </form>
         </div>
-        <div className="container flex-footer">
-          <FormFeedback />
+        <div className="container flex-footer box">
+          <a href="#" onClick={this.handleFeedback}>
+            <span>feedbacks or complains? shoot me a text!</span>
+          </a>
+          {/* <FormFeedback /> */}
         </div>
         <DetectAdBlock />
       </div>
