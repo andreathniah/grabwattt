@@ -1,5 +1,6 @@
 import React from "react";
 import FormHeader from "./FormHeader";
+import FormFeedback from "./FormFeedback";
 import DetectAdBlock from "./DetectAdBlock";
 import base from "../base";
 import { firebaseApp } from "../base";
@@ -238,6 +239,9 @@ class FormMain extends React.Component {
               <span className="input-group-btn">{disabledStatus}</span>
             </div>
           </form>
+        </div>
+        <div className="container flex-footer">
+          <FormFeedback />
         </div>
         <DetectAdBlock />
       </div>

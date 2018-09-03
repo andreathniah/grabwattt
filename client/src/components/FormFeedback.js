@@ -2,7 +2,14 @@ import React from "react";
 import base from "../base";
 
 class FormFeedback extends React.Component {
-  state = { thumbs: "", message: "", up: "", down: "", feedbackbox: [] };
+  state = {
+    thumbs: "",
+    message: "",
+    up: "",
+    down: "",
+    email: "",
+    feedbackbox: []
+  };
 
   componentDidMount() {
     this.ref = base.syncState(`feedback/${Date.now()}`, {
@@ -28,13 +35,19 @@ class FormFeedback extends React.Component {
     if (message !== null) this.setState(prevState => ({ message: message }));
   };
 
+  setEmail = event => {
+    const email = event.target.value;
+    if (email !== null) this.setState(prevState => ({ email: email }));
+  };
+
   sendFeedback = event => {
     event.preventDefault();
-    const { message, thumbs } = this.state;
+    const { message, thumbs, email } = this.state;
     const feedbackbox = { ...this.state.feedbackbox };
     const feedback = {
       thumbs: thumbs,
-      message: message
+      message: message,
+      email: email
     };
 
     if (thumbs !== "" && message !== "") {
@@ -43,8 +56,10 @@ class FormFeedback extends React.Component {
         message: "",
         up: "",
         down: "",
-        thumbs: ""
+        thumbs: "",
+        email: ""
       }));
+      console.log("feedback sent");
     }
   };
 
@@ -52,7 +67,7 @@ class FormFeedback extends React.Component {
     return (
       <div className="box">
         <a data-toggle="modal" href="#feedbackModal">
-          leave a feedback!
+          feedbacks or complains? shoot me a text!
         </a>
 
         <div
@@ -103,6 +118,15 @@ class FormFeedback extends React.Component {
                     className="form-control"
                     id="message-text"
                     value={this.state.message}
+                  />
+                </div>
+                <div onChange={event => this.setEmail(event)}>
+                  <label>Email:</label>
+                  <input
+                    className="form-control"
+                    id="email-text"
+                    value={this.state.email}
+                    placeholder="Optional: only if you want to chat with me privately!"
                   />
                 </div>
 

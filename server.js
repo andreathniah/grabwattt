@@ -246,7 +246,7 @@ autoScroll = page => {
     ]
   });
 
-  console.log("Chrome browser started");
+  console.log("[ONSTART] Chrome browser started");
 })();
 
 // create a new page and start scraping materials
@@ -323,7 +323,7 @@ logError = async storyId => {
   errorRef.set({ errorFound: true });
   queueRef.set({ toDelete: true });
   progressRef.set({ current: null, total: null, timestamp: null });
-  console.log("Closing page:", storyId);
+  console.log("[ERROR] Closing page =>", storyId);
 };
 
 // delete progress and flag for deletion when extraction is completed

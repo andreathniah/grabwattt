@@ -20,7 +20,8 @@ body {
 }
 
 .flex-footer {
-  height: 10vh;
+  display: flex;
+  justify-content: center;
 }
 
 .background {

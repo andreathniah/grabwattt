@@ -1,6 +1,5 @@
 import React from "react";
 import FormGIF from "./FormGIF";
-import FormFeedback from "./FormFeedback";
 import FormGithub from "./FormGithub";
 
 class FormHeader extends React.Component {
@@ -17,7 +16,6 @@ class FormHeader extends React.Component {
           </span>
           <FormGithub />
           <FormGIF />
-          {/* <FormFeedback /> */}
           <br />
         </div>
       </div>
