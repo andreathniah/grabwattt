@@ -58,8 +58,10 @@ class FormMain extends React.Component {
       .limitToLast(1);
 
     old.on("child_added", function(snapshot) {
-      console.log("old data:", snapshot.key, snapshot.val().timestamp);
-      database.child(snapshot.key).remove();
+      if (typeof snapshot.val().timestamp !== "undefined") {
+        console.log("old data:", snapshot.key, snapshot.val().timestamp);
+        database.child(snapshot.key).remove();
+      }
     });
   };
 
