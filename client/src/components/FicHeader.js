@@ -58,6 +58,11 @@ class FicHeader extends React.Component {
     this.props.history.push("/");
   };
 
+  handleFeedback = () => {
+    this.props.history.push("/feedback");
+    console.log("test");
+  };
+
   // create blob from pupeteer's pdf
   handleBackup = () => {
     fetch("/pdf", {
@@ -187,6 +192,12 @@ class FicHeader extends React.Component {
                   onClick={this.handleEpub}
                 >
                   Download as EPUB <span className="sr-only">(current)</span>
+                </a>
+                <a
+                  className="nav-item nav-link active"
+                  onClick={this.handleFeedback}
+                >
+                  Feedback <span className="sr-only">(current)</span>
                 </a>
                 <a className="nav-item nav-link disabled">
                   Database reference key: {storyId}

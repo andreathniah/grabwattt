@@ -6,8 +6,7 @@ class FeedbackForm extends React.Component {
 
   handleSpreadsheet = event => {
     const { message, thumbs } = this.state;
-    const scriptURL =
-      "https://script.google.com/macros/s/AKfycbxW-pQQKzOa9n39GX6W4A89pZscVt54esqQyR8t6daTOxnwadU/exec";
+    const scriptURL = process.env.REACT_APP_SPREADSHEET_URL;
     const method = "POST";
 
     if (thumbs !== "" && message !== "") {
@@ -85,7 +84,7 @@ class FeedbackForm extends React.Component {
               className="form-control"
               type="text"
               name="message"
-              placeholder="Let it all out, i'm eager to hear it all!"
+              placeholder="Let it all out, I'm eager to hear it all!"
               required
             />
           </div>

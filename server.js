@@ -76,7 +76,10 @@ app.post("/epub", (req, res) => {
   let epubSummary = req.body.summary;
   let epubContent = req.body.content;
 
-  const fileName = `archive/${epubTitle}.epub`;
+  // remove title with "/" to avoid file search confusion
+  const escapedTitle = epubTitle.replace(/[/]/g, "");
+  const fileName = `archive/${escapedTitle}.epub`;
+
   const option = {
     title: epubTitle, // *Required, title of the book.
     author: epubAuthor, // *Required, name of the author.
@@ -86,13 +89,12 @@ app.post("/epub", (req, res) => {
     ]
   };
 
+  // create directory if not available
   const dir = "./archive";
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-  }
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 
   const promise = new Promise((resolve, reject) => {
-    new Epub(option, fileName).promise
+    new Epub(option).promise
       .then(() => {
         resolve(true);
         console.log("[EPUB] Success => Id: ", epubURL, "\n");
@@ -101,11 +103,10 @@ app.post("/epub", (req, res) => {
         reject(err);
       });
   });
-
   promise.then(
     status => {
       const file = __dirname + `/${fileName}`;
-      res.download(file, "report.pdf", function(err) {
+      res.download(file, "report.pdf", err => {
         if (!err) {
           setTimeout(() => {
             fs.unlink(fileName, err => {
