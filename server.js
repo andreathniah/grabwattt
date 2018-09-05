@@ -76,7 +76,6 @@ app.post("/epub", (req, res) => {
   let epubSummary = req.body.summary;
   let epubContent = req.body.content;
 
-  // remove title with "/" to avoid file search confusion
   const escapedTitle = epubTitle.replace(/[/]/g, "");
   const fileName = `archive/${escapedTitle}.epub`;
 
@@ -94,7 +93,7 @@ app.post("/epub", (req, res) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 
   const promise = new Promise((resolve, reject) => {
-    new Epub(option).promise
+    new Epub(option, fileName).promise
       .then(() => {
         resolve(true);
         console.log("[EPUB] Success => Id: ", epubURL, "\n");
