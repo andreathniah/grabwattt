@@ -13,8 +13,7 @@ class FicHeader extends React.Component {
       ReactGA.event({
         category: "downloads",
         action: "pdf",
-        label: "jsPDF",
-        value: this.props.storyId
+        label: "jsPDF"
       });
     } catch (error) {
       alert(
@@ -26,8 +25,7 @@ class FicHeader extends React.Component {
         ReactGA.event({
           category: "downloads",
           action: "pdf",
-          label: "pupeteer",
-          value: this.props.storyId
+          label: "pupeteer"
         });
 
         // backup pdf download option with pupeteer microservice
@@ -40,8 +38,7 @@ class FicHeader extends React.Component {
         ReactGA.event({
           category: "downloads",
           action: "pdf",
-          label: "error",
-          value: this.props.storyId
+          label: "error"
         });
         alert("oops, something went wrong, use Ctrl+P and save as PDF instead");
       }
@@ -52,15 +49,13 @@ class FicHeader extends React.Component {
     ReactGA.event({
       category: "sucess",
       action: "redirection",
-      label: "return-home",
-      value: this.props.storyId
+      label: "return-home"
     });
     this.props.history.push("/");
   };
 
   handleFeedback = () => {
     this.props.history.push("/feedback");
-    console.log("test");
   };
 
   // create blob from pupeteer's pdf
@@ -116,16 +111,14 @@ class FicHeader extends React.Component {
       ReactGA.event({
         category: "downloads",
         action: "epub",
-        label: "epub-gen",
-        value: this.props.storyId
+        label: "epub-gen"
       });
       this.downloadEpub();
     } catch (error) {
       ReactGA.event({
         category: "downloads",
         action: "epub",
-        label: "error",
-        value: this.props.storyId
+        label: "error"
       });
       alert("oops, something went wrong, download as PDF instead");
     }
@@ -210,7 +203,10 @@ class FicHeader extends React.Component {
             <h5>
               {storyTitle} {storyAuthor}
             </h5>
-            <p dangerouslySetInnerHTML={{ __html: storySummary }} />
+            <p
+              className="summary-lines"
+              dangerouslySetInnerHTML={{ __html: storySummary }}
+            />
             <p>
               URL:{" "}
               <a href={storyURL} target="_blank">

@@ -52,6 +52,7 @@ class FormMain extends React.Component {
     const database = firebaseApp.database().ref("story");
     const now = Date.now();
     const cutoff = now - 8 * 60 * 60 * 1000; // 8 hours
+    // const cutoff = now - 2 * 60 * 60 * 1000; // 8 hours
     const old = database
       .orderByChild("timestamp")
       .endAt(cutoff)
@@ -61,7 +62,7 @@ class FormMain extends React.Component {
       if (typeof snapshot.val().timestamp !== "undefined") {
         console.log("old data:", snapshot.key, snapshot.val().timestamp);
         database.child(snapshot.key).remove();
-      }
+      } else console.log(snapshot.key);
     });
   };
 
@@ -172,35 +173,43 @@ class FormMain extends React.Component {
         const database = firebaseApp.database().ref("/");
         database.child(`story/${storyId}`).once("value", snapshot => {
           if (!snapshot.exists()) {
-            database.child(`queue/${storyId}`).once("value", snapshot => {
-              // new request for story
+            database.child(`progress/${storyId}`).once("value", snapshot => {
               if (!snapshot.exists()) {
-                ReactGA.event({
-                  category: "flag",
-                  action: "request",
-                  label: "request-story-extraction",
-                  value: storyId
+                database.child(`queue/${storyId}`).once("value", snapshot => {
+                  if (!snapshot.exists()) {
+                    // new request for story
+                    ReactGA.event({
+                      category: "flag",
+                      action: "request",
+                      label: "request-story-extraction"
+                    });
+                    this.postToServer(requestedURL, storyId);
+                  } else {
+                    // story extraction in progress
+                    ReactGA.event({
+                      category: "flag",
+                      action: "redirection",
+                      label: "same-story-request"
+                    });
+                    this.props.history.push(`/${storyId}`);
+                  }
                 });
-                this.postToServer(requestedURL, storyId);
-              }
-              // story requested by another user is in the midst of extraction
-              else {
+              } else {
+                // story extraction in progress
                 ReactGA.event({
                   category: "flag",
                   action: "redirection",
-                  label: "same-story-request",
-                  value: storyId
+                  label: "same-story-request"
                 });
                 this.props.history.push(`/${storyId}`);
               }
             });
           } else {
-            // story already available in firebase
+            // story is already available
             ReactGA.event({
               category: "flag",
               action: "redirection",
-              label: "story-already-available",
-              value: storyId
+              label: "story-already-available"
             });
             this.props.history.push(`/${storyId}`);
           }

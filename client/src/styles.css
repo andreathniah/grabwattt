@@ -1,6 +1,12 @@
 body {
   font-size: larger;
 }
+
+/* converts \n to <br/> */
+.summary-lines {
+  white-space: pre-line;
+}
+
 .navbar {
   margin-bottom: 2vh;
   background-color: darkred;
