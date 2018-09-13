@@ -131,6 +131,7 @@ class FormMain extends React.Component {
       })
       .catch(error => {
         console.log(error);
+        console.log("Grabbing temp storyId...");
         return this.grabTempStoryId(requestedURL);
       });
   };
