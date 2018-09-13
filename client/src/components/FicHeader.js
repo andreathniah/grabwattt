@@ -1,6 +1,8 @@
 import React from "react";
 import { generatePDF } from "../helpers";
 import ReactGA from "react-ga";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class FicHeader extends React.Component {
   state = { loading: true };
@@ -19,6 +21,8 @@ class FicHeader extends React.Component {
       alert(
         "Please make sure your browser has no pop-up or ads blockers! Keep a lookout for the pop-up blocked icon at your address bar."
       );
+      toast("This may take a while...");
+
       try {
         // backup pdf download option with pupeteer
         this.handleBackup();
@@ -106,6 +110,7 @@ class FicHeader extends React.Component {
     alert(
       "Please make sure your browser has no pop-up or ads blockers! Keep a lookout for the pop-up blocked icon at your address bar."
     );
+    toast("This may take a while...");
 
     try {
       ReactGA.event({
@@ -214,6 +219,7 @@ class FicHeader extends React.Component {
               </a>
             </p>
           </div>
+          <ToastContainer />
         </header>
       );
   }

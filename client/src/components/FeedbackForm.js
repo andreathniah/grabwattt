@@ -84,7 +84,7 @@ class FeedbackForm extends React.Component {
               className="form-control"
               type="text"
               name="message"
-              placeholder="Let it all out, I'm eager to hear it all!"
+              placeholder="Remember to add the story URL link if you need me to debug something!"
               required
             />
           </div>

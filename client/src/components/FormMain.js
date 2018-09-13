@@ -5,14 +5,16 @@ import DetectAdBlock from "./DetectAdBlock";
 import base from "../base";
 import { firebaseApp } from "../base";
 import ReactGA from "react-ga";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class FormMain extends React.Component {
   state = { storyId: "", status: "", queuebox: [], errorbox: [] };
 
   componentDidMount() {
     const alertMsg =
-      "Hey! If you find yourself encountering error one too many times, try limiting yourself to only sumbitting one link per hour. I'm fixing it, I promise!";
-    // alert(alertMsg);
+      "Service outrage on 09/12/18 2300 (UTC) has been fixed. Should you notice any lingering error, please notify me via the feedback page.";
+    toast(alertMsg);
 
     this.ref = base.syncState("/error", {
       context: this,
@@ -255,6 +257,7 @@ class FormMain extends React.Component {
               <span className="input-group-btn">{disabledStatus}</span>
             </div>
           </form>
+          <ToastContainer />
         </div>
         <div className="container flex-footer box">
           <a href="#" onClick={this.handleFeedback}>
