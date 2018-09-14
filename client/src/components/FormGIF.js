@@ -19,7 +19,7 @@ class FormGIF extends React.Component {
           <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Instructions</h5>
+                <h5 className="modal-title">Instructions GIFS</h5>
                 <button
                   type="button"
                   className="close"
@@ -30,11 +30,29 @@ class FormGIF extends React.Component {
                 </button>
               </div>
               <div className="modal-body">
-                <img
-                  src="./instructions.gif"
-                  alt="instructions"
-                  className="instructions"
-                />
+                <div>
+                  <label>
+                    General Instructions: <br />
+                  </label>
+                  <img
+                    src="./instructions.gif"
+                    alt="general instructions"
+                    className="instructions"
+                  />
+                </div>
+                <div>
+                  <br />
+                  <br />
+                  <label>
+                    PDF instructions: <br />
+                  </label>
+                  <img
+                    src="./howto_pdf.gif"
+                    alt="pdf instructions"
+                    className="instructions"
+                  />
+                </div>
+
                 <div>
                   <br />
                   <label>

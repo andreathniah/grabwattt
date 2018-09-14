@@ -12,6 +12,9 @@ class FormMain extends React.Component {
   state = { storyId: "", status: "", queuebox: [], errorbox: [] };
 
   componentDidMount() {
+    toast(
+      "Please check out the instructions page if you are having errors with pdf generation"
+    );
     const alertMsg =
       "Service outrage on 09/12/18 2300 (UTC) has been fixed. Should you notice any lingering error, please notify me via the feedback page.";
     toast(alertMsg);

@@ -21,7 +21,10 @@ class FicHeader extends React.Component {
       alert(
         "Please make sure your browser has no pop-up or ads blockers! Keep a lookout for the pop-up blocked icon at your address bar."
       );
-      toast("This may take a while...");
+      toast(
+        "Please check out the instructions page if you are having errors with pdf generation",
+        { autoClose: 8000 }
+      );
 
       try {
         // backup pdf download option with pupeteer
