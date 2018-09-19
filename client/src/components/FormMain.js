@@ -96,11 +96,12 @@ class FormMain extends React.Component {
 
   // check if given url can be parsed
   validateURL = requestedURL => {
-    const chapterLink = requestedURL.includes("https://www.wattpad.com/"); //ok
-    const storyLink = requestedURL.includes("https://www.wattpad.com/story/"); // reject
-    const missingHTTTPS = !requestedURL.includes("https://");
+    const chapterLink = requestedURL.startsWith("https://www.wattpad.com/"); //ok
+    const storyLink = requestedURL.startsWith("https://www.wattpad.com/story/"); // reject
+    const authorLink = requestedURL.startsWith("https://www.wattpad.com/user/"); // reject
+    const missingHTTTPS = !requestedURL.startsWith("https://");
 
-    if (storyLink || missingHTTTPS) return false;
+    if (storyLink || missingHTTTPS || authorLink) return false;
     else if (chapterLink) return true;
     else return false;
   };
@@ -222,7 +223,9 @@ class FormMain extends React.Component {
         });
       });
     } else {
-      alert("looks like something is wrong, is your link a CHAPTER URL?");
+      alert(
+        "Woosp, please make sure your link a CHAPTER URL! Check the instructions page if you are unsure!"
+      );
       this.setState(prevState => ({ status: "" }));
     }
   };
@@ -262,7 +265,7 @@ class FormMain extends React.Component {
           </form>
           <ToastContainer />
         </div>
-        <div className="container flex-footer box">
+        <div className="container flex-footer feedback">
           <a href="#" onClick={this.handleFeedback}>
             <span>feedbacks or complains? shoot me a text!</span>
           </a>

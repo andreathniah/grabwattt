@@ -2,9 +2,11 @@ import React from "react";
 import ReactGA from "react-ga";
 
 class FeedbackForm extends React.Component {
-  state = { up: "", down: "", thumbs: "", message: "", email: "" };
+  state = { up: "", down: "", thumbs: "", message: "", email: "", status: "" };
 
   handleSpreadsheet = event => {
+    this.setState(prevState => ({ status: "disabled" }));
+
     const { message, thumbs } = this.state;
     const scriptURL = process.env.REACT_APP_SPREADSHEET_URL;
     const method = "POST";
@@ -52,6 +54,25 @@ class FeedbackForm extends React.Component {
   };
 
   render() {
+    const { status } = this.state;
+    const disabledStatus =
+      status === "disabled" ? (
+        <button
+          className="button float-md-right"
+          onClick={this.handleSpreadsheet}
+          disabled
+        >
+          Send
+        </button>
+      ) : (
+        <button
+          className="button float-md-right"
+          onClick={this.handleSpreadsheet}
+        >
+          Send
+        </button>
+      );
+
     return (
       <div className="container">
         <form ref={el => (this.form = el)}>
@@ -95,17 +116,12 @@ class FeedbackForm extends React.Component {
               className="form-control"
               type="email"
               name="email"
-              placeholder="Only if you want to chat with me privately!"
+              placeholder="Optional but encouraged - especially if you want me to reply you via email!"
             />
           </div>
           <div>
             <br />
-            <button
-              className="button float-md-right"
-              onClick={this.handleSpreadsheet}
-            >
-              Send
-            </button>
+            <span>{disabledStatus}</span>
           </div>
         </form>
       </div>
