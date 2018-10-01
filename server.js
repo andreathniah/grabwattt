@@ -249,11 +249,50 @@ autoScroll = page => {
   console.log("[ONSTART] Chrome browser started");
 })();
 
+getUAString = () => {
+  const string0 =
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36";
+  const string1 =
+    "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36";
+  const string2 =
+    "Mozilla/5.0 (Windows NT 5.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36";
+  const string3 =
+    "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36";
+  const string4 =
+    "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36";
+  const string5 =
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36";
+  const string6 =
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36";
+  const string7 =
+    "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36";
+  const string8 =
+    "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36";
+  const UAStrings = [
+    string0,
+    string1,
+    string2,
+    string3,
+    string4,
+    string5,
+    string6,
+    string7,
+    string8
+  ];
+  const randomNo = Math.floor(Math.random() * 8 + 1);
+
+  return UAStrings[randomNo];
+};
+
 // create a new page and start scraping materials
 startScraping = async (requestedURL, storyId) => {
+  const useragent = getUAString();
+  console.log("[", storyId, "]", useragent);
+
   const page = await browser.newPage();
+  await page.setUserAgent(useragent);
   await page.setExtraHTTPHeaders({ Referer: "https://www.wattpad.com" });
-  await page.goto(requestedURL);
+  await page.goto(requestedURL, { waitUntil: "domcontentloaded" });
 
   try {
     // grab miscellaneous details
@@ -268,16 +307,19 @@ startScraping = async (requestedURL, storyId) => {
 
     for (let url of chapterURL) {
       const updatedURL = "https://www.wattpad.com" + url;
-      await page.goto(updatedURL);
+      await page.setUserAgent(useragent);
+      await page.goto(updatedURL, { waitUntil: "domcontentloaded" });
+
       await autoScroll(page);
       const items = await page.evaluate(extractContent);
       story.push(items);
-      console.log(updatedURL);
+      console.log("[", storyId, "]", updatedURL);
       updateProgress(storyId, ++count, chapterURL.length);
     }
 
     const summaryURL = "https://www.wattpad.com" + landingURL;
-    await page.goto(summaryURL);
+    await page.setUserAgent(useragent);
+    await page.goto(summaryURL, { waitUntil: "domcontentloaded" });
     const storySummary = await page.evaluate(extractSummary);
     console.log("summaryURL: ", summaryURL);
 

@@ -27,6 +27,7 @@ body {
 
 .flex-footer {
   display: flex;
+  text-align: center;
   justify-content: center;
 }
 
@@ -136,6 +137,14 @@ input:focus {
   width: 100%;
   max-width: 100%;
   height: auto;
+}
+
+/*  coz i don't want the size to increase */
+.feedback > a {
+  color: #ffa500;
+  font-style: italic;
+  font-weight: bold;
+  color: rgba(255, 165, 0, 0.8);
 }
 
 .box > a {

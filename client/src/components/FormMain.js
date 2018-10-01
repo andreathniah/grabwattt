@@ -5,14 +5,19 @@ import DetectAdBlock from "./DetectAdBlock";
 import base from "../base";
 import { firebaseApp } from "../base";
 import ReactGA from "react-ga";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class FormMain extends React.Component {
   state = { storyId: "", status: "", queuebox: [], errorbox: [] };
 
   componentDidMount() {
+    toast(
+      "Please check out the instructions page if you are having errors with pdf generation"
+    );
     const alertMsg =
-      "Hey! If you find yourself encountering error one too many times, try limiting yourself to only sumbitting one link per hour. I'm fixing it, I promise!";
-    // alert(alertMsg);
+      "Service outrage on 09/12/18 2300 (UTC) has been fixed. Should you notice any lingering error, please notify me via the feedback page.";
+    toast(alertMsg);
 
     this.ref = base.syncState("/error", {
       context: this,
@@ -91,11 +96,12 @@ class FormMain extends React.Component {
 
   // check if given url can be parsed
   validateURL = requestedURL => {
-    const chapterLink = requestedURL.includes("https://www.wattpad.com/"); //ok
-    const storyLink = requestedURL.includes("https://www.wattpad.com/story/"); // reject
-    const missingHTTTPS = !requestedURL.includes("https://");
+    const chapterLink = requestedURL.startsWith("https://www.wattpad.com/"); //ok
+    const storyLink = requestedURL.startsWith("https://www.wattpad.com/story/"); // reject
+    const authorLink = requestedURL.startsWith("https://www.wattpad.com/user/"); // reject
+    const missingHTTTPS = !requestedURL.startsWith("https://");
 
-    if (storyLink || missingHTTTPS) return false;
+    if (storyLink || missingHTTTPS || authorLink) return false;
     else if (chapterLink) return true;
     else return false;
   };
@@ -131,6 +137,7 @@ class FormMain extends React.Component {
       })
       .catch(error => {
         console.log(error);
+        console.log("Grabbing temp storyId...");
         return this.grabTempStoryId(requestedURL);
       });
   };
@@ -216,7 +223,9 @@ class FormMain extends React.Component {
         });
       });
     } else {
-      alert("looks like something is wrong, is your link a CHAPTER URL?");
+      alert(
+        "Woosp, please make sure your link a CHAPTER URL! Check the instructions page if you are unsure!"
+      );
       this.setState(prevState => ({ status: "" }));
     }
   };
@@ -254,8 +263,9 @@ class FormMain extends React.Component {
               <span className="input-group-btn">{disabledStatus}</span>
             </div>
           </form>
+          <ToastContainer />
         </div>
-        <div className="container flex-footer box">
+        <div className="container flex-footer feedback">
           <a href="#" onClick={this.handleFeedback}>
             <span>feedbacks or complains? shoot me a text!</span>
           </a>
