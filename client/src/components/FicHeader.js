@@ -113,7 +113,9 @@ class FicHeader extends React.Component {
     alert(
       "Please make sure your browser has no pop-up or ads blockers! Keep a lookout for the pop-up blocked icon at your address bar."
     );
-    toast("This may take a while...");
+    toast(
+      "Please be patient, give it at least 15 seconds. Do NOT spam the download button."
+    );
 
     try {
       ReactGA.event({
