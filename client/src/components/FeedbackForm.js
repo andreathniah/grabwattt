@@ -7,11 +7,11 @@ class FeedbackForm extends React.Component {
 	handleSpreadsheet = event => {
 		this.setState(prevState => ({ status: "disabled" }));
 
-		const { message, thumbs } = this.state;
+		const { email, message, thumbs } = this.state;
 		const scriptURL = process.env.REACT_APP_SPREADSHEET_URL;
 		const method = "POST";
 
-		if (thumbs !== "" && message !== "") {
+		if (thumbs !== "" && message !== "" && email !== "") {
 			const body = new FormData(this.form);
 			event.preventDefault(); // this position to for required validation
 			fetch(scriptURL, { method, body })

@@ -19,7 +19,6 @@ class FeedbackMain extends React.Component {
 			<div className="background">
 				<div className="flex-fullview">
 					<div className="container header">
-						<ToastContainer />
 						<h1>
 							<mark>feedback? i love it!</mark>
 						</h1>
@@ -27,6 +26,7 @@ class FeedbackMain extends React.Component {
 					<br />
 					<FeedbackForm history={this.props.history} />
 				</div>
+				<ToastContainer />
 				<div className="container flex-footer box">
 					<a href="#" onClick={this.handleHome}>
 						<span>return home!</span>
