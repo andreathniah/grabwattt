@@ -261,11 +261,6 @@ class FormMain extends React.Component {
 					</form>
 					<ToastContainer />
 				</div>
-				<div className="container flex-footer feedback">
-					<a href="#" onClick={this.handleFeedback}>
-						<span>feedbacks or complains? shoot me a text!</span>
-					</a>
-				</div>
 				<DetectAdBlock />
 			</div>
 		);
