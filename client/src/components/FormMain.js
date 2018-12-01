@@ -12,7 +12,7 @@ class FormMain extends React.Component {
 
 	componentDidMount() {
 		const alertMsg =
-			"Please note that this service will drop characters that are not of ASCII (alphabets) characters. A patch is on the works with regards to this.";
+			"System outrage from 25 Nov has been fixed. Please log a feedback ticket should you notice any lingering error. Thank you for your patience.";
 		toast(alertMsg);
 
 		this.ref = base.syncState("/error", {
