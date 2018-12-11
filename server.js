@@ -41,6 +41,7 @@ app.use(
 	})
 );
 
+// POST request for story extraction
 app.post("/", (req, res) => {
 	let requestedURL = req.body.url;
 	let storyId = req.body.storyId;
@@ -73,20 +74,16 @@ app.post("/epub", (req, res) => {
 	let epubURL = req.body.url;
 	let epubTitle = req.body.title;
 	let epubAuthor = req.body.author;
-	let epubSummary = req.body.summary;
 	let epubContent = req.body.content;
-
-	const escapedTitle = epubTitle.replace(/[/]/g, "");
-	const fileName = `archive/${escapedTitle}.epub`;
 
 	const option = {
 		title: epubTitle, // *Required, title of the book.
 		author: epubAuthor, // *Required, name of the author.
-		content: [
-			{ title: epubTitle, author: epubAuthor, data: epubSummary },
-			{ title: "Story", data: epubContent }
-		]
+		content: epubContent
 	};
+
+	const escapedTitle = epubTitle.replace(/[/]/g, "");
+	const fileName = `archive/${escapedTitle}.epub`;
 
 	// create directory if not available
 	const dir = "./archive";
@@ -198,7 +195,7 @@ extractContent = () => {
 	const chapterTitle = document.querySelector("header > h2");
 
 	const items = [];
-	const title = "<h5>" + chapterTitle.innerHTML + "</h5>";
+	const title = "<h5 id='chapter-title'>" + chapterTitle.innerHTML + "</h5>";
 	items.push("<!--ADD_PAGE-->");
 	items.push(title);
 
@@ -249,6 +246,7 @@ autoScroll = page => {
 	console.log("[ONSTART] Chrome browser started");
 })();
 
+// choose random common User Agent to avoid detection
 getUAString = () => {
 	const string0 =
 		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36";
@@ -317,6 +315,7 @@ startScraping = async (requestedURL, storyId) => {
 			updateProgress(storyId, ++count, chapterURL.length);
 		}
 
+		// get story's summary content
 		const summaryURL = "https://www.wattpad.com" + landingURL;
 		await page.setUserAgent(useragent);
 		await page.goto(summaryURL, { waitUntil: "domcontentloaded" });
