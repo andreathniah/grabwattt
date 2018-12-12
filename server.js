@@ -41,7 +41,7 @@ app.use(
 	})
 );
 
-// POST request for story extraction
+// POST request to extract story from URL
 app.post("/", (req, res) => {
 	let requestedURL = req.body.url;
 	let storyId = req.body.storyId;
@@ -59,6 +59,7 @@ app.post("/", (req, res) => {
 	res.send({ url: storyId });
 });
 
+// POST request to generate PDF from stories
 app.post("/pdf", (req, res) => {
 	let pdfURL = req.body.url;
 	const promise = startPDF(pdfURL);
@@ -70,6 +71,7 @@ app.post("/pdf", (req, res) => {
 		.catch(err => console.log(err));
 });
 
+// POST request to generate EPUB from stories
 app.post("/epub", (req, res) => {
 	let epubURL = req.body.url;
 	let epubTitle = req.body.title;
@@ -82,6 +84,7 @@ app.post("/epub", (req, res) => {
 		content: epubContent
 	};
 
+	// replace names with dash as it would be considered as a directory
 	const escapedTitle = epubTitle.replace(/[/]/g, "");
 	const fileName = `archive/${escapedTitle}.epub`;
 
@@ -95,15 +98,15 @@ app.post("/epub", (req, res) => {
 				resolve(true);
 				console.log("[EPUB] Success => Id: ", epubURL, "\n");
 			})
-			.catch(err => {
-				reject(err);
-			});
+			.catch(err => reject(err));
 	});
+
 	promise.then(
 		status => {
 			const file = __dirname + `/${fileName}`;
 			res.download(file, "report.pdf", err => {
 				if (!err) {
+					// delete local image of .epub after 3 seconds
 					setTimeout(() => {
 						fs.unlink(fileName, err => {
 							if (!err) console.log("Local image deleted");
@@ -113,12 +116,11 @@ app.post("/epub", (req, res) => {
 				}
 			});
 		},
-		error => {
-			console.log(error);
-		}
+		error => console.log(error)
 	);
 });
 
+// open new broswer for each PDF request
 startPDF = async pdfURL => {
 	const pdfBrowser = await puppeteer.launch({
 		headless: true,
@@ -132,7 +134,7 @@ startPDF = async pdfURL => {
 
 	const page = await pdfBrowser.newPage();
 	await page.goto(pdfURL);
-	await page.waitForSelector(".page");
+	await page.waitForSelector(".page"); // wait for react to show contents
 
 	console.log("pdfURL: ", pdfURL);
 
@@ -195,10 +197,11 @@ extractContent = () => {
 	const chapterTitle = document.querySelector("header > h2");
 
 	const items = [];
-	const title = "<h5 id='chapter-title'>" + chapterTitle.innerHTML + "</h5>";
+	const title = "<h5>" + chapterTitle.innerHTML + "</h5>";
 	items.push("<!--ADD_PAGE-->");
 	items.push(title);
 
+	// replace undesired characters outside of ASCII table
 	for (let element of extractedElements) {
 		const text0 = element.innerHTML.replace(/[…]/g, "...");
 		const text1 = text0.replace(/[“]/g, '"');
@@ -212,7 +215,7 @@ extractContent = () => {
 	return items;
 };
 
-// scroll page to the end of the chapter
+// scroll wattpad story to the end of the chapter
 autoScroll = page => {
 	return page.evaluate(() => {
 		return new Promise((resolve, reject) => {
@@ -232,7 +235,7 @@ autoScroll = page => {
 	});
 };
 
-// creates a global variable of browser on server start to reduce memory
+// create gloabl browser on server start to reduce memory usage
 (async () => {
 	browser = await puppeteer.launch({
 		headless: true,

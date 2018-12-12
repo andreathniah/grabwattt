@@ -31,6 +31,15 @@ class FormMain extends React.Component {
 		});
 	}
 
+	// log actions to google analytics
+	logToGA = (category, action, label) => {
+		ReactGA.event({
+			category: category,
+			action: action,
+			label: label
+		});
+	};
+
 	// delete queue and error checkers after extraction process
 	deleteQueue = () => {
 		var checker = false;
@@ -39,7 +48,6 @@ class FormMain extends React.Component {
 			if (val.toDelete) {
 				queuebox[key].toDelete = null;
 				errorbox[key].errorFound = null;
-
 				checker = true;
 			}
 		});
@@ -181,39 +189,23 @@ class FormMain extends React.Component {
 								database.child(`queue/${storyId}`).once("value", snapshot => {
 									if (!snapshot.exists()) {
 										// new request for story
-										ReactGA.event({
-											category: "flag",
-											action: "request",
-											label: "request-story-extraction"
-										});
+										this.logToGA("flag", "request", "request-story-extraction");
 										this.postToServer(requestedURL, storyId);
 									} else {
 										// story extraction in progress
-										ReactGA.event({
-											category: "flag",
-											action: "redirection",
-											label: "same-story-request"
-										});
+										this.logToGA("flag", "redirection", "same-story-request");
 										this.props.history.push(`/${storyId}`);
 									}
 								});
 							} else {
 								// story extraction in progress
-								ReactGA.event({
-									category: "flag",
-									action: "redirection",
-									label: "same-story-request"
-								});
+								this.logToGA("flag", "redirection", "same-story-request");
 								this.props.history.push(`/${storyId}`);
 							}
 						});
 					} else {
 						// story is already available
-						ReactGA.event({
-							category: "flag",
-							action: "redirection",
-							label: "story-already-available"
-						});
+						this.logToGA("flag", "redirection", "story-already-available");
 						this.props.history.push(`/${storyId}`);
 					}
 				});
