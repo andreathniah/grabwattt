@@ -249,6 +249,29 @@ autoScroll = page => {
 	console.log("[ONSTART] Chrome browser started");
 })();
 
+// logging error when server receives SIGTERM
+process.on("SIGTERM", () => {
+	console.log(
+		"[ONKILL] Server received kill signal, logging current tickets as failure..."
+	);
+	const errorRef = db.ref("error");
+	const queueRef = db.ref("queue");
+	const progressRef = db.ref("progress");
+
+	const toDelete = progressRef.orderByChild("timestamp").limitToLast(1);
+	toDelete.on("child_added", snapshot => {
+		console.log("[SIGTERM] Cleaning up =>", snapshot.key);
+		progressRef.child(snapshot.key).remove();
+		errorRef.child(snapshot.key).set({ errorFound: true });
+		queueRef.child(snapshot.key).set({ toDelete: true });
+	});
+
+	app.close(() => {
+		console.log("Ticket disposed, good bye");
+		process.exit(0);
+	});
+});
+
 // choose random common User Agent to avoid detection
 getUAString = () => {
 	const string0 =
