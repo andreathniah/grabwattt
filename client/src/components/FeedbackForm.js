@@ -4,6 +4,15 @@ import ReactGA from "react-ga";
 class FeedbackForm extends React.Component {
 	state = { up: "", down: "", thumbs: "", message: "", email: "", status: "" };
 
+	// log actions to google analytics
+	logToGA = (category, action, label) => {
+		ReactGA.event({
+			category: category,
+			action: action,
+			label: label
+		});
+	};
+
 	handleSpreadsheet = event => {
 		this.setState(prevState => ({ status: "disabled" }));
 
@@ -16,11 +25,7 @@ class FeedbackForm extends React.Component {
 			event.preventDefault(); // this position to for required validation
 			fetch(scriptURL, { method, body })
 				.then(res => {
-					ReactGA.event({
-						category: "flag",
-						action: "feedback",
-						label: "feedback-spreadsheet"
-					});
+					this.logToGA("flag", "feedback", "feedback-spreadsheet");
 
 					this.setState(
 						prevState => ({ up: "", down: "" }),

@@ -12,7 +12,7 @@ class FormMain extends React.Component {
 
 	componentDidMount() {
 		const alertMsg =
-			"Please note that this service will drop characters that are not of ASCII (alphabets) characters. A patch is on the works with regards to this.";
+			"System outrage from 25 Nov has been fixed. Please log a feedback ticket should you notice any lingering error. Thank you for your patience.";
 		toast(alertMsg);
 
 		this.ref = base.syncState("/error", {
@@ -31,6 +31,15 @@ class FormMain extends React.Component {
 		});
 	}
 
+	// log actions to google analytics
+	logToGA = (category, action, label) => {
+		ReactGA.event({
+			category: category,
+			action: action,
+			label: label
+		});
+	};
+
 	// delete queue and error checkers after extraction process
 	deleteQueue = () => {
 		var checker = false;
@@ -39,7 +48,6 @@ class FormMain extends React.Component {
 			if (val.toDelete) {
 				queuebox[key].toDelete = null;
 				errorbox[key].errorFound = null;
-
 				checker = true;
 			}
 		});
@@ -181,39 +189,23 @@ class FormMain extends React.Component {
 								database.child(`queue/${storyId}`).once("value", snapshot => {
 									if (!snapshot.exists()) {
 										// new request for story
-										ReactGA.event({
-											category: "flag",
-											action: "request",
-											label: "request-story-extraction"
-										});
+										this.logToGA("flag", "request", "request-story-extraction");
 										this.postToServer(requestedURL, storyId);
 									} else {
 										// story extraction in progress
-										ReactGA.event({
-											category: "flag",
-											action: "redirection",
-											label: "same-story-request"
-										});
+										this.logToGA("flag", "redirection", "same-story-request");
 										this.props.history.push(`/${storyId}`);
 									}
 								});
 							} else {
 								// story extraction in progress
-								ReactGA.event({
-									category: "flag",
-									action: "redirection",
-									label: "same-story-request"
-								});
+								this.logToGA("flag", "redirection", "same-story-request");
 								this.props.history.push(`/${storyId}`);
 							}
 						});
 					} else {
 						// story is already available
-						ReactGA.event({
-							category: "flag",
-							action: "redirection",
-							label: "story-already-available"
-						});
+						this.logToGA("flag", "redirection", "story-already-available");
 						this.props.history.push(`/${storyId}`);
 					}
 				});

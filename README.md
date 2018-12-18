@@ -1,4 +1,4 @@
-# GrabWatt
+# Grabwatt
 
 <img src="./client/public/GrabWatt.png" width="100" height="100" />
 

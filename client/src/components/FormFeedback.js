@@ -82,7 +82,7 @@ class FormFeedback extends React.Component {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="exampleModalLongTitle">
-                  Help GrabWatt improve!
+                  Help Grabwatt improve!
                 </h5>
                 <button
                   type="button"

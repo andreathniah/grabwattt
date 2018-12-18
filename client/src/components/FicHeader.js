@@ -7,6 +7,15 @@ import "react-toastify/dist/ReactToastify.css";
 class FicHeader extends React.Component {
 	state = { loading: true };
 
+	// log actions to google analytics
+	logToGA = (category, action, label) => {
+		ReactGA.event({
+			category: category,
+			action: action,
+			label: label
+		});
+	};
+
 	handleDownload = () => {
 		alert(
 			"Please make sure your browser has no pop-up or ads blockers! Keep a lookout for the pop-up blocked icon at your address bar."
@@ -19,11 +28,7 @@ class FicHeader extends React.Component {
 		try {
 			// backup pdf download option with pupeteer
 			this.handleBackup();
-			ReactGA.event({
-				category: "downloads",
-				action: "pdf",
-				label: "pupeteer"
-			});
+			this.logToGA("downloads", "pdf", "pupeteer");
 
 			// backup pdf download option with pupeteer microservice
 			const pdfURL =
@@ -32,21 +37,13 @@ class FicHeader extends React.Component {
 				"&waitFor=header&emulateScreenMedia=false&pdf.margin.top=2cm&pdf.margin.right=2cm&pdf.margin.bottom=2cm&pdf.margin.left=2cm";
 			window.open(pdfURL, "_blank");
 		} catch (error) {
-			ReactGA.event({
-				category: "downloads",
-				action: "pdf",
-				label: "error"
-			});
+			this.logToGA("downloads", "pdf", "error");
 			alert("oops, something went wrong, use Ctrl+P and save as PDF instead");
 		}
 	};
 
 	handleHome = () => {
-		ReactGA.event({
-			category: "sucess",
-			action: "redirection",
-			label: "return-home"
-		});
+		this.logToGA("success", "redirection", "return-home");
 		this.props.history.push("/");
 	};
 
@@ -74,8 +71,22 @@ class FicHeader extends React.Component {
 	downloadEpub = () => {
 		const { storyTitle, storyAuthor } = this.props;
 
+		const contentArr = [];
 		const epubSummary = document.getElementById("summary-container").innerHTML;
-		const epubContent = document.getElementById("story-container").innerHTML;
+		const chaptersContent = document.querySelectorAll("#chapter-container");
+
+		// combine all contents into one large JSON object
+		contentArr[0] = {
+			title: storyTitle,
+			author: storyAuthor.replace("by ", ""),
+			data: epubSummary
+		};
+		for (let i = 0; i < chaptersContent.length; i++) {
+			contentArr[i + 1] = {
+				title: `Chapter ${i + 1}`,
+				data: chaptersContent[i].innerHTML
+			};
+		}
 
 		fetch("/epub", {
 			method: "POST",
@@ -85,7 +96,7 @@ class FicHeader extends React.Component {
 				title: storyTitle,
 				author: storyAuthor,
 				summary: epubSummary,
-				content: epubContent
+				content: contentArr
 			}),
 			headers: { "Content-Type": "application/json" }
 		})
@@ -107,18 +118,10 @@ class FicHeader extends React.Component {
 		);
 
 		try {
-			ReactGA.event({
-				category: "downloads",
-				action: "epub",
-				label: "epub-gen"
-			});
+			this.logToGA("downloads", "epub", "epub-gen");
 			this.downloadEpub();
 		} catch (error) {
-			ReactGA.event({
-				category: "downloads",
-				action: "epub",
-				label: "error"
-			});
+			this.logToGA("downloads", "epub", "error");
 			alert("oops, something went wrong, download as PDF instead");
 		}
 	};
@@ -151,7 +154,7 @@ class FicHeader extends React.Component {
 								width="50"
 								height="50"
 								className="d-inline-block align-top"
-								alt="GrabWatt"
+								alt="Grabwatt"
 							/>
 						</a>
 						<button

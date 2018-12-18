@@ -41,6 +41,7 @@ app.use(
 	})
 );
 
+// POST request to extract story from URL
 app.post("/", (req, res) => {
 	let requestedURL = req.body.url;
 	let storyId = req.body.storyId;
@@ -58,6 +59,7 @@ app.post("/", (req, res) => {
 	res.send({ url: storyId });
 });
 
+// POST request to generate PDF from stories
 app.post("/pdf", (req, res) => {
 	let pdfURL = req.body.url;
 	const promise = startPDF(pdfURL);
@@ -69,24 +71,22 @@ app.post("/pdf", (req, res) => {
 		.catch(err => console.log(err));
 });
 
+// POST request to generate EPUB from stories
 app.post("/epub", (req, res) => {
 	let epubURL = req.body.url;
 	let epubTitle = req.body.title;
 	let epubAuthor = req.body.author;
-	let epubSummary = req.body.summary;
 	let epubContent = req.body.content;
-
-	const escapedTitle = epubTitle.replace(/[/]/g, "");
-	const fileName = `archive/${escapedTitle}.epub`;
 
 	const option = {
 		title: epubTitle, // *Required, title of the book.
 		author: epubAuthor, // *Required, name of the author.
-		content: [
-			{ title: epubTitle, author: epubAuthor, data: epubSummary },
-			{ title: "Story", data: epubContent }
-		]
+		content: epubContent
 	};
+
+	// replace names with dash as it would be considered as a directory
+	const escapedTitle = epubTitle.replace(/[/]/g, "");
+	const fileName = `archive/${escapedTitle}.epub`;
 
 	// create directory if not available
 	const dir = "./archive";
@@ -98,15 +98,15 @@ app.post("/epub", (req, res) => {
 				resolve(true);
 				console.log("[EPUB] Success => Id: ", epubURL, "\n");
 			})
-			.catch(err => {
-				reject(err);
-			});
+			.catch(err => reject(err));
 	});
+
 	promise.then(
 		status => {
 			const file = __dirname + `/${fileName}`;
 			res.download(file, "report.pdf", err => {
 				if (!err) {
+					// delete local image of .epub after 3 seconds
 					setTimeout(() => {
 						fs.unlink(fileName, err => {
 							if (!err) console.log("Local image deleted");
@@ -116,12 +116,11 @@ app.post("/epub", (req, res) => {
 				}
 			});
 		},
-		error => {
-			console.log(error);
-		}
+		error => console.log(error)
 	);
 });
 
+// open new broswer for each PDF request
 startPDF = async pdfURL => {
 	const pdfBrowser = await puppeteer.launch({
 		headless: true,
@@ -135,7 +134,7 @@ startPDF = async pdfURL => {
 
 	const page = await pdfBrowser.newPage();
 	await page.goto(pdfURL);
-	await page.waitForSelector(".page");
+	await page.waitForSelector(".page"); // wait for react to show contents
 
 	console.log("pdfURL: ", pdfURL);
 
@@ -202,19 +201,21 @@ extractContent = () => {
 	items.push("<!--ADD_PAGE-->");
 	items.push(title);
 
+	// replace undesired characters outside of ASCII table
 	for (let element of extractedElements) {
 		const text0 = element.innerHTML.replace(/[…]/g, "...");
 		const text1 = text0.replace(/[“]/g, '"');
 		const text2 = text1.replace(/[”]/g, '"');
 		const text3 = text2.replace(/[’]/g, "'");
+		const removedUTF8 = text3.replace(/[^\x00-\x7F]/g, "");
 
-		const paragraph = "<p>" + text3 + "</p>";
+		const paragraph = "<p>" + removedUTF8 + "</p>";
 		items.push(paragraph);
 	}
 	return items;
 };
 
-// scroll page to the end of the chapter
+// scroll wattpad story to the end of the chapter
 autoScroll = page => {
 	return page.evaluate(() => {
 		return new Promise((resolve, reject) => {
@@ -234,7 +235,7 @@ autoScroll = page => {
 	});
 };
 
-// creates a global variable of browser on server start to reduce memory
+// create gloabl browser on server start to reduce memory usage
 (async () => {
 	browser = await puppeteer.launch({
 		headless: true,
@@ -248,6 +249,30 @@ autoScroll = page => {
 	console.log("[ONSTART] Chrome browser started");
 })();
 
+// logging error when server receives SIGTERM
+process.on("SIGTERM", () => {
+	console.log(
+		"[ONKILL] Server received kill signal, logging current tickets as failure..."
+	);
+	const errorRef = db.ref("error");
+	const queueRef = db.ref("queue");
+	const progressRef = db.ref("progress");
+
+	const toDelete = progressRef.orderByChild("timestamp").limitToLast(1);
+	toDelete.on("child_added", snapshot => {
+		console.log("[SIGTERM] Cleaning up =>", snapshot.key);
+		progressRef.child(snapshot.key).remove();
+		errorRef.child(snapshot.key).set({ errorFound: true });
+		queueRef.child(snapshot.key).set({ toDelete: true });
+	});
+
+	app.close(() => {
+		console.log("Ticket disposed, good bye");
+		process.exit(0);
+	});
+});
+
+// choose random common User Agent to avoid detection
 getUAString = () => {
 	const string0 =
 		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36";
@@ -316,6 +341,7 @@ startScraping = async (requestedURL, storyId) => {
 			updateProgress(storyId, ++count, chapterURL.length);
 		}
 
+		// get story's summary content
 		const summaryURL = "https://www.wattpad.com" + landingURL;
 		await page.setUserAgent(useragent);
 		await page.goto(summaryURL, { waitUntil: "domcontentloaded" });
