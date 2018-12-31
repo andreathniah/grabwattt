@@ -19,7 +19,6 @@ class FicHeader extends React.Component {
 	handleDownload = () => {
 		const { storyTitle, storyAuthor } = this.props;
 		try {
-			// default pdf download option with jsPDF
 			generatePDF(storyTitle, storyAuthor);
 			this.logToGA("downloads", "pdf", "jsPDF");
 		} catch (error) {
@@ -36,7 +35,6 @@ class FicHeader extends React.Component {
 			);
 
 			try {
-				// backup pdf download option with pupeteer
 				this.handleBackup();
 				this.logToGA("downloads", "pdf", "pupeteer");
 			} catch (error) {
@@ -57,7 +55,7 @@ class FicHeader extends React.Component {
 
 	// create blob from pupeteer's pdf
 	handleBackup = () => {
-		fetch("/pdf", {
+		fetch("http://andreathniah.xyz:5001/pdf", {
 			method: "POST",
 			mode: "cors",
 			body: JSON.stringify({ url: window.location.href }),
