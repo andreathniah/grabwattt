@@ -1,4 +1,6 @@
-const generatePDF = require("./services/generatePDF");
+const startScraping = require("./services/extractStories");
+const databaseHelpers = require("./services/databaseHelpers");
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -7,20 +9,7 @@ const app = express();
 const port = process.env.PORT || 5001;
 app.listen(port, () => console.log(`Server started on port: ${port}`));
 
-// const whitelist = ["http://grabwatt.herokuapp.com"];
-// const options = {
-// 	origin: (origin, callback) => {
-// 		if (whitelist.indexOf(origin) !== -1 || !origin) {
-// 			callback(null, true);
-// 		} else {
-// 			callback(new Error("Not allowed by CORS"));
-// 		}
-// 	}
-// };
-// app.use(cors(options));
-
 app.use(cors());
-
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(
 	bodyParser.urlencoded({
@@ -29,20 +18,19 @@ app.use(
 	})
 );
 
-app.get("/", (request, response) => {
-	response.send("Home page");
-});
-
 app.post("/pdf", (req, res) => {
 	let url = req.body.url;
-	console.log("received request", url);
-	console.log("Requested: ", new Date().toLocaleString());
-	const pdfPromise = generatePDF(url);
-	pdfPromise
-		.then(buffer => {
-			res.type("application/pdf");
-			res.send(buffer);
-			console.log("Delivered : ", new Date().toLocaleString());
+	let storyId = req.body.storyId;
+	console.log("requestedURL:", url);
+
+	const storyPromise = startScraping(url, storyId);
+	storyPromise
+		.then(key => {
+			if (key) databaseHelpers.deleteProgress(storyId);
 		})
-		.catch(error => console.log(error));
+		.catch(error => {
+			databaseHelpers.logError(storyId);
+			console.log(error);
+		});
+	res.send({ url: storyId });
 });

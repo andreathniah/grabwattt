@@ -1,6 +1,8 @@
 const puppeteer = require("puppeteer");
 const genericPool = require("generic-pool");
 
+// create a hanful of browser instances and
+// reuse them for each scrape request
 const factory = {
 	create: async function() {
 		const browser = await puppeteer.launch({
@@ -12,10 +14,7 @@ const factory = {
 				// "--single-process" // disable this in localhost
 			]
 		});
-
-		const page = await browser.newPage();
-		await page.setViewport({ width: 800, height: 420 });
-		return page;
+		return browser;
 	},
 	destroy: function(puppeteer) {
 		puppeteer.close();
