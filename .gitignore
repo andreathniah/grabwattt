@@ -1,9 +1,9 @@
-
 # dependencies
 /node_modules
 
 # misc
 .DS_Store
-.env
+*.pdf
+.env*
 
 /archive
