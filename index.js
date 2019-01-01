@@ -21,7 +21,7 @@ app.use(
 app.post("/pdf", (req, res) => {
 	let url = req.body.url;
 	let storyId = req.body.storyId;
-	console.log("requestedURL:", url);
+	console.log("requestedURL: ", url);
 
 	const storyPromise = startScraping(url, storyId);
 	storyPromise

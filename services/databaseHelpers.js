@@ -1,3 +1,4 @@
+const ua = require("universal-analytics");
 const firebase = require("firebase");
 require("firebase/database");
 require("dotenv").config();
@@ -10,6 +11,11 @@ const firebaseConfig = {
 };
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+
+// setting
+const gaTracker =
+	process.env.NODE_ENV === "development" ? "UA-123756712-3" : "UA-123756712-1";
+const analytics = ua(gaTracker);
 
 // commit extracted contents to firebase on on success
 let saveToFirebase = (
@@ -31,6 +37,8 @@ let saveToFirebase = (
 	});
 
 	console.log("[STORY] Success => Id: ", storyId, "\n");
+	analytics.event("flag", "request", "server-extraction-successful").send();
+
 	return storyId;
 };
 
@@ -57,7 +65,9 @@ logError = async storyId => {
 	errorRef.set({ errorFound: true });
 	queueRef.set({ toDelete: true });
 	progressRef.set({ current: null, total: null, timestamp: null });
+
 	console.log("[ERROR] Closing page =>", storyId);
+	analytics.event("flag", "request", "server-extraction-failed").send();
 };
 
 module.exports = {

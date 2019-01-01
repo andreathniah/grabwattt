@@ -4,7 +4,7 @@ const genericPool = require("generic-pool");
 // create a hanful of browser instances and
 // reuse them for each scrape request
 const factory = {
-	create: async function() {
+	create: async () => {
 		const browser = await puppeteer.launch({
 			headless: true,
 			args: [
@@ -16,7 +16,7 @@ const factory = {
 		});
 		return browser;
 	},
-	destroy: function(puppeteer) {
+	destroy: puppeteer => {
 		puppeteer.close();
 	}
 };
