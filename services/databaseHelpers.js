@@ -42,6 +42,22 @@ let saveToFirebase = (
 	return storyId;
 };
 
+// general house-keeping to empty database workbin
+onStartDeletion = () => {
+	const errorRef = db.ref("error");
+	const queueRef = db.ref("queue");
+	const progressRef = db.ref("progress");
+
+	const toDelete = progressRef.orderByChild("timestamp").limitToLast(1);
+	toDelete.on("child_added", snapshot => {
+		console.log("silent crash:", snapshot.key, snapshot.val().timestamp);
+		// set variables up for deletion
+		progressRef.child(snapshot.key).remove();
+		errorRef.child(snapshot.key).set({ errorFound: true });
+		queueRef.child(snapshot.key).set({ toDelete: true });
+	});
+};
+
 // update chapter progress counter of the story
 updateProgress = async (storyId, counter, total) => {
 	const progressRef = db.ref("progress/" + storyId);
@@ -71,6 +87,7 @@ logError = async storyId => {
 };
 
 module.exports = {
+	onStartDeletion: onStartDeletion,
 	saveToFirebase: saveToFirebase,
 	updateProgress: updateProgress,
 	deleteProgress: deleteProgress,

@@ -60,6 +60,8 @@ module.exports = async (url, storyId) => {
 			summaryURL,
 			storyId
 		);
+		await page.goto("about:blank");
+		await page.close();
 
 		return storyKey;
 	} catch (error) {
