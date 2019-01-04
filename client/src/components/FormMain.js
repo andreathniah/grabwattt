@@ -1,6 +1,7 @@
 import React from "react";
 import { base, firebaseApp, logToGA } from "../helpers";
 import FormBody from "./FormBody";
+import FormHeader from "./FormHeader";
 
 class FormMain extends React.Component {
 	constructor(props) {
@@ -124,9 +125,12 @@ class FormMain extends React.Component {
 
 	render() {
 		return (
-			<React.Fragment>
-				<FormBody {...this.state} handleSubmit={this.handleSubmit} />
-			</React.Fragment>
+			<div className="form-main">
+				<div>
+					<FormHeader />
+					<FormBody {...this.state} handleSubmit={this.handleSubmit} />
+				</div>
+			</div>
 		);
 	}
 }

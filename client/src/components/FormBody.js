@@ -67,28 +67,28 @@ class FormBody extends React.Component {
 
 		// disable submit button when link is invalid
 		const validity = this.getWarningMsg();
-		const formButton =
-			status || (validity !== null && validity.length > 0) ? (
-				<Button onClick={this.handleClick} disabled>
-					Go
-				</Button>
-			) : (
-				<Button onClick={this.handleClick}>Go</Button>
-			);
 
 		return (
 			<React.Fragment>
-				<FormGroup validationState={this.getValidationState()}>
+				<FormGroup
+					className="form-body"
+					validationState={this.getValidationState()}
+				>
 					<FormControl
 						type="text"
 						value={url}
 						placeholder="https://www.wattpad.com/"
 						onChange={this.handleChange}
 					/>
-					<FormControl.Feedback />
-					<HelpBlock>{this.getWarningMsg()}</HelpBlock>
+					<Button
+						bsClass="grabwatt-button"
+						onClick={this.handleClick}
+						disabled={status || (validity !== null && validity.length > 0)}
+					>
+						Go
+					</Button>
 				</FormGroup>
-				{formButton}
+				<span className="form-body-help">{this.getWarningMsg()}</span>
 			</React.Fragment>
 		);
 	}
