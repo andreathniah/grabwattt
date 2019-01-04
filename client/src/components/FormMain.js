@@ -2,6 +2,7 @@ import React from "react";
 import { base, firebaseApp, logToGA } from "../helpers";
 import FormBody from "./FormBody";
 import FormHeader from "./FormHeader";
+import FeedbackMain from "./FeedbackMain";
 
 class FormMain extends React.Component {
 	constructor(props) {
@@ -124,12 +125,19 @@ class FormMain extends React.Component {
 	};
 
 	render() {
+		const FormFeedback = (
+			<a href="#" onClick={() => this.props.history.push("/feedback")}>
+				<span>feedbacks or complains? shoot me a text!</span>
+			</a>
+		);
+
 		return (
-			<div className="form-main">
+			<div className="form-main grabwatt-background">
 				<div>
 					<FormHeader />
 					<FormBody {...this.state} handleSubmit={this.handleSubmit} />
 				</div>
+				<div className="form-feedback">{FormFeedback}</div>
 			</div>
 		);
 	}

@@ -11,13 +11,31 @@
 	background-color: #ffa500;
 }
 
-.form-main {
+.grabwatt-background {
+	background: url("/pattern.svg");
+}
+
+/* front page related css */
+.form-main,
+.feedback-main {
 	display: grid;
 	grid-template-rows: 1fr;
 	align-items: center;
 	justify-content: center;
 	height: 100vh;
-	background: url("/pattern.svg");
+}
+
+.form-main a,
+.feedback-main a {
+	color: #ffa500;
+	font-style: italic;
+	font-weight: bold;
+	color: rgba(255, 165, 0, 0.8);
+}
+
+.form-feedback {
+	text-align: center;
+	margin-bottom: 1rem;
 }
 
 .form-body {
@@ -34,13 +52,6 @@
 	margin-bottom: 2rem;
 }
 
-.form-header a {
-	color: #ffa500;
-	font-style: italic;
-	font-weight: bold;
-	color: rgba(255, 165, 0, 0.8);
-}
-
 .form-header h1 {
 	font-weight: bolder;
 	margin: 0;
@@ -51,7 +62,8 @@
 	color: rgba(255, 165, 0, 0.8);
 }
 
-.form-header mark {
+.form-header mark,
+.feedback-main mark {
 	display: inline-block;
 	line-height: 0em;
 	padding-bottom: 0.5em;

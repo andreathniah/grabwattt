@@ -4,6 +4,7 @@ import ReactGA from "react-ga";
 
 import GAListener from "./GAListener";
 import FormMain from "../components/FormMain";
+import FeedbackMain from "../components/FeedbackMain";
 
 const gaTracker =
 	process.env.NODE_ENV === "development" ? "UA-123756712-3" : "UA-123756712-1";
@@ -14,6 +15,7 @@ const Router = () => (
 		<GAListener>
 			<Switch>
 				<Route exact path="/" component={FormMain} />
+				<Route exact path="/feedback" component={FeedbackMain} />
 			</Switch>
 		</GAListener>
 	</BrowserRouter>
