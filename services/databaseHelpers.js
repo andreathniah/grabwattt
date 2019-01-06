@@ -61,6 +61,11 @@ onStartDeletion = () => {
 // update chapter progress counter of the story
 updateProgress = async (storyId, counter, total) => {
 	const progressRef = db.ref("progress/" + storyId);
+	const queueRef = db.ref("queue/" + storyId);
+	const errorRef = db.ref("error/" + storyId);
+
+	errorRef.set({ errorFound: false });
+	queueRef.set({ toDelete: false });
 	progressRef.update({ current: counter, total: total, timestamp: Date.now() });
 };
 

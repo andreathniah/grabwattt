@@ -4,6 +4,8 @@ import ReactGA from "react-ga";
 
 import GAListener from "./GAListener";
 import FormMain from "../components/FormMain";
+import NotFound from "../components/NotFound";
+import LoaderMain from "../components/LoaderMain";
 import FeedbackMain from "../components/FeedbackMain";
 
 const gaTracker =
@@ -15,7 +17,9 @@ const Router = () => (
 		<GAListener>
 			<Switch>
 				<Route exact path="/" component={FormMain} />
+				<Route path="/error" component={NotFound} />
 				<Route exact path="/feedback" component={FeedbackMain} />
+				<Route path="/:storyId" component={LoaderMain} />
 			</Switch>
 		</GAListener>
 	</BrowserRouter>

@@ -14,6 +14,17 @@ const firebaseKey = {
 const firebaseApp = firebase.initializeApp(firebaseKey);
 const base = Rebase.createClass(firebaseApp.database());
 
+// check if child node exists under parent
+export function checkExistence(parentRef, child) {
+	return parentRef
+		.child(child)
+		.once("value")
+		.then(snapshot => {
+			if (snapshot.exists()) return true;
+			else return false;
+		});
+}
+
 // log actions to google analytics
 export function logToGA(category, action, label) {
 	ReactGA.event({

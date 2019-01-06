@@ -15,8 +15,10 @@ class FeedbackBody extends React.Component {
 		this.state = { email: "", message: "", thumb: "", status: true };
 	}
 
+	// disable submit button
+	// redirect form data to google spreadsheet and email
 	handleClick = () => {
-		let { email, message, thumb, status } = this.state;
+		let { email, message, thumb } = this.state;
 		this.setState({ status: false });
 
 		const scriptURL = process.env.REACT_APP_SPREADSHEET_URL;
@@ -71,8 +73,6 @@ class FeedbackBody extends React.Component {
 			!status
 				? true
 				: false;
-
-		// Emojis should be wrapped in <span>, have role="img", and have an accessible description with aria-label or aria-labelledb
 
 		return (
 			<form className="gform" ref={el => (this.form = el)}>

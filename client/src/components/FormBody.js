@@ -16,6 +16,7 @@ class FormBody extends React.Component {
 	};
 
 	// validation logic, returns an object of variables
+	// need to have regex where https://www.wattpad.com/<number> would equal to true
 	validateURL = () => {
 		const { url } = this.state;
 
@@ -81,9 +82,13 @@ class FormBody extends React.Component {
 						onChange={this.handleChange}
 					/>
 					<Button
-						bsClass="grabwatt-button"
+						bsStyle="warning"
 						onClick={this.handleClick}
-						disabled={status || (validity !== null && validity.length > 0)}
+						disabled={
+							!status ||
+							url.length === 0 ||
+							(validity !== null && validity.length > 0)
+						}
 					>
 						Go
 					</Button>

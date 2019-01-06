@@ -1,12 +1,12 @@
 import React from "react";
-import { base, firebaseApp, logToGA } from "../helpers";
+import { base, firebaseApp, logToGA, checkExistence } from "../helpers";
 import FormBody from "./FormBody";
 import FormHeader from "./FormHeader";
 
 class FormMain extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { status: false, errorbox: [], queuebox: [] };
+		this.state = { status: true, errorbox: [], queuebox: [] };
 	}
 
 	// sync firebase values upon site load
@@ -40,52 +40,47 @@ class FormMain extends React.Component {
 				const queuebox = { ...this.state.queuebox };
 				queuebox[body.url] = { toDelete: false };
 				this.setState({ queuebox: queuebox });
-
-				// this.props.history.push(`/${body.url}`);
+				this.props.history.push(`/${body.url}`);
 			})
 			.catch(err => {
 				console.log(err);
-				// this.props.history.push(`/${this.state.storyId}`);
+				this.props.history.push(`/${storyId}`);
 			});
 	};
 
 	// submit action called by child component
 	handleSubmit = data => {
 		const { status } = this.state;
-		this.setState({ status: !status });
+		this.setState({ status: false });
 
 		// promise based method to find storyId
-		this.grabStoryId(data).then(storyId => {
-			console.log("storyId", storyId);
-			const database = firebaseApp.database().ref("/");
-			database.child(`story/${storyId}`).once("value", snapshot => {
-				if (!snapshot.exists()) {
-					database.child(`progress/${storyId}`).once("value", snapshot => {
-						if (!snapshot.exists()) {
-							database.child(`queue/${storyId}`).once("value", snapshot => {
-								if (!snapshot.exists()) {
-									// new request for story
-									logToGA("flag", "request", "request-story-extraction");
-									this.postToServer(data, storyId);
-								} else {
-									// story extraction in progress
-									logToGA("flag", "redirection", "same-story-request");
-									// this.props.history.push(`/${storyId}`);
-								}
-							});
-						} else {
-							// story extraction in progress
-							logToGA("flag", "redirection", "same-story-request");
-							// this.props.history.push(`/${storyId}`);
-						}
-					});
-				} else {
-					// story is already available
-					logToGA("flag", "redirection", "story-already-available");
-					// this.props.history.push(`/${storyId}`);
-				}
-			});
-		});
+		this.grabStoryId(data)
+			.then(storyId => {
+				console.log("storyId", storyId);
+				const database = firebaseApp.database().ref("/");
+
+				Promise.all([
+					checkExistence(database, `story/${storyId}`),
+					checkExistence(database, `progress/${storyId}`),
+					checkExistence(database, `queue/${storyId}`)
+				]).then(result => {
+					console.log(result);
+					if (result[0]) {
+						console.log("story already exists");
+						logToGA("flag", "redirection", "story-already-available");
+						this.props.history.push(`/${storyId}`);
+					} else if (!result[1] && !result[2]) {
+						console.log("start extracting story");
+						logToGA("flag", "request", "request-story-extraction");
+						this.postToServer(data, storyId);
+					} else {
+						console.log("same story requested, redirecting...");
+						logToGA("flag", "redirection", "same-story-request");
+						this.props.history.push(`/${storyId}`);
+					}
+				});
+			})
+			.catch(error => this.setState({ status: true }));
 	};
 
 	// fetching plain HTML to isolate storyId from dropdownlist
