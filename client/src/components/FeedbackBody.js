@@ -12,11 +12,27 @@ import {
 class FeedbackBody extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { email: "", message: "", thumb: "" };
+		this.state = { email: "", message: "", thumb: "", status: true };
 	}
 
 	handleClick = () => {
-		console.log("start submitting to both gmail and spreadsheet");
+		let { email, message, thumb, status } = this.state;
+		this.setState({ status: false });
+
+		const scriptURL = process.env.REACT_APP_SPREADSHEET_URL;
+		const method = "POST";
+		const body = new FormData(this.form);
+		fetch(scriptURL, { method, body })
+			.then(res => {
+				alert(
+					"Thank you for leaving us with a feedback! Check your email for replies within a week!"
+				);
+				email = message = thumb = "";
+				this.setState({ email, message, thumb, status: true }, () => {
+					this.props.history.push("/");
+				});
+			})
+			.catch(error => this.setState({ status: true }));
 	};
 
 	handleChange = opcode => event => {
@@ -33,8 +49,8 @@ class FeedbackBody extends React.Component {
 		) {
 			if (
 				(opcode === "message" && message.length === 0) ||
-				(opcode === "email" && email.length === 0) ||
-				(opcode === "thumb" && thumb.length === 0)
+				(opcode === "thumb" && thumb.length === 0) ||
+				(opcode === "email" && (email.length === 0 || !email.includes("@")))
 			)
 				return "error";
 			else return "success";
@@ -42,7 +58,7 @@ class FeedbackBody extends React.Component {
 	};
 
 	render() {
-		const { email, message, thumb } = this.state;
+		const { email, message, thumb, status } = this.state;
 
 		// allow button to be clicked only when all fields are input
 		const validity =
@@ -51,22 +67,33 @@ class FeedbackBody extends React.Component {
 			) ||
 			(this.getValidationState("message") === "error" ||
 				this.getValidationState("email") === "error") ||
-			thumb.length === 0
+			thumb.length === 0 ||
+			!status
 				? true
 				: false;
 
+		// Emojis should be wrapped in <span>, have role="img", and have an accessible description with aria-label or aria-labelledb
+
 		return (
-			<React.Fragment>
+			<form className="gform" ref={el => (this.form = el)}>
 				<FormGroup validationState={this.getValidationState("thumb")}>
 					<ControlLabel>Experience</ControlLabel>
 					<ButtonToolbar>
 						<ToggleButtonGroup
 							onChange={this.handleChange("thumb")}
 							type="radio"
-							name="thumbs"
+							name="thumb"
 						>
-							<ToggleButton value={"up"}>&#128077;</ToggleButton>
-							<ToggleButton value={"down"}>&#128078;</ToggleButton>
+							<ToggleButton value={"up"}>
+								<span role="img" aria-label="thumbs-up">
+									&#128077;
+								</span>
+							</ToggleButton>
+							<ToggleButton value={"down"}>
+								<span role="img" aria-label="thumbs-down">
+									&#128078;
+								</span>
+							</ToggleButton>
 						</ToggleButtonGroup>
 					</ButtonToolbar>
 				</FormGroup>
@@ -75,30 +102,31 @@ class FeedbackBody extends React.Component {
 					<ControlLabel>Message</ControlLabel>
 					<FormControl
 						type="text"
-						componentClass="textarea"
+						name="message"
 						value={message}
 						onChange={this.handleChange("message")}
 						placeholder="Add the story URL link if you need me to debug something!"
+						componentClass="textarea"
 					/>
 				</FormGroup>
 				<FormGroup validationState={this.getValidationState("email")}>
 					<ControlLabel>Email</ControlLabel>
 					<FormControl
 						type="email"
+						name="email"
 						value={email}
-						placeholder="Check your email within a week for my reply!"
 						onChange={this.handleChange("email")}
+						placeholder="Check your email within a week for my reply!"
 					/>
 				</FormGroup>
 				<Button
-					onClick={
-						this.handleClick // bsClass="grabwatt-button"
-					}
+					bsStyle="warning"
+					onClick={this.handleClick}
 					disabled={validity}
 				>
 					Go
 				</Button>
-			</React.Fragment>
+			</form>
 		);
 	}
 }

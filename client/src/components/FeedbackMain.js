@@ -7,20 +7,22 @@ const FormGreeting = (
 	</h1>
 );
 
-const FormFeedback = (
-	<a href="#" onClick={() => this.props.history.push("/feedback")}>
-		<span>return home!</span>
-	</a>
+const FormFeedback = props => (
+	<div className="form-feedback">
+		<a href="#" onClick={() => props.history.push("/")}>
+			<span>return home!</span>
+		</a>
+	</div>
 );
 
-const FeedbackMain = () => {
+const FeedbackMain = props => {
 	return (
 		<div className="feedback-main grabwatt-background">
 			<div>
 				{FormGreeting}
-				<FeedbackBody />
+				<FeedbackBody {...props} />
 			</div>
-			<div className="form-feedback">{FormFeedback}</div>
+			{FormFeedback(props)}
 		</div>
 	);
 };

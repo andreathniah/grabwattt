@@ -2,7 +2,6 @@ import React from "react";
 import { base, firebaseApp, logToGA } from "../helpers";
 import FormBody from "./FormBody";
 import FormHeader from "./FormHeader";
-import FeedbackMain from "./FeedbackMain";
 
 class FormMain extends React.Component {
 	constructor(props) {
