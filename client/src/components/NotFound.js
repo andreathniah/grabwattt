@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
-
-import { logToGA } from "../helpers";
+import { logToGA, getHelmet } from "../helpers";
 
 class NotFound extends React.Component {
 	handleHome = () => {
@@ -12,6 +11,7 @@ class NotFound extends React.Component {
 	render() {
 		return (
 			<div className="flex-fullview background">
+				{getHelmet("Not Found")}
 				<h1 className="error-404">404</h1>
 				<p>The story you are looking for has expired</p>
 				<div>

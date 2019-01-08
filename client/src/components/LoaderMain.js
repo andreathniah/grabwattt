@@ -27,7 +27,6 @@ class LoaderMain extends React.Component {
 					checkExistence(queueRef, storyId),
 					checkExistence(storyRef, storyId)
 				]).then(result => {
-					console.log(result);
 					if (result.every(item => !item)) {
 						logToGA("error", "redirection", "story-not-found");
 						console.log("redirecting...");

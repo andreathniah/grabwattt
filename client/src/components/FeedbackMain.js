@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 import FeedbackBody from "./FeedbackBody";
 
 const FormGreeting = (
@@ -18,6 +19,10 @@ const FormFeedback = props => (
 const FeedbackMain = props => {
 	return (
 		<div className="feedback-main grabwatt-background">
+			<Helmet
+				title="Feedback"
+				meta={[{ property: "og:title", content: "Feedback" }]}
+			/>
 			<div>
 				{FormGreeting}
 				<FeedbackBody {...props} />

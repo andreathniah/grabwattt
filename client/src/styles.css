@@ -2,6 +2,11 @@
 	white-space: pre-line;
 }
 
+.page {
+	page-break-after: always;
+	padding: 2rem;
+}
+
 .grabwatt-background {
 	background: url("/pattern.svg");
 }
