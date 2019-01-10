@@ -31,7 +31,8 @@
 /* front page related css */
 .form-main,
 .loader-main,
-.feedback-main {
+.feedback-main,
+.error-main {
 	display: grid;
 	grid-template-rows: 1fr;
 	align-items: center;
@@ -39,8 +40,28 @@
 	height: 100vh;
 }
 
+.error-main > div {
+	display: grid;
+	grid-gap: 1rem;
+}
+
+.error-404 {
+	font-weight: bolder;
+	font-size: 10em;
+	margin-bottom: -0.15em;
+	text-align: center;
+	color: black;
+	-webkit-text-fill-color: white; /* Will override color (regardless of order) */
+	-webkit-text-stroke-width: 2px;
+	-webkit-text-stroke-color: rgba(255, 165, 0, 1);
+}
+
 .feedback-main button {
 	float: right;
+}
+
+button {
+	text-transform: uppercase;
 }
 
 .loader-main > div {

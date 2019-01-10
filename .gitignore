@@ -5,5 +5,5 @@
 .DS_Store
 *.pdf
 .env
-
+.vscode 
 /archive

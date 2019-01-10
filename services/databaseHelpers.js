@@ -53,7 +53,6 @@ updateProgress = async (storyId, counter, total) => {
 	const queueRef = db.ref("queue/" + storyId);
 	const errorRef = db.ref("error/" + storyId);
 
-	errorRef.set({ errorFound: false });
 	queueRef.set({ toDelete: false });
 	progressRef.update({ current: counter, total: total, timestamp: Date.now() });
 };

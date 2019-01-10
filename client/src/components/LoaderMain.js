@@ -29,7 +29,6 @@ class LoaderMain extends React.Component {
 				]).then(result => {
 					if (result.every(item => !item)) {
 						logToGA("error", "redirection", "story-not-found");
-						console.log("redirecting...");
 						errorRef.set({ errorFound: null });
 						this.props.history.push("/error");
 					}

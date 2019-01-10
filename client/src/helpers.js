@@ -16,6 +16,23 @@ const firebaseKey = {
 const firebaseApp = firebase.initializeApp(firebaseKey);
 const base = Rebase.createClass(firebaseApp.database());
 
+export function deleteExpireStories(dataRef) {
+	const now = Date.now();
+	const cutoff = now - 8 * 60 * 60 * 1000; // 8 hours
+	// const cutoff = now - 2 * 60 * 60 * 1000; // 8 hours
+	const old = dataRef
+		.orderByChild("timestamp")
+		.endAt(cutoff)
+		.limitToLast(1);
+
+	old.on("child_added", snapshot => {
+		if (snapshot.val().timestamp !== undefined) {
+			console.log("old data:", snapshot.key, snapshot.val().timestamp);
+			dataRef.child(snapshot.key).remove();
+		} else console.log(snapshot.key);
+	});
+}
+
 // check if child node exists under parent
 export function checkExistence(parentRef, child) {
 	return parentRef

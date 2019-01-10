@@ -3,20 +3,37 @@ import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { generatePDF, logToGA } from "../helpers";
 
 class FicNav extends React.Component {
+	// navigate to home page upon click on logo
+	handleHome = () => {
+		logToGA("success", "redirection", "return-home");
+		this.props.history.push("/");
+	};
+
+	// trigger relevant download actions
 	handleSelect = event => {
 		console.log(event);
 		const { title, author } = this.props.storybox;
 
 		if (event === "pdf") {
 			try {
+				// pdf downloader using jsPDF
+				// issues with generating images and UTF8 characters
 				generatePDF(title, author);
+				logToGA("downloads", "pdf", "jsPDF");
 			} catch (error) {
-				this.downloadPdf();
+				try {
+					// alert users to remove pop-up blockers and check
+					this.downloadPdf();
+					logToGA("downloads", "pdf", "pupeteer");
+				} catch (error) {
+					logToGA("downloads", "pdf", "error");
+				}
 			}
 		} else if (event === "epub") this.downloadEpub(title, author);
 		else if (event === "feedback") this.props.history.push("/feedback");
 	};
 
+	// fetch call to DO server
 	downloadPdf = () => {
 		fetch("http://andreathniah.xyz:5001/pdf", {
 			method: "POST",
@@ -33,6 +50,7 @@ class FicNav extends React.Component {
 			.catch(err => console.log(err));
 	};
 
+	// fetch call to backend server
 	downloadEpub = (storyTitle, storyAuthor) => {
 		const contentArr = [];
 		const epubSummary = document.getElementById("summary-container").innerHTML;
@@ -73,14 +91,13 @@ class FicNav extends React.Component {
 	};
 
 	render() {
-		const { history, match } = this.props;
-		const { storyId } = match.params;
+		const { storyId } = this.props.match.params;
 
 		return (
 			<Navbar collapseOnSelect onSelect={this.handleSelect}>
 				<Navbar.Header>
 					<Navbar.Brand>
-						<a onClick={() => history.push("/")}>Grabwatt</a>
+						<a onClick={this.handleHome}>Grabwatt</a>
 					</Navbar.Brand>
 					<Navbar.Toggle />
 				</Navbar.Header>

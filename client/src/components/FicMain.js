@@ -3,7 +3,8 @@ import FicNav from "./FicNav";
 import { getHelmet } from "../helpers";
 
 const getTitle = (title, author) => {
-	return title + author.replace("by ", " - ");
+	if (author) return title + author.replace("by ", " - ");
+	else return title + " " + author;
 };
 
 const FicSummary = data => (
@@ -25,19 +26,22 @@ const FicSummary = data => (
 );
 
 const FicBody = data => {
-	return data.map((chapter, index) => {
-		return (
-			<div key={index} id="chapter-container" className="page">
-				{chapter.map((lines, index) => (
-					<p key={index} dangerouslySetInnerHTML={{ __html: lines }} />
-				))}
-			</div>
-		);
-	});
+	if (data) {
+		return data.map((chapter, index) => {
+			return (
+				<div key={index} id="chapter-container" className="page">
+					{chapter.map((lines, index) => (
+						<p key={index} dangerouslySetInnerHTML={{ __html: lines }} />
+					))}
+				</div>
+			);
+		});
+	}
 };
 
 const FicMain = props => {
 	const { title, author, pages } = props.storybox;
+
 	return (
 		<React.Fragment>
 			{getHelmet(getTitle(title, author))}

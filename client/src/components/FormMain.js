@@ -4,6 +4,7 @@ import {
 	firebaseApp,
 	logToGA,
 	checkExistence,
+	deleteExpireStories,
 	getHelmet
 } from "../helpers";
 import FormBody from "./FormBody";
@@ -26,9 +27,9 @@ class FormMain extends React.Component {
 			context: this,
 			state: "queuebox",
 			then() {
+				const database = firebaseApp.database().ref("story");
+				// deleteExpireStories(database);
 				this.deleteErrorCheckers();
-				// this.deleteOld();
-				// this.deleteSilentCrash();
 			}
 		});
 	};
@@ -59,10 +60,10 @@ class FormMain extends React.Component {
 		})
 			.then(res => res.json())
 			.then(body => {
-				// add storyId to queuebox
+				// add storyId to queuebox and errorbox
 				const queuebox = { ...this.state.queuebox };
 				queuebox[body.url] = { toDelete: false };
-				this.setState({ queuebox: queuebox });
+				this.setState({ queuebox });
 				this.props.history.push(`/${body.url}`);
 			})
 			.catch(err => {
@@ -73,7 +74,6 @@ class FormMain extends React.Component {
 
 	// submit action called by child component
 	handleSubmit = data => {
-		const { status } = this.state;
 		this.setState({ status: false });
 
 		// promise based method to find storyId

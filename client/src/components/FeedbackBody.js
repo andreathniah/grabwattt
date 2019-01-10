@@ -8,6 +8,7 @@ import {
 	ButtonToolbar,
 	ToggleButtonGroup
 } from "react-bootstrap";
+import { logToGA } from "../helpers";
 
 class FeedbackBody extends React.Component {
 	constructor(props) {
@@ -17,6 +18,7 @@ class FeedbackBody extends React.Component {
 
 	// disable submit button
 	// redirect form data to google spreadsheet and email
+	// log event to GA
 	handleClick = () => {
 		let { email, message, thumb } = this.state;
 		this.setState({ status: false });
@@ -26,6 +28,7 @@ class FeedbackBody extends React.Component {
 		const body = new FormData(this.form);
 		fetch(scriptURL, { method, body })
 			.then(res => {
+				logToGA("flag", "feedback", "feedback-spreadsheet");
 				alert(
 					"Thank you for leaving us with a feedback! Check your email for replies within a week!"
 				);
@@ -37,11 +40,14 @@ class FeedbackBody extends React.Component {
 			.catch(error => this.setState({ status: true }));
 	};
 
+	// update states upon changes to input form
 	handleChange = opcode => event => {
 		if (opcode !== "thumb") this.setState({ [opcode]: event.target.value });
 		else this.setState({ [opcode]: event });
 	};
 
+	// return error when at least one field is empty
+	// email bar must include @ to qualify
 	getValidationState = opcode => {
 		const { email, message, thumb } = this.state;
 		if (
@@ -124,7 +130,7 @@ class FeedbackBody extends React.Component {
 					onClick={this.handleClick}
 					disabled={validity}
 				>
-					Go
+					Send
 				</Button>
 			</form>
 		);
