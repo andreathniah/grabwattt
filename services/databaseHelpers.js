@@ -44,18 +44,11 @@ let saveToFirebase = (
 
 // general house-keeping to empty database workbin
 onStartDeletion = () => {
-	const errorRef = db.ref("error");
-	const queueRef = db.ref("queue");
-	const progressRef = db.ref("progress");
+	db.ref("error").remove();
+	db.ref("queue").remove();
+	db.ref("progress").remove();
 
-	const toDelete = progressRef.orderByChild("timestamp").limitToLast(1);
-	toDelete.on("child_added", snapshot => {
-		console.log("silent crash:", snapshot.key, snapshot.val().timestamp);
-		// set variables up for deletion
-		progressRef.child(snapshot.key).remove();
-		errorRef.child(snapshot.key).set({ errorFound: true });
-		queueRef.child(snapshot.key).set({ toDelete: true });
-	});
+	console.log("[ONSTART] Deleting all entries at Firebase...");
 };
 
 // update chapter progress counter of the story

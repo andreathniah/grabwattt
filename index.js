@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === "production") {
 
 app.listen(port, () => {
 	// check any stories in "progress", delete them if there are
-	// databaseHelpers.onStartDeletion();
+	databaseHelpers.onStartDeletion();
 	console.log(`Server started on port: ${port}`);
 });
 

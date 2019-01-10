@@ -1,5 +1,11 @@
 import React from "react";
-import { base, firebaseApp, logToGA, checkExistence } from "../helpers";
+import {
+	base,
+	firebaseApp,
+	logToGA,
+	checkExistence,
+	getHelmet
+} from "../helpers";
 import FormBody from "./FormBody";
 import FormHeader from "./FormHeader";
 
@@ -20,11 +26,28 @@ class FormMain extends React.Component {
 			context: this,
 			state: "queuebox",
 			then() {
-				// this.deleteQueue();
+				this.deleteErrorCheckers();
 				// this.deleteOld();
 				// this.deleteSilentCrash();
 			}
 		});
+	};
+
+	// delete queue and error checkers after extraction process
+	deleteErrorCheckers = () => {
+		let checker = false;
+		const { queuebox, errorbox } = this.state;
+
+		Object.entries(queuebox).map(([key, val]) => {
+			if (val.toDelete) {
+				queuebox[key].toDelete = null;
+				errorbox[key].errorFound = null;
+				checker = true;
+			}
+		});
+		if (checker) {
+			this.setState(prevState => ({ queuebox, errorbox }));
+		}
 	};
 
 	postToServer = (url, storyId) => {
@@ -127,6 +150,7 @@ class FormMain extends React.Component {
 
 		return (
 			<div className="form-main grabwatt-background">
+				{getHelmet("Grabwatt - Wattpad Softcopies Downloader")}
 				<div>
 					<FormHeader />
 					<FormBody {...this.state} handleSubmit={this.handleSubmit} />
