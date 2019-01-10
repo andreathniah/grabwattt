@@ -57,7 +57,7 @@ class LoaderMain extends React.Component {
 		return (
 			<div>
 				{loading ? (
-					<LoaderMessage {...this.state} storyId={storyId} />
+					<LoaderMessage {...this.state} {...this.props} storyId={storyId} />
 				) : (
 					<FicMain {...this.props} storybox={storybox} />
 				)}

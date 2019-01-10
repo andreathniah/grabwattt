@@ -8,7 +8,7 @@ const getTitle = (title, author) => {
 
 const FicSummary = data => (
 	<React.Fragment>
-		<h5>
+		<h5 className="fic-head-title">
 			<strong>{getTitle(data.title, data.author)}</strong>
 		</h5>
 		<p

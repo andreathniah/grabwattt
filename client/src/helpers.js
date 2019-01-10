@@ -51,8 +51,8 @@ export function getHelmet(data) {
 }
 
 // generate PDF with page breaks
+// https://plnkr.co/edit/64KOSxMgDWfRUfg2bxfo?p=preview
 export function generatePDF(storyTitle, storyAuthor) {
-	// https://plnkr.co/edit/64KOSxMgDWfRUfg2bxfo?p=preview
 	var pdf = new jsPDF();
 	var pdfName = storyTitle + " " + storyAuthor + ".pdf";
 
