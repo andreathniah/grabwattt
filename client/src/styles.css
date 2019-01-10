@@ -1,10 +1,27 @@
+.print-container,
+.fic-head-title {
+	font-size: large;
+}
+
+/* bold chapters titles */
+#story-container p:nth-child(2) > h5 {
+	font-weight: bold;
+	font-size: large;
+}
+
+/* shrink image in fic to fit div */
+.print-container img {
+	width: 100%;
+}
+
+/* convert <br/> to lines */
 .fic-head-line {
 	white-space: pre-line;
 }
 
 .page {
 	page-break-after: always;
-	padding: 2rem;
+	padding: 0.5rem 2rem;
 }
 
 .grabwatt-background {
@@ -13,12 +30,28 @@
 
 /* front page related css */
 .form-main,
+.loader-main,
 .feedback-main {
 	display: grid;
 	grid-template-rows: 1fr;
 	align-items: center;
 	justify-content: center;
 	height: 100vh;
+}
+
+.feedback-main button {
+	float: right;
+}
+
+.loader-main > div {
+	display: grid;
+	grid-gap: 1rem;
+}
+
+.loader-main p {
+	text-transform: uppercase;
+	font-weight: bold;
+	color: #ffa500;
 }
 
 .form-main a,
@@ -48,7 +81,8 @@
 	margin-bottom: 2rem;
 }
 
-.form-header h1 {
+.form-header h1,
+.feedback-main h1 {
 	font-weight: bolder;
 	margin: 0;
 }
@@ -65,4 +99,17 @@
 	padding-bottom: 0.5em;
 	background-color: rgba(255, 165, 0, 0.8);
 	margin-bottom: 1rem;
+}
+
+.info-gifs {
+	width: 100%;
+	max-width: 100%;
+	height: auto;
+}
+
+@media (max-width: 700px) {
+	.form-header h1,
+	.feedback-main h1 {
+		font-size: calc(1.5vw + 1.5vh + 1vmin);
+	}
 }

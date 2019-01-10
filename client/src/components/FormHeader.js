@@ -1,10 +1,12 @@
 import React from "react";
+import InfoInstructions from "./InfoInstructions";
+import { logToGA } from "../helpers";
 
 const FormKoFi = (
 	<a
 		href="https://ko-fi.com/grabwatt"
 		target="_blank"
-		onClick={this.handleGithub}
+		onClick={logToGA("flag", "redirection", "go-kofi")}
 		rel="noopener noreferrer"
 	>
 		<span>help out with the server cost!</span>
@@ -27,6 +29,7 @@ const FormHeader = () => {
 	return (
 		<div className="form-header">
 			{FormGreeting}
+			<InfoInstructions />
 			{FormKoFi}
 		</div>
 	);
