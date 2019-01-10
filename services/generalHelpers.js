@@ -1,3 +1,11 @@
+const ua = require("universal-analytics");
+require("dotenv").config();
+
+// server side google analytics
+const gaTracker =
+	process.env.NODE_ENV === "development" ? "UA-123756712-3" : "UA-123756712-1";
+const analytics = ua(gaTracker);
+
 // generate random common user agent in an attempt to avoid detection
 generateRandomUA = () => {
 	const string0 =
@@ -34,5 +42,6 @@ generateRandomUA = () => {
 };
 
 module.exports = {
+	analytics: analytics,
 	generateRandomUA: generateRandomUA
 };

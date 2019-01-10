@@ -1,5 +1,6 @@
 const startScraping = require("./services/extractStories");
 const databaseHelpers = require("./services/databaseHelpers");
+const generalHelpers = require("./services/generalHelpers");
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -79,7 +80,11 @@ app.post("/epub", (req, res) => {
 		new Epub(option, fileName).promise
 			.then(() => {
 				resolve(true);
+
 				console.log("[EPUB] Success => Id: ", epubURL, "\n");
+				generalHelpers.analytics
+					.event("downloads", "epub", "server-download-epub")
+					.send();
 			})
 			.catch(err => reject(err));
 	});
