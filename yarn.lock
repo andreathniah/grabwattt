@@ -1593,6 +1593,12 @@ punycode@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
 
+puppeteer-cluster@^0.12.1:
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/puppeteer-cluster/-/puppeteer-cluster-0.12.1.tgz#e55e1936cf850c41e33f09aca8b079448a26183d"
+  dependencies:
+    debug "^3.1.0"
+
 puppeteer@^1.6.2:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-1.11.0.tgz#63cdbe12b07275cd6e0b94bce41f3fcb20305770"
