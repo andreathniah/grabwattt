@@ -16,7 +16,6 @@ const databaseHelpers = require("./databaseHelpers");
 				"--no-sandbox",
 				"--disable-setuid-sandbox",
 				"--disable-dev-shm-usage"
-				// "--single-process" // disable this in localhost
 			]
 		}
 	});
@@ -68,16 +67,24 @@ grabStory = async ({ page, data }) => {
 		storyId
 	);
 	console.log("summaryURL: ", summaryURL);
+	databaseHelpers.deleteProgress(storyId);
 };
 
 module.exports = (url, storyId) => {
 	return new Promise(async (resolve, reject) => {
 		const useragent = generalHelpers.generateRandomUA();
 		await cluster.queue({ url, storyId, useragent }, grabStory);
-		// figure out how to tell users that they are in the queue
+
+		// TODO: display waiting queue message if story is put on hold
+		// TODO: allow 2nd scrapping try should timeout occurs
 		cluster.on("taskerror", (err, data) => {
-			if (err.message.includes("Timeout")) console.log("timeout, what to do");
-			else reject(err.message);
+			if (err.message.includes("Timeout"))
+				console.log("Timeout, trying again...");
+			else {
+				databaseHelpers.logError(storyId);
+				console.log(err.message);
+				reject(err.message);
+			}
 		});
 		await cluster.idle();
 		resolve(storyKey);

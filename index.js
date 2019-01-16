@@ -45,11 +45,8 @@ app.post("/", (req, res) => {
 
 	const storyPromise = clusterHelpers(url, storyId);
 	storyPromise
-		.then(key => {
-			if (key) databaseHelpers.deleteProgress(storyId);
-		})
+		.then(key => console.log("[CLUSTER] Queue streak ended => Id:", key))
 		.catch(error => {
-			databaseHelpers.logError(storyId);
 			console.log(error);
 		});
 	res.send({ url: storyId });
