@@ -1,5 +1,5 @@
 {
-	"name": "site",
+	"name": "grabwatt",
 	"engines": {
 		"node": "^8.2.1"
 	},
@@ -8,9 +8,9 @@
 	"main": "index.js",
 	"scripts": {
 		"client": "cd client && yarn start",
-		"server": "nodemon server.js",
+		"server": "nodemon index.js",
 		"dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-		"start": "node server.js",
+		"start": "node index.js",
 		"heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
 	},
 	"dependencies": {
@@ -20,10 +20,14 @@
 		"epub-gen": "^0.0.20",
 		"express": "^4.16.3",
 		"firebase": "^5.3.0",
-		"puppeteer": "^1.6.2"
+		"generic-pool": "^3.4.2",
+		"puppeteer": "^1.6.2",
+		"puppeteer-cluster": "^0.12.1",
+		"react-helmet": "^5.2.0",
+		"universal-analytics": "^0.4.20"
 	},
 	"devDependencies": {
-		"concurrently": "^3.5.0"
+		"concurrently": "^4.1.0"
 	},
 	"author": "",
 	"license": "ISC"

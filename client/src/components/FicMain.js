@@ -1,61 +1,59 @@
 import React from "react";
-import FicHeader from "./FicHeader";
-import FicChapter from "./FicChapter";
-import base from "../base";
+import FicNav from "./FicNav";
+import { getHelmet } from "../helpers";
 
-class FicMain extends React.Component {
-  state = { storybox: [] };
+const getTitle = (title, author) => {
+	if (author) return title + author.replace("by ", " - ");
+	else return title + " " + author;
+};
 
-  componentDidMount() {
-    this.ref = base.syncState(`story/${this.props.storyId}`, {
-      context: this,
-      state: "storybox"
-    });
-  }
+const FicSummary = data => (
+	<React.Fragment>
+		<h5 className="fic-head-title">
+			<strong>{getTitle(data.title, data.author)}</strong>
+		</h5>
+		<p
+			className="fic-head-line"
+			dangerouslySetInnerHTML={{ __html: data.summary }}
+		/>
+		<p>
+			URL:{" "}
+			<a href={data.url} target="_blank">
+				{data.url}
+			</a>
+		</p>
+	</React.Fragment>
+);
 
-  componentWillUnmount() {
-    base.removeBinding(this.ref);
-  }
+const FicBody = data => {
+	if (data) {
+		return data.map((chapter, index) => {
+			return (
+				<div key={index} id="chapter-container" className="page">
+					{chapter.map((lines, index) => (
+						<p key={index} dangerouslySetInnerHTML={{ __html: lines }} />
+					))}
+				</div>
+			);
+		});
+	}
+};
 
-  extractDetails = detail => {
-    return Object.entries(this.state.storybox)
-      .filter(([key, val]) => key === detail)
-      .map(([key, val]) => val)[0];
-  };
+const FicMain = props => {
+	const { title, author, pages } = props.storybox;
 
-  render() {
-    const { storybox } = this.state;
-    const { storyId } = this.props;
-
-    const contents = Object.entries(storybox)[1];
-    if (typeof contents !== "undefined") {
-      var i = 0;
-      var storyChapter = contents[1].map(id => {
-        return <FicChapter key={i++} storybox={id} />;
-      });
-    }
-
-    const storyAuthor = this.extractDetails("author");
-    const storyTitle = this.extractDetails("title");
-    const storySummary = this.extractDetails("summary");
-    const storyURL = this.extractDetails("url");
-
-    return (
-      <div className="container">
-        <FicHeader
-          history={this.props.history}
-          storyId={storyId}
-          storyAuthor={storyAuthor}
-          storyTitle={storyTitle}
-          storySummary={storySummary}
-          storyURL={storyURL}
-        />
-        <div id="story-container" className="print-container">
-          {storyChapter}
-        </div>
-      </div>
-    );
-  }
-}
+	return (
+		<React.Fragment>
+			{getHelmet(getTitle(title, author))}
+			<FicNav {...props} />
+			<div id="summary-container" className="page print-container">
+				{FicSummary(props.storybox)}
+			</div>
+			<div id="story-container" className="print-container">
+				{FicBody(pages)}
+			</div>
+		</React.Fragment>
+	);
+};
 
 export default FicMain;

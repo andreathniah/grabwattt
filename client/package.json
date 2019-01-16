@@ -9,8 +9,9 @@
 		"prop-types": "^15.6.2",
 		"re-base": "^3.2.3",
 		"react": "^16.4.1",
+		"react-bootstrap": "^0.32.4",
 		"react-dom": "^16.4.1",
-		"react-ga": "^2.5.3",
+		"react-ga": "^2.5.6",
 		"react-router-dom": "^4.3.1",
 		"react-scripts": "1.1.4",
 		"react-toastify": "^4.3.1"

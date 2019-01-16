@@ -1,25 +1,23 @@
 import React from "react";
-import ReactGA from "react-ga";
+import { Button } from "react-bootstrap";
+import { logToGA, getHelmet } from "../helpers";
 
 class NotFound extends React.Component {
 	handleHome = () => {
-		ReactGA.event({
-			category: "error",
-			action: "redirection",
-			label: "return-home"
-		});
+		logToGA("error", "redirection", "return-home");
 		this.props.history.push("/");
 	};
 
 	render() {
 		return (
-			<div className="flex-fullview background">
-				<h1 className="error-404">404</h1>
-				<p>The story you are looking for has expired</p>
+			<div className="error-main grabwatt-background">
+				{getHelmet("Not Found")}
 				<div>
-					<button type="button" className="button" onClick={this.handleHome}>
+					<h1 className="error-404">404</h1>
+					<p>The story you are looking for has expired</p>
+					<Button bsStyle="warning" onClick={this.handleHome}>
 						Return home
-					</button>
+					</Button>
 				</div>
 			</div>
 		);
