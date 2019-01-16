@@ -35,8 +35,6 @@ grabStory = async ({ page, data }) => {
 	const chapterURL = await page.evaluate(scraperHelpers.extractChapters);
 	const landingURL = await page.evaluate(scraperHelpers.extractLink); // find link to summary page
 
-	console.log(storyTitle, storyAuthor, chapterURL, landingURL);
-
 	// grab every chapter's content
 	let story = [];
 	let count = 0;
