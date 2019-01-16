@@ -1,40 +1,34 @@
 import React from "react";
-import FeedbackForm from "./FeedbackForm";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import FeedbackBody from "./FeedbackBody";
+import { getHelmet } from "../helpers";
 
-class FeedbackMain extends React.Component {
-	componentDidMount() {
-		const alertMsg =
-			"Returning feedback users are advised to check your email for relevant correspondence before logging a new support ticket.";
-		toast(alertMsg, { autoClose: 8000 });
-	}
+const FormGreeting = (
+	<h1>
+		<mark>feedback? i love it</mark>
+	</h1>
+);
 
-	handleHome = () => {
-		this.props.history.push("/");
-	};
+const FormFeedback = props => (
+	<div className="form-feedback">
+		<a href="#" onClick={() => props.history.push("/")}>
+			<span>return home!</span>
+		</a>
+	</div>
+);
 
-	render() {
-		return (
-			<div className="background">
-				<div className="flex-fullview">
-					<div className="container header">
-						<h1>
-							<mark>feedback? i love it!</mark>
-						</h1>
-					</div>
-					<br />
-					<FeedbackForm history={this.props.history} />
+const FeedbackMain = props => {
+	return (
+		<div className=" grabwatt-background">
+			{getHelmet("Feedback")}
+			<div className="feedback-main">
+				<div>
+					{FormGreeting}
+					<FeedbackBody {...props} />
 				</div>
-				<ToastContainer />
-				<div className="container flex-footer box">
-					<a href="#" onClick={this.handleHome}>
-						<span>return home!</span>
-					</a>
-				</div>
+				{FormFeedback(props)}
 			</div>
-		);
-	}
-}
+		</div>
+	);
+};
 
 export default FeedbackMain;

@@ -4,6 +4,6 @@
 # misc
 .DS_Store
 *.pdf
-.env*
-
+.env
+.vscode 
 /archive

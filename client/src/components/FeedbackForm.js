@@ -65,7 +65,7 @@ class FeedbackForm extends React.Component {
 				<button
 					className="button float-md-right"
 					onClick={this.handleSpreadsheet}
-					disabled
+					disabled={status === "disabled"}
 				>
 					Send
 				</button>

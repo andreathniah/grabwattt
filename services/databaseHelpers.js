@@ -1,7 +1,6 @@
-const ua = require("universal-analytics");
 const firebase = require("firebase");
+const generalHelpers = require("./generalHelpers");
 require("firebase/database");
-require("dotenv").config();
 
 // firebase configurations
 const firebaseConfig = {
@@ -11,11 +10,6 @@ const firebaseConfig = {
 };
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
-
-// setting
-const gaTracker =
-	process.env.NODE_ENV === "development" ? "UA-123756712-3" : "UA-123756712-1";
-const analytics = ua(gaTracker);
 
 // commit extracted contents to firebase on on success
 let saveToFirebase = (
@@ -37,14 +31,29 @@ let saveToFirebase = (
 	});
 
 	console.log("[STORY] Success => Id: ", storyId, "\n");
-	analytics.event("flag", "request", "server-extraction-successful").send();
+	generalHelpers.analytics
+		.event("flag", "request", "server-extraction-successful")
+		.send();
 
 	return storyId;
+};
+
+// general house-keeping to empty database workbin
+onStartDeletion = () => {
+	db.ref("error").remove();
+	db.ref("queue").remove();
+	db.ref("progress").remove();
+
+	console.log("[ONSTART] Deleting all entries at Firebase...");
 };
 
 // update chapter progress counter of the story
 updateProgress = async (storyId, counter, total) => {
 	const progressRef = db.ref("progress/" + storyId);
+	const queueRef = db.ref("queue/" + storyId);
+	const errorRef = db.ref("error/" + storyId);
+
+	queueRef.set({ toDelete: false });
 	progressRef.update({ current: counter, total: total, timestamp: Date.now() });
 };
 
@@ -67,10 +76,13 @@ logError = async storyId => {
 	progressRef.set({ current: null, total: null, timestamp: null });
 
 	console.log("[ERROR] Closing page =>", storyId);
-	analytics.event("flag", "request", "server-extraction-failed").send();
+	generalHelpers.analytics
+		.event("flag", "request", "server-extraction-failed")
+		.send();
 };
 
 module.exports = {
+	onStartDeletion: onStartDeletion,
 	saveToFirebase: saveToFirebase,
 	updateProgress: updateProgress,
 	deleteProgress: deleteProgress,
