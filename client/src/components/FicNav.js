@@ -1,8 +1,16 @@
 import React from "react";
 import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { generatePDF, logToGA } from "../helpers";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class FicNav extends React.Component {
+	componentDidMount = () => {
+		const alertMsg =
+			"Grabawatt has rolled out a new PDF generation service. Do log a feedback if you notice any issues!";
+		toast(alertMsg, { autoClose: 8000 });
+	};
+
 	// navigate to home page upon click on logo
 	handleHome = () => {
 		logToGA("success", "redirection", "return-home");
@@ -16,21 +24,39 @@ class FicNav extends React.Component {
 
 		if (event === "pdf") {
 			try {
-				// pdf downloader using jsPDF
-				// issues with generating images and UTF8 characters
 				generatePDF(title, author);
 				logToGA("downloads", "pdf", "jsPDF");
 			} catch (error) {
 				try {
-					// alert users to remove pop-up blockers and check
+					alert(
+						"Please make sure your browser has no pop-up or ads blockers! Keep a lookout for the pop-up blocked icon at your address bar."
+					);
+					toast(
+						"PDF generation takes at least 30 seconds to work at the background, please stay on the current page",
+						{ autoClose: 10000 }
+					);
 					this.downloadPdf();
 					logToGA("downloads", "pdf", "pupeteer");
 				} catch (error) {
+					alert(
+						"Oops, something went wrong, use Ctrl+P and save as PDF instead"
+					);
 					logToGA("downloads", "pdf", "error");
 				}
 			}
-		} else if (event === "epub") this.downloadEpub(title, author);
-		else if (event === "feedback") this.props.history.push("/feedback");
+		} else if (event === "epub") {
+			alert(
+				"Please make sure your browser has no pop-up or ads blockers! Keep a lookout for the pop-up blocked icon at your address bar."
+			);
+			toast(
+				"Please be patient, give it at least 15 seconds. Do NOT spam the download button."
+			);
+			logToGA("downloads", "epub", "epub-gen");
+			this.downloadEpub(title, author);
+		} else if (event === "feedback") {
+			logToGA("success", "redirection", "return-home");
+			this.props.history.push("/feedback");
+		}
 	};
 
 	// fetch call to DO server
@@ -109,6 +135,7 @@ class FicNav extends React.Component {
 					</Nav>
 					<Navbar.Text pullRight>Story ID: {storyId}</Navbar.Text>
 				</Navbar.Collapse>
+				<ToastContainer />
 			</Navbar>
 		);
 	}

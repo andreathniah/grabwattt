@@ -9,6 +9,8 @@ import {
 } from "../helpers";
 import FormBody from "./FormBody";
 import FormHeader from "./FormHeader";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class FormMain extends React.Component {
 	constructor(props) {
@@ -18,6 +20,10 @@ class FormMain extends React.Component {
 
 	// sync firebase values upon site load
 	componentDidMount = () => {
+		const alertMsg =
+			"Grabwatt is running on a new algorithm that would hopefully reduce the amount of error rates! Do log a feedback if you notice something wrong!";
+		toast(alertMsg, { autoClose: 10000 });
+
 		this.ref = base.syncState("/error", {
 			context: this,
 			state: "errorbox"
@@ -28,7 +34,7 @@ class FormMain extends React.Component {
 			state: "queuebox",
 			then() {
 				const database = firebaseApp.database().ref("story");
-				// deleteExpireStories(database);
+				deleteExpireStories(database);
 				this.deleteErrorCheckers();
 			}
 		});
@@ -156,6 +162,7 @@ class FormMain extends React.Component {
 					<FormBody {...this.state} handleSubmit={this.handleSubmit} />
 				</div>
 				<div className="form-feedback">{FormFeedback}</div>
+				<ToastContainer />
 			</div>
 		);
 	}

@@ -1,6 +1,6 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ReactGA from "react-ga";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import GAListener from "./GAListener";
 import FormMain from "../components/FormMain";

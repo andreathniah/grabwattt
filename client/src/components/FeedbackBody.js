@@ -9,12 +9,20 @@ import {
 	ToggleButtonGroup
 } from "react-bootstrap";
 import { logToGA } from "../helpers";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class FeedbackBody extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = { email: "", message: "", thumb: "", status: true };
 	}
+
+	componentDidMount = () => {
+		const alertMsg =
+			"Returning feedback users are advised to check your email for relevant correspondence before logging a new support ticket.";
+		toast(alertMsg, { autoClose: 8000 });
+	};
 
 	// disable submit button
 	// redirect form data to google spreadsheet and email
@@ -132,6 +140,7 @@ class FeedbackBody extends React.Component {
 				>
 					Send
 				</Button>
+				<ToastContainer />
 			</form>
 		);
 	}

@@ -7,10 +7,11 @@ const databaseHelpers = require("./databaseHelpers");
 (async () => {
 	cluster = await Cluster.launch({
 		concurrency: Cluster.CONCURRENCY_PAGE,
-		maxConcurrency: 3,
+		maxConcurrency: 4,
+		timeout: 3000000,
 		monitor: false,
 		puppeteerOptions: {
-			headless: false,
+			headless: true,
 			args: [
 				"--no-sandbox",
 				"--disable-setuid-sandbox",
@@ -43,43 +44,41 @@ grabStory = async ({ page, data }) => {
 
 	for (let url of chapterURL) {
 		const updatedURL = "https://www.wattpad.com" + url;
-		await cluster.queue(async ({ page }) => {
-			await page.setUserAgent(useragent);
-			await page.goto(updatedURL, { waitUntil: "domcontentloaded" });
-			await autoScroll(page);
-			const items = await page.evaluate(extractContent);
-			story.push(items);
-			console.log("[", storyId, "]", updatedURL);
-			databaseHelpers.updateProgress(storyId, ++count, chapterURL.length);
-		});
+		await page.setUserAgent(useragent);
+		await page.goto(updatedURL, { waitUntil: "domcontentloaded" });
+		await autoScroll(page);
+		const items = await page.evaluate(extractContent);
+		story.push(items);
+		console.log("[", storyId, "]", updatedURL);
+		databaseHelpers.updateProgress(storyId, ++count, chapterURL.length);
 	}
 
 	// get story's summary content
 	const summaryURL = "https://www.wattpad.com" + landingURL;
-	await cluster.queue(async ({ page }) => {
-		await page.setUserAgent(useragent);
-		await page.goto(summaryURL, { waitUntil: "domcontentloaded" });
-		const storySummary = await page.evaluate(extractSummary);
-		// save details to database
-		storyKey = databaseHelpers.saveToFirebase(
-			story,
-			storyTitle,
-			storyAuthor,
-			storySummary,
-			summaryURL,
-			storyId
-		);
-		console.log("summaryURL: ", summaryURL);
-	});
-
-	await cluster.idle();
+	await page.setUserAgent(useragent);
+	await page.goto(summaryURL, { waitUntil: "domcontentloaded" });
+	const storySummary = await page.evaluate(extractSummary);
+	// save details to database
+	storyKey = databaseHelpers.saveToFirebase(
+		story,
+		storyTitle,
+		storyAuthor,
+		storySummary,
+		summaryURL,
+		storyId
+	);
+	console.log("summaryURL: ", summaryURL);
 };
 
 module.exports = (url, storyId) => {
 	return new Promise(async (resolve, reject) => {
 		const useragent = generalHelpers.generateRandomUA();
 		await cluster.queue({ url, storyId, useragent }, grabStory);
-		cluster.on("taskerror", (err, data) => reject(err.message));
+		// figure out how to tell users that they are in the queue
+		cluster.on("taskerror", (err, data) => {
+			if (err.message.includes("Timeout")) console.log("timeout, what to do");
+			else reject(err.message);
+		});
 		await cluster.idle();
 		resolve(storyKey);
 	});
