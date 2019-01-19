@@ -98,12 +98,12 @@ class FeedbackBody extends React.Component {
 							type="radio"
 							name="thumb"
 						>
-							<ToggleButton value={"up"}>
+							<ToggleButton value={"TRUE"}>
 								<span role="img" aria-label="thumbs-up">
 									&#128077;
 								</span>
 							</ToggleButton>
-							<ToggleButton value={"down"}>
+							<ToggleButton value={"FALSE"}>
 								<span role="img" aria-label="thumbs-down">
 									&#128078;
 								</span>
@@ -121,6 +121,7 @@ class FeedbackBody extends React.Component {
 						onChange={this.handleChange("message")}
 						placeholder="Add the story URL link if you need me to debug something!"
 						componentClass="textarea"
+						rows={5}
 					/>
 				</FormGroup>
 				<FormGroup validationState={this.getValidationState("email")}>

@@ -6,7 +6,7 @@ const FormKoFi = (
 	<a
 		href="https://ko-fi.com/grabwatt"
 		target="_blank"
-		onClick={logToGA("flag", "redirection", "go-kofi")}
+		onClick={handleLogging}
 		rel="noopener noreferrer"
 	>
 		<span>help out with the server cost!</span>
@@ -24,6 +24,10 @@ const FormGreeting = (
 		</div>
 	</React.Fragment>
 );
+
+const handleLogging = () => {
+	logToGA("flag", "redirection", "go-kofi");
+};
 
 const FormHeader = () => {
 	return (

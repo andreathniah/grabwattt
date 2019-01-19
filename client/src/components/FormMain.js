@@ -93,17 +93,16 @@ class FormMain extends React.Component {
 					checkExistence(database, `progress/${storyId}`),
 					checkExistence(database, `queue/${storyId}`)
 				]).then(result => {
-					console.log(result);
 					if (result[0]) {
-						console.log("story already exists");
+						// story already exist
 						logToGA("flag", "redirection", "story-already-available");
 						this.props.history.push(`/${storyId}`);
 					} else if (!result[1] && !result[2]) {
-						console.log("start extracting story");
+						// new story request
 						logToGA("flag", "request", "request-story-extraction");
 						this.postToServer(data, storyId);
 					} else {
-						console.log("same story requested, redirecting...");
+						// same story request
 						logToGA("flag", "redirection", "same-story-request");
 						this.props.history.push(`/${storyId}`);
 					}
@@ -128,7 +127,6 @@ class FormMain extends React.Component {
 			.then(link => {
 				const str = link.split("-")[0];
 				const storyId = str.split("/")[2];
-				console.log("StoryId:", storyId);
 				if (isNaN(storyId)) return this.grabChapterId(url);
 				else return storyId;
 			})

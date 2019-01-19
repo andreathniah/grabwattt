@@ -1,6 +1,7 @@
 const clusterHelpers = require("./services/clusterHelpers");
 const databaseHelpers = require("./services/databaseHelpers");
 const generalHelpers = require("./services/generalHelpers");
+const pdfHelpers = require("./services/pdfHelpers");
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -51,6 +52,20 @@ app.post("/", (req, res) => {
 		});
 	res.send({ url: storyId });
 });
+
+// POST request to generate PDF from stories
+// app.post("/pdf", (req, res) => {
+// 	let pdfURL = req.body.url;
+// 	console.log("requestedPDF: ", pdfURL);
+// 	const pdfPromise = pdfHelpers(pdfURL);
+// 	pdfPromise
+// 		.then(buffer => {
+// 			res.type("application/pdf");
+// 			res.send(buffer);
+// 			console.log("[PDF] Success => Id: ", pdfURL, "\n");
+// 		})
+// 		.catch(error => console.log(error));
+// });
 
 // POST request to generate EPUB from stories
 app.post("/epub", (req, res) => {
