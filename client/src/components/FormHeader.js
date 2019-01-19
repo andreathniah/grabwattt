@@ -2,6 +2,10 @@ import React from "react";
 import InfoInstructions from "./InfoInstructions";
 import { logToGA } from "../helpers";
 
+const handleLogging = () => {
+	logToGA("flag", "redirection", "go-kofi");
+};
+
 const FormKoFi = (
 	<a
 		href="https://ko-fi.com/grabwatt"
@@ -24,10 +28,6 @@ const FormGreeting = (
 		</div>
 	</React.Fragment>
 );
-
-const handleLogging = () => {
-	logToGA("flag", "redirection", "go-kofi");
-};
 
 const FormHeader = () => {
 	return (
