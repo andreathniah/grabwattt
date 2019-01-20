@@ -54,18 +54,18 @@ app.post("/", (req, res) => {
 });
 
 // POST request to generate PDF from stories
-// app.post("/pdf", (req, res) => {
-// 	let pdfURL = req.body.url;
-// 	console.log("requestedPDF: ", pdfURL);
-// 	const pdfPromise = pdfHelpers(pdfURL);
-// 	pdfPromise
-// 		.then(buffer => {
-// 			res.type("application/pdf");
-// 			res.send(buffer);
-// 			console.log("[PDF] Success => Id: ", pdfURL, "\n");
-// 		})
-// 		.catch(error => console.log(error));
-// });
+app.post("/pdf", (req, res) => {
+	let pdfURL = req.body.url;
+	console.log("requestedPDF: ", pdfURL);
+	const pdfPromise = pdfHelpers(pdfURL);
+	pdfPromise
+		.then(buffer => {
+			res.type("application/pdf");
+			res.send(buffer);
+			console.log("[PDF] Success => Id: ", pdfURL, "\n");
+		})
+		.catch(error => console.log(error));
+});
 
 // POST request to generate EPUB from stories
 app.post("/epub", (req, res) => {

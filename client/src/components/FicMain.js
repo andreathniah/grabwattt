@@ -3,8 +3,7 @@ import FicNav from "./FicNav";
 import { getHelmet } from "../helpers";
 
 const getTitle = (title, author) => {
-	if (author) return title + author.replace("by ", " - ");
-	else return title + " " + author;
+	return title + " " + author;
 };
 
 const FicSummary = data => (

@@ -24,7 +24,9 @@ class FicNav extends React.Component {
 
 		if (event === "pdf") {
 			try {
-				generatePDF(title, author);
+				// generatePDF(title, author);
+				this.downloadPdf();
+
 				logToGA("downloads", "pdf", "jsPDF");
 			} catch (error) {
 				try {
@@ -61,7 +63,7 @@ class FicNav extends React.Component {
 
 	// fetch call to DO server
 	downloadPdf = () => {
-		fetch("http://andreathniah.xyz:5001/pdf", {
+		fetch("/pdf", {
 			method: "POST",
 			mode: "cors",
 			body: JSON.stringify({ url: window.location.href }),
