@@ -19,7 +19,6 @@ class FicNav extends React.Component {
 
 	// trigger relevant download actions
 	handleSelect = event => {
-		console.log(event);
 		const { title, author } = this.props.storybox;
 
 		if (event === "pdf") {
