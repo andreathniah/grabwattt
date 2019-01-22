@@ -62,7 +62,6 @@ app.post("/pdf", (req, res) => {
 		.then(buffer => {
 			res.type("application/pdf");
 			res.send(buffer);
-			console.log("[PDF] Success => Id: ", pdfURL, "\n");
 		})
 		.catch(error => console.log(error));
 });

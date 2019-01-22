@@ -76,8 +76,7 @@ module.exports = (url, storyId) => {
 		// TODO: display waiting queue message if story is put on hold
 		// TODO: allow 2nd scrapping try should timeout occurs
 		cluster.on("taskerror", (err, data) => {
-			if (err.message.includes("Timeout"))
-				console.log("Timeout, trying again...");
+			if (err.message.includes("Timeout")) console.log("[TIMEOUT]", url);
 			else {
 				databaseHelpers.logError(storyId);
 				console.log(err.message);

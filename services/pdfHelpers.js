@@ -46,6 +46,8 @@ module.exports = (url, storyId) => {
 		generalHelpers.analytics
 			.event("downloads", "pdf", "server-download-pdf")
 			.send();
+
+		console.log("[PDF] Success => Id: ", url, "\n");
 		resolve(pdfBuffer[0]);
 	});
 };
