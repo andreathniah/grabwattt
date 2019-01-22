@@ -23,9 +23,7 @@ class FicNav extends React.Component {
 
 		if (event === "pdf") {
 			try {
-				// generatePDF(title, author);
-				this.downloadPdf();
-
+				generatePDF(title, author);
 				logToGA("downloads", "pdf", "jsPDF");
 			} catch (error) {
 				try {

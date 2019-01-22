@@ -5,7 +5,8 @@ import {
 	logToGA,
 	checkExistence,
 	deleteExpireStories,
-	getHelmet
+	getHelmet,
+	deleteCrashedStories
 } from "../helpers";
 import FormBody from "./FormBody";
 import FormHeader from "./FormHeader";
@@ -33,8 +34,12 @@ class FormMain extends React.Component {
 			context: this,
 			state: "queuebox",
 			then() {
-				const database = firebaseApp.database().ref("story");
-				deleteExpireStories(database);
+				const progressRef = firebaseApp.database().ref("story");
+				const queueRef = firebaseApp.database().ref("queue");
+				const errorRef = firebaseApp.database().ref("error");
+
+				deleteExpireStories(progressRef);
+				deleteCrashedStories(progressRef, queueRef, errorRef);
 				this.deleteErrorCheckers();
 			}
 		});

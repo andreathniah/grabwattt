@@ -33,6 +33,25 @@ export function deleteExpireStories(dataRef) {
 	});
 }
 
+// delete progress counter that silently failed aka 15mins
+export function deleteCrashedStories(progressRef, queueRef, errorRef) {
+	const now = Date.now();
+	const cutoff = now - 15 * 60 * 1000; // 15 mins
+
+	const old = progressRef
+		.orderByChild("timestamp")
+		.endAt(cutoff)
+		.limitToLast(1);
+
+	old.on("child_added", snapshot => {
+		console.log("old data:", snapshot.key, snapshot.val().timestamp);
+		// set variables up for deletion
+		progressRef.child(snapshot.key).remove();
+		errorRef.child(snapshot.key).set({ errorFound: true });
+		queueRef.child(snapshot.key).set({ toDelete: true });
+	});
+}
+
 // check if child node exists under parent
 export function checkExistence(parentRef, child) {
 	return parentRef

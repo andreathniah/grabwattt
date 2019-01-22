@@ -81,6 +81,7 @@ logError = async storyId => {
 };
 
 module.exports = {
+	deleteSilentCrash: deleteSilentCrash,
 	onStartDeletion: onStartDeletion,
 	saveToFirebase: saveToFirebase,
 	updateProgress: updateProgress,
