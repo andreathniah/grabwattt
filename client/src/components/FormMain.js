@@ -21,9 +21,12 @@ class FormMain extends React.Component {
 
 	// sync firebase values upon site load
 	componentDidMount = () => {
-		const alertMsg =
+		const alertMsg1 =
 			"Grabwatt is running on a new algorithm that would hopefully reduce the amount of error rates! Do log a feedback if you notice something wrong!";
-		toast(alertMsg, { autoClose: 10000 });
+		const alertMsg2 =
+			"Grabwatt's database is experiencing some issues with storiing stories for 8hours, as a precaution, please download your story immediately after extraction completes.";
+		toast(alertMsg2, { autoClose: 12000 });
+		toast(alertMsg1, { autoClose: 10000 });
 
 		this.ref = base.syncState("/error", {
 			context: this,
@@ -39,7 +42,7 @@ class FormMain extends React.Component {
 				const errorRef = firebaseApp.database().ref("error");
 
 				deleteExpireStories(progressRef);
-				deleteCrashedStories(progressRef, queueRef, errorRef);
+				//deleteCrashedStories(progressRef, queueRef, errorRef);
 				this.deleteErrorCheckers();
 			}
 		});
