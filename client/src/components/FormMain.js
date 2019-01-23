@@ -41,7 +41,7 @@ class FormMain extends React.Component {
 				const queueRef = firebaseApp.database().ref("queue");
 				const errorRef = firebaseApp.database().ref("error");
 
-				deleteExpireStories(progressRef);
+				//deleteExpireStories(progressRef);
 				//deleteCrashedStories(progressRef, queueRef, errorRef);
 				this.deleteErrorCheckers();
 			}
