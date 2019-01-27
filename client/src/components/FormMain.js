@@ -37,12 +37,13 @@ class FormMain extends React.Component {
 			context: this,
 			state: "queuebox",
 			then() {
-				const progressRef = firebaseApp.database().ref("story");
+				const storyRef = firebaseApp.database().ref("story");
+				const progressRef = firebaseApp.database().ref("progress");
 				const queueRef = firebaseApp.database().ref("queue");
 				const errorRef = firebaseApp.database().ref("error");
 
-				//deleteExpireStories(progressRef);
-				//deleteCrashedStories(progressRef, queueRef, errorRef);
+				deleteExpireStories(storyRef);
+				deleteCrashedStories(progressRef, queueRef, errorRef);
 				this.deleteErrorCheckers();
 			}
 		});

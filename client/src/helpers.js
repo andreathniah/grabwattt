@@ -44,11 +44,13 @@ export function deleteCrashedStories(progressRef, queueRef, errorRef) {
 		.limitToLast(1);
 
 	old.on("child_added", snapshot => {
-		console.log("old data:", snapshot.key, snapshot.val().timestamp);
-		// set variables up for deletion
-		progressRef.child(snapshot.key).remove();
-		errorRef.child(snapshot.key).set({ errorFound: true });
-		queueRef.child(snapshot.key).set({ toDelete: true });
+		console.log("crashed data:", snapshot.key, snapshot.val().timestamp);
+		if (snapshot.val().timestamp !== undefined) {
+			// set variables up for deletion
+			progressRef.child(snapshot.key).remove();
+			errorRef.child(snapshot.key).set({ errorFound: true });
+			queueRef.child(snapshot.key).set({ toDelete: true });
+		}
 	});
 }
 
