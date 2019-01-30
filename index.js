@@ -1,7 +1,7 @@
 const clusterHelpers = require("./services/clusterHelpers");
 const databaseHelpers = require("./services/databaseHelpers");
 const generalHelpers = require("./services/generalHelpers");
-const pdfHelpers = require("./services/pdfHelpers");
+const pdfDefault = require("./services/pdfDefault");
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -24,6 +24,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 app.listen(port, () => {
+	generalHelpers.analytics;
 	// check any stories in "progress", delete them if there are
 	databaseHelpers.onStartDeletion();
 	console.log(`Server started on port: ${port}`);
@@ -57,7 +58,7 @@ app.post("/", (req, res) => {
 app.post("/pdf", (req, res) => {
 	let pdfURL = req.body.url;
 	console.log("requestedPDF: ", pdfURL);
-	const pdfPromise = pdfHelpers(pdfURL);
+	const pdfPromise = pdfDefault(pdfURL);
 	pdfPromise
 		.then(buffer => {
 			res.type("application/pdf");

@@ -67,7 +67,7 @@ class FicNav extends React.Component {
 
 	// fetch call to DO server
 	downloadPdf = () => {
-		fetch("http://andreathniah.xyz:5001/pdf", {
+		fetch("/pdf", {
 			method: "POST",
 			mode: "cors",
 			body: JSON.stringify({ url: window.location.href }),
