@@ -24,8 +24,9 @@ class FormMain extends React.Component {
 		const alertMsg1 =
 			"Grabwatt is running on a new algorithm that would hopefully reduce the amount of error rates! Do log a feedback if you notice something wrong!";
 		const alertMsg2 =
-			"Grabwatt's database is experiencing some issues with storiing stories for 8hours, as a precaution, please download your story immediately after extraction completes.";
-		toast(alertMsg2, { autoClose: 12000 });
+			"Woosp, it seems like Grabwatt will have to go offline soon. Select ‘Add me to the backup list’ at the feedback form to know more! Thank you for your support thus far!";
+
+		toast(alertMsg2, { autoClose: 25000 });
 		toast(alertMsg1, { autoClose: 10000 });
 
 		this.ref = base.syncState("/error", {

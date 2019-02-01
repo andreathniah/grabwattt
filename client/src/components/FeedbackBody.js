@@ -15,7 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 class FeedbackBody extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { email: "", message: "", thumb: "", status: true };
+		this.state = { email: "", message: "", thumb: "", issue: "", status: true };
 	}
 
 	componentDidMount = () => {
@@ -50,22 +50,26 @@ class FeedbackBody extends React.Component {
 
 	// update states upon changes to input form
 	handleChange = opcode => event => {
-		if (opcode !== "thumb") this.setState({ [opcode]: event.target.value });
+		console.log(event);
+		if (opcode !== "thumb" && opcode !== "issue")
+			this.setState({ [opcode]: event.target.value });
 		else this.setState({ [opcode]: event });
 	};
 
 	// return error when at least one field is empty
 	// email bar must include @ to qualify
 	getValidationState = opcode => {
-		const { email, message, thumb } = this.state;
+		const { email, message, thumb, issue } = this.state;
 		if (
 			email.trim().length > 0 ||
 			message.trim().length > 0 ||
-			thumb.trim().length > 0
+			thumb.trim().length > 0 ||
+			issue.trim().length > 0
 		) {
 			if (
 				(opcode === "message" && message.length === 0) ||
 				(opcode === "thumb" && thumb.length === 0) ||
+				(opcode === "issue" && issue.length === 0) ||
 				(opcode === "email" && (email.length === 0 || !email.includes("@")))
 			)
 				return "error";
@@ -74,7 +78,7 @@ class FeedbackBody extends React.Component {
 	};
 
 	render() {
-		const { email, message, thumb, status } = this.state;
+		const { email, message, thumb, issue, status } = this.state;
 
 		// allow button to be clicked only when all fields are input
 		const validity =
@@ -84,6 +88,7 @@ class FeedbackBody extends React.Component {
 			(this.getValidationState("message") === "error" ||
 				this.getValidationState("email") === "error") ||
 			thumb.length === 0 ||
+			issue.length === 0 ||
 			!status
 				? true
 				: false;
@@ -112,6 +117,25 @@ class FeedbackBody extends React.Component {
 					</ButtonToolbar>
 				</FormGroup>
 
+				<FormGroup validationState={this.getValidationState("issue")}>
+					<ControlLabel>Facing issues with:</ControlLabel>
+					<ButtonToolbar>
+						<ToggleButtonGroup
+							onChange={this.handleChange("issue")}
+							type="radio"
+							name="issue"
+						>
+							<ToggleButton value={"EXTRACT"}>Extraction</ToggleButton>
+							<ToggleButton value={"PDF"}>PDF</ToggleButton>
+							<ToggleButton value={"EPUB"}>EPUB</ToggleButton>
+							<ToggleButton value={"OTHERS"}>Others</ToggleButton>
+							<ToggleButton value={"BACKUP"}>
+								Add me to the backup list!
+							</ToggleButton>
+						</ToggleButtonGroup>
+					</ButtonToolbar>
+				</FormGroup>
+
 				<FormGroup validationState={this.getValidationState("message")}>
 					<ControlLabel>Message</ControlLabel>
 					<FormControl
@@ -131,7 +155,7 @@ class FeedbackBody extends React.Component {
 						name="email"
 						value={email}
 						onChange={this.handleChange("email")}
-						placeholder="Check your email within a week for my reply!"
+						placeholder="Make sure your email is correct!"
 					/>
 				</FormGroup>
 				<Button
