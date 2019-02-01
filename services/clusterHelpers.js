@@ -7,7 +7,7 @@ const databaseHelpers = require("./databaseHelpers");
 (async () => {
 	cluster = await Cluster.launch({
 		concurrency: Cluster.CONCURRENCY_PAGE,
-		maxConcurrency: 4,
+		maxConcurrency: 3,
 		timeout: 3000000,
 		monitor: false,
 		puppeteerOptions: {
