@@ -40,11 +40,10 @@ let saveToFirebase = (
 
 // general house-keeping to empty database workbin
 onStartDeletion = () => {
-	db.ref("error").remove();
-	db.ref("queue").remove();
-	db.ref("progress").remove();
-
 	console.log("[ONSTART] Deleting all entries at Firebase...");
+	db.ref("progress").once("value", snapshot => {
+		snapshot.forEach(childSnapshot => logError(childSnapshot.key));
+	});
 };
 
 // update chapter progress counter of the story
