@@ -9,7 +9,7 @@ import LoaderMain from "../components/LoaderMain";
 import FeedbackMain from "../components/FeedbackMain";
 
 const gaTracker =
-	process.env.NODE_ENV === "development" ? "UA-123756712-3" : "UA-123756712-1";
+	process.env.NODE_ENV === "development" ? "UA-123756712-3" : "UA-123756712-4";
 ReactGA.initialize(gaTracker, { titleCase: false });
 
 const Router = () => (

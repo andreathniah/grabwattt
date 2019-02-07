@@ -23,32 +23,25 @@ class FicNav extends React.Component {
 
 		if (event === "pdf") {
 			try {
-				generatePDF(title, author);
-				logToGA("downloads", "pdf", "jsPDF");
-			} catch (error) {
-				try {
-					alert(
-						"Please make sure your browser has no pop-up or ads blockers! Keep a lookout for the pop-up blocked icon at your address bar."
-					);
-					toast(
-						"PDF generation takes at least 30 seconds to work at the background, please stay on the current page",
-						{ autoClose: 10000 }
-					);
-					this.downloadPdf();
-					logToGA("downloads", "pdf", "pupeteer");
+				alert(
+					"Please make sure your browser has no pop-up or ads blockers! Keep a lookout for the pop-up blocked icon at your address bar."
+				);
+				toast(
+					"PDF generation takes at least 30 seconds to work at the background, please stay on the current page",
+					{ autoClose: 10000 }
+				);
+				this.downloadPdf();
+				logToGA("downloads", "pdf", "pupeteer");
 
-					// backup pdf download option with pupeteer microservice
-					const pdfURL =
-						"https://url-to-pdf-api.herokuapp.com/api/render?url=" +
-						window.location.href +
-						"&waitFor=header&emulateScreenMedia=false&pdf.margin.top=2cm&pdf.margin.right=2cm&pdf.margin.bottom=2cm&pdf.margin.left=2cm";
-					window.open(pdfURL, "_blank");
-				} catch (error) {
-					alert(
-						"Oops, something went wrong, use Ctrl+P and save as PDF instead"
-					);
-					logToGA("downloads", "pdf", "error");
-				}
+				// backup pdf download option with pupeteer microservice
+				const pdfURL =
+					"https://url-to-pdf-api.herokuapp.com/api/render?url=" +
+					window.location.href +
+					"&waitFor=header&emulateScreenMedia=false&pdf.margin.top=2cm&pdf.margin.right=2cm&pdf.margin.bottom=2cm&pdf.margin.left=2cm";
+				window.open(pdfURL, "_blank");
+			} catch (error) {
+				alert("Oops, something went wrong, use Ctrl+P and save as PDF instead");
+				logToGA("downloads", "pdf", "error");
 			}
 		} else if (event === "epub") {
 			alert(

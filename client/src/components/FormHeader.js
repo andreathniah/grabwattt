@@ -20,11 +20,17 @@ const FormKoFi = (
 const FormGreeting = (
 	<React.Fragment>
 		<h1>
-			<mark>want that wattpad fic?</mark>
+			<mark>grabwatt in different language?</mark>
 		</h1>
 		<div>
-			enter any wattpad <span>chapter URL</span> to start! <br />
-			data will be purged after <span>8 hours</span>
+			this a <span>temporary</span> site to accomodate to stories with unique
+			characters.
+			<br />
+			<span>
+				<strong>DO NOT SHARE THIS LINK.</strong>
+			</span>
+			<br />
+			<br />
 		</div>
 	</React.Fragment>
 );

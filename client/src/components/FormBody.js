@@ -82,7 +82,7 @@ class FormBody extends React.Component {
 						onChange={this.handleChange}
 					/>
 					<Button
-						bsStyle="warning"
+						bsStyle="primary"
 						onClick={this.handleClick}
 						disabled={
 							!status ||

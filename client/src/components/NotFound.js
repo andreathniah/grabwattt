@@ -15,7 +15,7 @@ class NotFound extends React.Component {
 				<div>
 					<h1 className="error-404">404</h1>
 					<p>The story you are looking for has expired</p>
-					<Button bsStyle="warning" onClick={this.handleHome}>
+					<Button bsStyle="primary" onClick={this.handleHome}>
 						Return home
 					</Button>
 				</div>

@@ -70,7 +70,7 @@ class LoaderMessage extends React.Component {
 						{this.getMessage(storyId, progressbox, loading, error)}
 					</p>
 					{error ? (
-						<Button bsStyle="warning" onClick={this.handleHome}>
+						<Button bsStyle="primary" onClick={this.handleHome}>
 							Return Home
 						</Button>
 					) : null}

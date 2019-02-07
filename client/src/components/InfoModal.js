@@ -14,7 +14,7 @@ const InfoModal = props => {
 			</Modal.Header>
 			<Modal.Body>{props.content}</Modal.Body>
 			<Modal.Footer>
-				<Button onClick={props.onSave} bsStyle="warning">
+				<Button onClick={props.onSave} bsStyle="primary">
 					Okay
 				</Button>
 			</Modal.Footer>

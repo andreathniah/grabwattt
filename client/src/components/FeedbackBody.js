@@ -159,7 +159,7 @@ class FeedbackBody extends React.Component {
 					/>
 				</FormGroup>
 				<Button
-					bsStyle="warning"
+					bsStyle="primary"
 					onClick={this.handleClick}
 					disabled={validity}
 				>

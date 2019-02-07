@@ -57,9 +57,8 @@ extractContent = () => {
 		const text1 = text0.replace(/[“]/g, '"');
 		const text2 = text1.replace(/[”]/g, '"');
 		const text3 = text2.replace(/[’]/g, "'");
-		const removedUTF8 = text3.replace(/[^\x00-\x7F]/g, "");
 
-		const paragraph = "<p>" + removedUTF8 + "</p>";
+		const paragraph = "<p>" + text3 + "</p>";
 		items.push(paragraph);
 	}
 	return items;

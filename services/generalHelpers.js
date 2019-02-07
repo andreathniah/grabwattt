@@ -3,7 +3,7 @@ const ua = require("universal-analytics");
 require("dotenv").config();
 
 const gaTracker =
-	process.env.NODE_ENV === "development" ? "UA-123756712-3" : "UA-123756712-1";
+	process.env.NODE_ENV === "development" ? "UA-123756712-3" : "UA-123756712-4";
 const analytics = ua(gaTracker);
 
 // generate random common user agent in an attempt to avoid detection
