@@ -44,6 +44,8 @@ onStartDeletion = () => {
 	db.ref("progress").once("value", snapshot => {
 		snapshot.forEach(childSnapshot => logError(childSnapshot.key));
 	});
+	db.ref("error").remove();
+	db.ref("queue").remove();
 };
 
 // update chapter progress counter of the story
