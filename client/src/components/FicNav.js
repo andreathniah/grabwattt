@@ -36,13 +36,6 @@ class FicNav extends React.Component {
 					);
 					this.downloadPdf();
 					logToGA("downloads", "pdf", "pupeteer");
-
-					// backup pdf download option with pupeteer microservice
-					const pdfURL =
-						"https://url-to-pdf-api.herokuapp.com/api/render?url=" +
-						window.location.href +
-						"&waitFor=header&emulateScreenMedia=false&pdf.margin.top=2cm&pdf.margin.right=2cm&pdf.margin.bottom=2cm&pdf.margin.left=2cm";
-					window.open(pdfURL, "_blank");
 				} catch (error) {
 					alert(
 						"Oops, something went wrong, use Ctrl+P and save as PDF instead"

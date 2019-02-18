@@ -41,9 +41,10 @@ let saveToFirebase = (
 // general house-keeping to empty database workbin
 onStartDeletion = () => {
 	console.log("[ONSTART] Deleting all entries at Firebase...");
-	db.ref("progress").once("value", snapshot => {
-		snapshot.forEach(childSnapshot => logError(childSnapshot.key));
-	});
+	// db.ref("progress").once("value", snapshot => {
+	// 	snapshot.forEach(childSnapshot => logError(childSnapshot.key));
+	// });
+	db.ref("progress").remove();
 	db.ref("error").remove();
 	db.ref("queue").remove();
 };
