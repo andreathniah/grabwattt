@@ -68,8 +68,6 @@ grabStory = async ({ page, data }) => {
 	databaseHelpers.deleteProgress(storyId);
 };
 
-let restartCounter = 0;
-
 module.exports = (url, storyId) => {
 	return new Promise(async (resolve, reject) => {
 		const useragent = generalHelpers.generateRandomUA();
@@ -78,19 +76,14 @@ module.exports = (url, storyId) => {
 		// TODO: display waiting queue message if story is put on hold
 		// TODO: allow 2nd scrapping try should timeout occurs
 		cluster.on("taskerror", (err, data) => {
-			console.log(data);
 			if (err.message.includes("Timeout")) console.log("[TIMEOUT]", url);
 			else {
-				console.log("incrementing restart counter");
-				restartCounter++;
 				databaseHelpers.logError(data.storyId);
-				console.log(err.message);
 				reject(err.message);
 			}
 		});
+
 		await cluster.idle();
-		console.log("resetting restart counter");
-		restartCounter = 0;
 		resolve(storyKey);
 	});
 };
