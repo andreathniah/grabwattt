@@ -5,12 +5,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 class FicNav extends React.Component {
-	componentDidMount = () => {
-		const alertMsg =
-			"Grabawatt has rolled out a new PDF generation service. Do log a feedback if you notice any issues!";
-		toast(alertMsg, { autoClose: 8000 });
-	};
-
 	// navigate to home page upon click on logo
 	handleHome = () => {
 		logToGA("success", "redirection", "return-home");

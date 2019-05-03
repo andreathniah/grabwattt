@@ -21,9 +21,12 @@ class FormMain extends React.Component {
 
 	// sync firebase values upon site load
 	componentDidMount = () => {
+		const alertMsg1 =
+			"New extraction process! Each chapter will now take only 8 seconds (or even lesser) to extract! Lots of hard work was put into this, do use the feedback form to report any error found!";
 		const alertMsg2 =
 			"Woosp, it seems like Grabwatt will have to go offline soon. Select ‘Add me to the backup list’ at the feedback form to know more! Thank you for your support thus far!";
 
+		toast(alertMsg1, { autoClose: 25000 });
 		toast(alertMsg2, { autoClose: 25000 });
 
 		this.ref = base.syncState("/error", {
