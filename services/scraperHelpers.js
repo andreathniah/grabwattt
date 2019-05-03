@@ -1,43 +1,32 @@
-// extract link to the story's summary
-extractLink = () => {
-	return document
-		.querySelector("div.toc-header.text-center")
-		.querySelector("a.on-navigate")
-		.getAttribute("href");
-};
-
-// extract story summary
-extractSummary = () => {
-	const extractedSummary = document.querySelector("h2.description > pre")
-		.innerHTML;
-
-	// replace characters not conforming with ACSII table
-	const text = extractedSummary.replace(/…/g, "...");
-	const removedUTF8 = text.replace(/[^\x00-\x7F]/g, "");
-	return removedUTF8;
-};
-
-// extract story title
-extractTitle = () => {
-	return document.getElementsByClassName("title h5")[0].innerText;
-};
-
-// extract author name
-extractAuthor = () => {
-	return document.getElementsByClassName("author h6")[0].innerText;
-};
-
 // extract the links to all chapters of the story
-extractChapters = () => {
+// @returns [array]   array of chapters
+getAllChapterLinks = () => {
+	// find selector with drop down list
 	const extractedChapters = document
 		.querySelector("ul.table-of-contents")
 		.getElementsByTagName("li");
 
+	// push all chapter's link to chapter array
 	const chapters = [];
 	for (let chapter of extractedChapters) {
 		chapters.push(chapter.querySelector("a.on-navigate").getAttribute("href"));
 	}
 	return chapters;
+};
+
+// from HTML DOM, extract essential data from JavaScript tag
+// @return  {object}
+getStoryJSONTag = () => {
+	// grab script tag selector that contains JSON data
+	const scriptSelector = $("script:contains('window.prefetched')")[0];
+	// isolate variable window.prefetch to get JSON data
+	const resultAsText = scriptSelector.outerText.match(
+		/window.prefetched = (.*);/
+	)[1];
+	// parse text to JSON
+	const resultAsJSON = JSON.parse(resultAsText);
+	// pinpoint data field specifically
+	return Object.entries(resultAsJSON)[0][1].data;
 };
 
 // extract story content and get rid of comments
@@ -86,11 +75,8 @@ autoScroll = page => {
 };
 
 module.exports = {
-	extractLink: extractLink,
-	extractSummary: extractSummary,
-	extractTitle: extractTitle,
-	extractAuthor: extractAuthor,
-	extractChapters: extractChapters,
+	getAllChapterLinks: getAllChapterLinks,
+	getStoryJSONTag: getStoryJSONTag,
 	extractContent: extractContent,
 	autoScroll: autoScroll
 };
