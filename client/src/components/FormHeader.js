@@ -29,12 +29,22 @@ const FormGreeting = (
 	</React.Fragment>
 );
 
+const FormGoodbye = (
+	<React.Fragment>
+		<h1>
+			<mark>grabwatt is offline!</mark>
+		</h1>
+		<div>it has been a fun ride, thank you for all your support!</div>
+	</React.Fragment>
+);
+
 const FormHeader = () => {
 	return (
 		<div className="form-header">
-			{FormGreeting}
-			<InfoInstructions />
-			{FormKoFi}
+			{FormGoodbye}
+			{/* {FormGreeting} */}
+			{/* <InfoInstructions /> */}
+			{/* {FormKoFi} */}
 		</div>
 	);
 };
