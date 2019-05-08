@@ -46,7 +46,7 @@ grabStory = async ({ page, data }) => {
 		const updatedURL = "https://www.wattpad.com" + url;
 		await page.setUserAgent(useragent);
 		await page.goto(updatedURL, { waitUntil: "domcontentloaded" });
-		await page.waitFor(() => Math.floor(Math.random() * 5000) + 3000);
+		await page.waitFor(() => Math.floor(Math.random() * 8000) + 5000);
 
 		// filter out the json tag and extract the url with all contents
 		const jsonResult = await page.evaluate(scraperHelpers.getStoryJSONTag);
