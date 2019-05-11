@@ -161,7 +161,7 @@ class FormMain extends React.Component {
 					<FormHeader />
 					{/* <FormBody {...this.state} handleSubmit={this.handleSubmit} /> */}
 				</div>
-				<div className="form-feedback">{FormFeedback}</div>
+				{/* <div className="form-feedback">{FormFeedback}</div> */}
 				<ToastContainer />
 			</div>
 		);
